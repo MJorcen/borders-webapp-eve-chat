@@ -128,6 +128,7 @@ export const useImHook = () => {
     newData.unshift(session);
     console.log("会话更新了", session);
     evenBus.emit("updateSession", newData);
+    evenBus.emit("updateSessionChatRoom", newData);
   }
 
   // function onUpdateUser(user: any) {

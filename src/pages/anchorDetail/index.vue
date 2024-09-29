@@ -180,7 +180,7 @@
           }
         "
       />
-      <div class="bottomBoxRight">
+      <div class="bottomBoxRight" @click.stop="handleGo(data)">
         <img src="./assets/ic_call_video@2x.png" class="bottomBoxRightImg" />
         <img src="./assets/coin_300@2x.png" class="bottomBoxRightImgGold" />
         <div class="nums">
@@ -206,6 +206,7 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
 import { useUserStore } from "@/stores/user";
+import { handleGo } from "@/common/fetchCommon";
 
 onMounted(() => {
   getUserDetail();

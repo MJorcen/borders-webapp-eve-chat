@@ -604,7 +604,7 @@ evenBus.on("onConnect", () => {
 });
 
 // 监听到消息更新后更新页面数据
-evenBus.on("updateSession", () => {
+evenBus.on("updateSessionChatRoom", () => {
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
     getChatMsgList(res || []);
   });

@@ -115,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, onActivated } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Tabbar from "@/components/Tabbar/index.vue";
 import img1 from "./assets/ic_block List@2x.png";
@@ -144,6 +144,10 @@ const {
 onMounted(() => {
   getUserDetail();
 });
+
+// onActivated(() => {
+//   getUserDetail();
+// });
 
 const { setUser }: any = useUserDetailStore();
 

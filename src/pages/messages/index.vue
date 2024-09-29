@@ -92,10 +92,10 @@
           <div class="noticeTopBoxRightTop">
             <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
             <div class="noticeTopBoxRightTopRight" v-if="item.unread === 0">
-              {{ dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+              {{ dayjs(item?.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
             </div>
             <div v-else class="noticeTopBoxRightTopRight">
-              {{ dayjs(item.localCustom.time).format("YYYY-MM-DD HH:mm:ss") }}
+              {{ dayjs(item?.localCustom?.time).format("YYYY-MM-DD HH:mm:ss") }}
             </div>
           </div>
           <div class="noticeTopBoxRightBottomFlex">
@@ -226,8 +226,8 @@
   <Tabbar></Tabbar>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive, onMounted, watch } from "vue";
+<script setup lang="ts" name="Messages">
+import { ref, reactive, onMounted, watch, nextTick, onActivated } from "vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import Empty from "@/components/Empty.vue";
 import dayjs from "dayjs";
@@ -256,11 +256,29 @@ const router = useRouter();
 const { nim, hooksState } = useImHook();
 
 evenBus.on("updateonSessions", (data: any) => {
-  getMsgList(data);
+  nim?.getLocalSessions({
+    limit: 100,
+    done: getLocalSessionsDone,
+  });
+
+  function getLocalSessionsDone(error: any, obj: any) {
+    if (!error) {
+      getMsgList(obj.sessions);
+    }
+  }
 });
 
 evenBus.on("updateSession", (data: any) => {
-  getMsgList(data);
+  nim?.getLocalSessions({
+    limit: 100,
+    done: getLocalSessionsDone,
+  });
+
+  function getLocalSessionsDone(error: any, obj: any) {
+    if (!error) {
+      getMsgList(obj.sessions);
+    }
+  }
 });
 
 const tabsList: any = reactive([
@@ -280,20 +298,28 @@ onMounted(async () => {
   await noticeFetch({
     tab: 3,
   });
-  await getMsgList(hooksState.messageList);
+  // await getMsgList(hooksState.messageList);
   document.body.style.overflow = "auto";
+});
+
+onActivated(() => {
+  nim?.getLocalSessions({
+    limit: 100,
+    done: getLocalSessionsDone,
+  });
+
+  function getLocalSessionsDone(error: any, obj: any) {
+    if (!error) {
+      getMsgList(obj.sessions);
+      closeToast();
+    }
+  }
 });
 
 const { user: userInfo }: any = useUserStore();
 
 const getMsgList = async (data: any) => {
-  showLoadingToast({
-    message: "Loading...",
-    forbidClick: true,
-    duration: 0,
-  });
   state.messageList = data;
-
   state.messageList.map((item: any, index: number) => {
     if (item.lastMsg) {
       nim.getUser({
@@ -306,8 +332,6 @@ const getMsgList = async (data: any) => {
       });
     }
   });
-
-  closeToast();
 };
 
 const getUserDone = (error: any, user: any) => {
@@ -370,6 +394,7 @@ const handleClear = () => {
     console.log("删除本地会话" + (!error ? "成功" : "失败"));
     if (!error) {
       closeToast();
+      localStorage.setItem("badge", "0");
       state.messageList = [];
     }
   }

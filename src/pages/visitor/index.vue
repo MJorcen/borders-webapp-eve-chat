@@ -1,4 +1,3 @@
-<
 <template>
   <van-nav-bar left-text="" title="Visitor" fixed :border="false">
     <template #left>
