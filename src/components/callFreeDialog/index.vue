@@ -2,15 +2,27 @@
   <transition name="slide-fade">
     <div v-if="props.modelValue" class="popup">
       <div class="videoBox" v-if="state.showVideo">
-        <video
-          ref="videoRef"
+        <!-- ref="videoRef"
           width="100%"
           height="100%"
           :src="props.wsData.call?.videoPath"
           class="videoClass"
           @ended="onVideoEnded"
           autoplay
-          muted
+          muted -->
+        <video
+          width="100%"
+          height="100%"
+          x5-video-player-type="h5"
+          :autoplay="true"
+          :loop="true"
+          :webkit-playsinline="true"
+          :playsinline="true"
+          :controls="false"
+          @ended="onVideoEnded"
+          :src="props.wsData.call?.videoPath"
+          class="videoClass"
+          ref="videoRef"
         >
           您的浏览器不支持视频标签。
         </video>
