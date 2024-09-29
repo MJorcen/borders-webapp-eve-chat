@@ -1,0 +1,301 @@
+<template>
+  <div class="bigBox">
+    <van-tabbar v-model="props.tabsCurrent">
+      <van-tabbar-item
+        v-for="(item, index) in tabsList"
+        :key="index"
+        @click="handleChange(item, index)"
+        :badge="item.showBadge && state.badge > 0 ? state.badge : null"
+      >
+        <!-- :badge="item.showBadge && state.badge > 0 ? state.badge : null" -->
+        <template #icon>
+          <img
+            class="imgClass"
+            :src="item.active ? item.activeImg : item.img"
+          />
+        </template>
+      </van-tabbar-item>
+    </van-tabbar>
+  </div>
+</template>
+
+<script setup lang="ts">
+import {
+  ref,
+  reactive,
+  onMounted,
+  watch,
+  getCurrentInstance,
+  onActivated,
+  computed,
+} from 'vue'
+import { useRouter } from 'vue-router'
+import img1 from '../../assets/home.png'
+import img2 from '../../assets/homeActive.png'
+import imgMatchActive from '../../assets/matchActive.png'
+import imgMatch from '../../assets/match.png'
+import img3 from '../../assets/gc.png'
+import img4 from '../../assets/gcActive.png'
+import img5 from '../../assets/icon@2x (4).png'
+import img6 from '../../assets/icon@2x (3).png'
+import img7 from '../../assets/icon@2x (2).png'
+import img8 from '../../assets/icon@2x (1).png'
+import evenBus from '@/common/evenBus'
+
+export interface Props {
+  tabsCurrent: number
+  modalValue: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  tabsCurrent: 0,
+  modalValue: 0,
+})
+
+const state = reactive<any>({
+  badge: 0,
+  msgList: [],
+})
+
+const emits = defineEmits([
+  'onChange',
+  'update:tabsCurrent',
+  'update:modalValue',
+])
+
+evenBus.on('updateonSessions', (data: any) => {
+  const res = data.map((item: any) => {
+    if (item?.localCustom) {
+      try {
+        item.localCustom = JSON.parse(item.localCustom)
+      } catch (err) {
+        console.warn(err)
+      }
+    }
+    return item
+  })
+  state.badge = sumUnreadAndLocalCustomUnread(res)
+  // emits("update:modalValue", 23);
+})
+
+evenBus.on('updateSession', (data: any) => {
+  const res = data.map((item: any) => {
+    if (item?.localCustom) {
+      try {
+        item.localCustom = JSON.parse(item.localCustom)
+      } catch (err) {
+        console.warn(err)
+      }
+    }
+    return item
+  })
+  state.badge = sumUnreadAndLocalCustomUnread(res)
+})
+
+const sumUnreadAndLocalCustomUnread = (arr: any) => {
+  return arr.reduce((accumulator: any, current: any) => {
+    const unread = current.unread || 0
+
+    const localCustomUnread =
+      current.localCustom && current.localCustom.unread
+        ? current.localCustom.unread
+        : 0
+
+    return accumulator + unread + localCustomUnread
+  }, 0)
+}
+
+const router = useRouter()
+
+let nim: any
+
+evenBus.on('setFunc', (data: any) => {
+  nim = data
+})
+
+onMounted(() => {
+  const currentTab = getCurrentTab()
+  nim?.getLocalSessions({
+    limit: 100,
+    done: getLocalSessionsDone,
+  })
+
+  function getLocalSessionsDone(error: any, obj: any) {
+    if (!error) {
+      state.msgList = obj.sessions.map((item: any) => {
+        if (item?.localCustom) {
+          try {
+            item.localCustom = JSON.parse(item.localCustom)
+          } catch (err) {
+            console.warn(err)
+          }
+        }
+        return item
+      })
+    }
+  }
+  state.badge = sumUnreadAndLocalCustomUnread(state.msgList)
+
+  emits('update:tabsCurrent', currentTab)
+
+  if (currentTab === 0) {
+    tabsList[0].active = true
+    tabsList[1].active = false
+    tabsList[2].active = false
+    tabsList[3].active = false
+    tabsList[4].active = false
+  } else if (currentTab === 2) {
+    tabsList[0].active = false
+    tabsList[1].active = false
+    tabsList[2].active = true
+    tabsList[3].active = false
+    tabsList[4].active = false
+  } else if (currentTab === 1) {
+    tabsList[0].active = false
+    tabsList[1].active = true
+    tabsList[2].active = false
+    tabsList[3].active = false
+    tabsList[4].active = false
+  } else if (currentTab === 3) {
+    tabsList[0].active = false
+    tabsList[1].active = false
+    tabsList[2].active = false
+    tabsList[3].active = true
+    tabsList[4].active = false
+  } else if (currentTab === 4) {
+    tabsList[0].active = false
+    tabsList[1].active = false
+    tabsList[2].active = false
+    tabsList[3].active = false
+    tabsList[4].active = true
+  }
+})
+
+onActivated(() => {
+  const currentTab = getCurrentTab()
+
+  nim?.getLocalSessions({
+    limit: 100,
+    done: getLocalSessionsDone,
+  })
+
+  function getLocalSessionsDone(error: any, obj: any) {
+    if (!error) {
+      state.msgList = obj.sessions.map((item: any) => {
+        if (item?.localCustom) {
+          try {
+            item.localCustom = JSON.parse(item.localCustom)
+          } catch (err) {
+            console.warn(err)
+          }
+        }
+        return item
+      })
+    }
+  }
+
+  state.badge = sumUnreadAndLocalCustomUnread(state.msgList)
+
+  emits('update:tabsCurrent', currentTab)
+
+  if (currentTab === 0) {
+    tabsList[0].active = true
+    tabsList[1].active = false
+    tabsList[2].active = false
+    tabsList[3].active = false
+    tabsList[4].active = false
+  } else if (currentTab === 2) {
+    tabsList[0].active = false
+    tabsList[1].active = false
+    tabsList[2].active = true
+    tabsList[3].active = false
+    tabsList[4].active = false
+  } else if (currentTab === 1) {
+    tabsList[0].active = false
+    tabsList[1].active = true
+    tabsList[2].active = false
+    tabsList[3].active = false
+    tabsList[4].active = false
+  } else if (currentTab === 3) {
+    tabsList[0].active = false
+    tabsList[1].active = false
+    tabsList[2].active = false
+    tabsList[3].active = true
+    tabsList[4].active = false
+  } else if (currentTab === 4) {
+    tabsList[0].active = false
+    tabsList[1].active = false
+    tabsList[2].active = false
+    tabsList[3].active = false
+    tabsList[4].active = true
+  }
+})
+
+const getCurrentTab = () => {
+  switch (router?.currentRoute?.value?.name) {
+    case 'HostList':
+      return 0
+    case 'Messages':
+      return 3
+    case 'Dynamic':
+      return 2
+    case 'MatchHome':
+      return 1
+    case 'Mine':
+      return 4
+  }
+}
+
+const tabsList: any = reactive([
+  {
+    img: img1,
+    activeImg: img2,
+    active: true,
+    name: 'HostList',
+  },
+  {
+    img: imgMatch,
+    activeImg: imgMatchActive,
+    active: false,
+    name: 'MatchHome',
+  },
+  {
+    img: img3,
+    activeImg: img4,
+    active: false,
+    name: 'Dynamic',
+  },
+  {
+    img: img5,
+    activeImg: img6,
+    active: false,
+    name: 'Messages',
+    showBadge: true,
+  },
+  {
+    img: img7,
+    activeImg: img8,
+    active: false,
+    name: 'Mine',
+  },
+])
+
+const handleChange = (it: any, index: number) => {
+  tabsList.map((item: any, i: number) => {
+    if (index === i) {
+      item.active = true
+    } else {
+      item.active = false
+    }
+    return item
+  })
+  router.push({ name: it.name })
+  //   emits("onChange", index);
+}
+</script>
+<style lang="scss" scoped>
+.imgClass {
+  width: 72px;
+  height: 72px;
+}
+</style>

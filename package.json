@@ -1,0 +1,46 @@
+{
+  "name": "chat1v1-h5",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode development --host",
+    "buildtest": "vite build --mode test",
+    "buildprod": "vite build --mode prod",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@yxim/nim-web-sdk": "^9.17.5",
+    "amfe-flexible": "^2.2.1",
+    "path": "^0.12.7",
+    "postcss": "^8.4.33",
+    "postcss-pxtorem": "^6.0.0",
+    "sass": "^1.69.7",
+    "tailwindcss": "^3.4.0",
+    "vite-plugin-html": "^3.2.1",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "axios": "^1.6.8",
+    "dayjs": "^1.11.12",
+    "js-cookie": "^3.0.5",
+    "mitt": "^3.0.1",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persist": "^1.0.0",
+    "qs": "^6.12.1",
+    "recorder-core": "^1.3.24040900",
+    "svgaplayerweb": "^2.3.2",
+    "typescript": "^5.2.2",
+    "uuid": "^10.0.0",
+    "vant": "^4.9.2",
+    "vconsole": "^3.15.1",
+    "vite": "^5.0.8",
+    "vite-plugin-pwa": "^0.20.0",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue-tsc": "^1.8.25",
+    "vue3-emoji": "^2.1.8",
+    "zego-express-engine-webrtc": "^3.5.0"
+  }
+}

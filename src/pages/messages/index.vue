@@ -1,0 +1,737 @@
+<template>
+  <div class="bigBox">
+    <div class="tabsBox">
+      <div class="tabsBoxLeft">
+        <div
+          :class="item.active ? 'activeTabs' : 'tabs'"
+          v-for="(item, index) in tabsList"
+          :key="index"
+          @click="handleClick(index)"
+        >
+          {{ item.title }}
+        </div>
+      </div>
+      <img @click="handleClear" src="./assets/Frame@2x.png" class="deleteImg" />
+    </div>
+    <div class="scollTop" v-if="active === 0 && state.messageList.length">
+      <div
+        :class="item.onLine ? 'userItem' : 'userItemNone'"
+        v-for="(item, index) in state.messageList"
+        :key="index"
+      >
+        <van-image
+          round
+          fit="cover"
+          :src="item.avatar"
+          class="noticeTopImg"
+          lazy-load
+          @click.stop="handleChatRoom(item)"
+        ></van-image>
+      </div>
+    </div>
+    <!-- 系统消息 -->
+    <div class="noticeTopBoxBig" v-if="active === 0">
+      <div class="noticeTopBox" @click="router.push('/notification')">
+        <img
+          src="./assets/_Avatar／Notifications@2x.png"
+          class="noticeTopImg"
+        />
+        <div class="noticeTopBoxRight">
+          <div class="noticeTopBoxRightTop">
+            <div class="noticeTopBoxRightTopLeft">Notifications</div>
+            <div class="noticeTopBoxRightTopRight">
+              {{ noticeData?.list?.[0]?.updatedAt }}
+            </div>
+          </div>
+          <div class="noticeTopBoxRightBottom">
+            {{ noticeData?.list?.[0]?.content }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 系统消息 -->
+    <!-- 访客 -->
+    <div
+      class="noticeTopBoxBig"
+      v-if="active === 0"
+      @click="router.push('/visitor')"
+    >
+      <div class="eyeBig">
+        <div class="eyesLeft">
+          <img src="./assets/eyes.png" class="eyesImg" />
+          <div class="eyesFont">
+            <div class="eyesFontOne">Visitors</div>
+            <div class="eyesFontTwo">Have new visitors!</div>
+          </div>
+        </div>
+        <div class="eyesRight">
+          <img src="./assets/mohu.png" class="eyesRightImg" />
+          <div class="dian"></div>
+        </div>
+      </div>
+    </div>
+    <!-- 访客 -->
+
+    <div
+      class="noticeTopBoxBig"
+      v-for="(item, index) in state.messageList"
+      :key="index"
+      v-if="active === 0 && state.messageList.length"
+      @click.stop="handleChatRoom(item)"
+    >
+      <div class="noticeTopBox">
+        <van-image
+          round
+          fit="cover"
+          radius="50"
+          :src="item.avatar"
+          class="noticeTopImg"
+          lazy-load
+        ></van-image>
+        <div class="noticeTopBoxRight">
+          <div class="noticeTopBoxRightTop">
+            <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
+            <div class="noticeTopBoxRightTopRight" v-if="item.unread === 0">
+              {{ dayjs(item.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+            </div>
+            <div v-else class="noticeTopBoxRightTopRight">
+              {{ dayjs(item.localCustom.time).format("YYYY-MM-DD HH:mm:ss") }}
+            </div>
+          </div>
+          <div class="noticeTopBoxRightBottomFlex">
+            <!-- !item.localCustom?.cusstomMsg -->
+            <div
+              class="noticeTopBoxRightBottomFlexFont"
+              v-if="
+                (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
+                item?.localCustom?.cusstomMsg === ''
+              "
+            >
+              {{
+                item?.lastMsg?.type === "image"
+                  ? "[Picture]"
+                  : item?.lastMsg?.type === "audio"
+                  ? "[Audio]"
+                  : item.lastMsg?.type === "custom" &&
+                    JSON.parse(item?.lastMsg?.content)?.type === 2
+                  ? "[Video Call]"
+                  : item.lastMsg?.type === "custom" &&
+                    JSON.parse(item?.lastMsg?.content)?.type === 1
+                  ? "[Gift]"
+                  : item?.lastMsg?.text
+              }}
+            </div>
+            <div v-else class="noticeTopBoxRightBottomFlexFont">
+              {{ item?.localCustom.cusstomMsg }}
+            </div>
+            <div
+              class="nums"
+              v-if="
+                (item.unread <= 99 && item.unread > 0) ||
+                item?.localCustom?.unread > 0
+              "
+            >
+              {{
+                !item?.localCustom && !item?.localCustom?.unread
+                  ? item.unread
+                  : item?.localCustom?.unread
+              }}
+            </div>
+            <div class="numsPlus" v-if="item.unread >= 99">99+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Empty v-if="active === 0 && !state.messageList.length"></Empty>
+
+    <van-pull-refresh
+      v-model="loading"
+      @refresh="
+        () => {
+          state.callList = [];
+          state.offset = 0;
+          state.finished = true;
+          getList();
+        }
+      "
+    >
+      <template #pulling>
+        <span>Loading...</span>
+      </template>
+      <template #loosing>
+        <span>Loading...</span>
+      </template>
+      <template #loading>
+        <span>Loading...</span>
+      </template>
+      <van-list
+        v-model:loading="loading"
+        :finished="state.finished"
+        finished-text="Noting More"
+        loading-text="Loading..."
+        @load="getList"
+        v-if="active === 1"
+      >
+        <div v-if="active === 1">
+          <div
+            class="callBigBox"
+            v-for="(item, index) in state.callList"
+            :key="index"
+          >
+            <div class="callBoxItem">
+              <div class="callBoxItemLeft">
+                <van-image
+                  round
+                  fit="cover"
+                  radius="50"
+                  :src="item.user.avatar"
+                  class="callBoxItemLeftImg"
+                  lazy-load
+                ></van-image>
+                <div class="callContent">
+                  <div class="callContentTop">{{ item.user.nickname }}</div>
+                  <div class="callContentTime">
+                    [Video call:{{
+                      formatSecondsToTime(item.call.duration || 0)
+                    }}]
+                  </div>
+                  <div class="callContentBottom">
+                    {{ item.call.createdAt }}
+                  </div>
+                </div>
+              </div>
+              <!-- <img
+                :src="
+                  item.user.inCall === 0 && item.user.active === 1
+                    ? videoImg
+                    : msgImg
+                "
+                @click="handleGo(item)"
+                class="callBoxItemRight"
+              /> -->
+              <img
+                :src="videoImg"
+                @click="handleGo(item)"
+                class="callBoxItemRight"
+              />
+            </div>
+          </div>
+        </div>
+        <Empty v-if="active === 1 && !state.callList.length"></Empty>
+      </van-list>
+    </van-pull-refresh>
+
+    <div class="w-[100%] h-[100px]"></div>
+  </div>
+  <Tabbar></Tabbar>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, watch } from "vue";
+import Tabbar from "@/components/Tabbar/index.vue";
+import Empty from "@/components/Empty.vue";
+import dayjs from "dayjs";
+import { useImHook } from "@/hook/useIm";
+import { callrecordlist, notiflist } from "@/api/allApi";
+import { closeToast, showLoadingToast, showToast } from "vant";
+import msgImg from "./assets/ic_video@2x (1).png";
+import videoImg from "./assets/ic_video@2x.png";
+import evenBus from "@/common/evenBus";
+import { useRouter } from "vue-router";
+import { handleGo } from "@/common/fetchCommon";
+import { formatSecondsToTime, removeSubstrings } from "@/common/utils";
+import { useUserStore } from "@/stores/user";
+
+const state = reactive<any>({
+  messageList: [],
+  callList: [],
+  offset: 0,
+  finished: true,
+});
+
+const active = ref(0);
+
+const router = useRouter();
+
+const { nim, hooksState } = useImHook();
+
+evenBus.on("updateonSessions", (data: any) => {
+  getMsgList(data);
+});
+
+evenBus.on("updateSession", (data: any) => {
+  getMsgList(data);
+});
+
+const tabsList: any = reactive([
+  { title: "Messages", active: true },
+  { title: "Calls", active: false },
+]);
+
+const { fetchData: noticeFetch, data: noticeData } = notiflist();
+
+onMounted(async () => {
+  showLoadingToast({
+    duration: 0,
+    message: "Loading...",
+    forbidClick: true,
+  });
+  await getList();
+  await noticeFetch({
+    tab: 3,
+  });
+  await getMsgList(hooksState.messageList);
+  document.body.style.overflow = "auto";
+});
+
+const { user: userInfo }: any = useUserStore();
+
+const getMsgList = async (data: any) => {
+  showLoadingToast({
+    message: "Loading...",
+    forbidClick: true,
+    duration: 0,
+  });
+  state.messageList = data;
+
+  state.messageList.map((item: any, index: number) => {
+    if (item.lastMsg) {
+      nim.getUser({
+        account:
+          item.to ===
+          `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
+            ? item.lastMsg.from
+            : item.to,
+        done: (error: any, user: any) => getUserDone(error, user),
+      });
+    }
+  });
+
+  closeToast();
+};
+
+const getUserDone = (error: any, user: any) => {
+  console.log(error);
+  console.log(user);
+  console.log("获取用户资料" + (!error ? "成功" : "失败"));
+
+  if (!error) {
+    state.messageList = state.messageList.map((item: any, i: number) => {
+      const userId =
+        `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}` ===
+        item.to
+          ? item.lastMsg.from
+          : item.to;
+      if (userId === user?.account) {
+        item.avatar = user?.avatar;
+        item.nick = user?.nick;
+        if (user?.custom) {
+          item.custom = JSON?.parse(user?.custom);
+        }
+        if (item?.localCustom) {
+          try {
+            item.localCustom = JSON.parse(item.localCustom);
+          } catch (err) {
+            console.warn(err);
+          }
+        }
+      }
+      return item;
+    });
+  }
+};
+
+const { fetchData, data, loading } = callrecordlist();
+
+const getList = async () => {
+  await fetchData({
+    offset: state.offset,
+  });
+  if (data.value) {
+    state.offset += data.value.list.length;
+    state.finished = !data.value.hasMore;
+    state.callList = [...state.callList, ...data.value.list];
+  }
+};
+
+const handleClear = () => {
+  showLoadingToast({
+    duration: 0,
+    message: "Please wait...",
+    forbidClick: true,
+  });
+  nim.deleteAllLocalMsgs({
+    // id: idArr,
+    done: deleteLocalSessionDone,
+  });
+  function deleteLocalSessionDone(error: any, obj: any) {
+    console.log(error);
+    console.log(obj);
+    console.log("删除本地会话" + (!error ? "成功" : "失败"));
+    if (!error) {
+      closeToast();
+      state.messageList = [];
+    }
+  }
+};
+
+const handleChatRoom = (item: any) => {
+  // 假如存在自定义字段进去会话前要清0未读数;
+  if (item?.localCustom) {
+    nim.getLocalSession({
+      sessionId: item.id,
+      done: (error: any, session: any) => {
+        console.log(error);
+        console.log(session);
+        console.log("获取本地会话" + (!error ? "成功" : "失败"));
+        const obj = JSON.parse(session.localCustom);
+        obj.unread = 0;
+        nim.updateLocalSession({
+          localCustom: JSON.stringify(obj),
+          id: item.id,
+          done: (err: any, obj: any) => {
+            console.log(`output->错误`, err);
+            console.log(`output->更新的会话结构`, obj);
+          },
+        });
+        // 记录当前进入房间的id
+        const currentObj = {
+          userId: removeSubstrings(item.lastMsg.from),
+          time: new Date().getTime(),
+        };
+        localStorage.setItem("currentChatRoomObj", JSON.stringify(currentObj));
+      },
+    });
+  }
+
+  nim.resetSessionUnread(item.id);
+  router.push({
+    name: "ChatRoom",
+    query: {
+      user: JSON.stringify(item),
+      type: "formMsgList",
+    },
+  });
+};
+
+const handleClick = (index: number) => {
+  tabsList.forEach((item: any, i: number) => {
+    if (i === index) {
+      item.active = true;
+    } else {
+      item.active = false;
+    }
+  });
+  active.value = index;
+};
+</script>
+<style lang="scss" scoped>
+.bigBox {
+  .tabsBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    margin-bottom: 42px;
+    padding-left: 32px;
+    padding-right: 32px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background-color: #ffffff;
+    .tabsBoxLeft {
+      display: flex;
+      align-items: center;
+      .tabs {
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: bold;
+        font-size: 40px;
+        color: #aaaaaa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .activeTabs {
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: bold;
+        font-size: 40px;
+        color: #ff4d42;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .activeTabs:nth-child(2) {
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+      .tabs:nth-child(2) {
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+    .deleteImg {
+      width: 48px;
+      height: 48px;
+    }
+  }
+  .scollTop {
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
+    height: 140px;
+    padding-left: 28px;
+    padding-right: 28px;
+    gap: 14px;
+    flex-shrink: 0;
+    .userItem {
+      min-width: 101px;
+      max-width: 101px;
+      height: 101px;
+      border: 2px solid #ff4d42;
+      opacity: 0.7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      .userItemImg {
+        border-radius: 50%;
+        width: 92px;
+        height: 92px;
+      }
+    }
+    .userItemNone {
+      min-width: 101px;
+      max-width: 101px;
+      height: 101px;
+      opacity: 0.7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      .userItemImg {
+        border-radius: 50%;
+        width: 92px;
+        height: 92px;
+      }
+    }
+    .noticeTopImg {
+      min-width: 108px;
+      max-width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      margin-right: 32px;
+    }
+  }
+  .noticeTopBoxBig {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding-left: 32px;
+    padding-right: 32px;
+    width: 100%;
+    .noticeTopBox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 168px;
+      border-bottom: 2px solid #f5f5f5;
+      width: 100%;
+
+      .noticeTopImg {
+        min-width: 108px;
+        max-width: 108px;
+        height: 108px;
+        border-radius: 50%;
+        margin-right: 32px;
+      }
+      .noticeTopBoxRight {
+        width: 100%;
+        .noticeTopBoxRightTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 18px;
+          width: 100%;
+          .noticeTopBoxRightTopLeft {
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: bold;
+            font-size: 36px;
+            color: #1a1a1a;
+          }
+          .noticeTopBoxRightTopRight {
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            color: #8c8c8c;
+          }
+        }
+        .noticeTopBoxRightBottom {
+          width: 556px;
+          height: 34px;
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: 400;
+          font-size: 28px;
+          color: #404040;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .noticeTopBoxRightBottomFlex {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .noticeTopBoxRightBottomFlexFont {
+            width: 504px;
+            height: 34px;
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            color: #404040;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .nums {
+            // padding: 2px 15px 2px 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            background: #ff4d42;
+            border: 2px solid #ffffff;
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            color: #ffffff;
+          }
+          .numsPlus {
+            width: 64px;
+            height: 32px;
+            background: #ff4d42;
+            border-radius: 20px 20px 20px 20px;
+            border: 2px solid #ffffff;
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+    .eyeBig {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 168px;
+      border-bottom: 2px solid #f5f5f5;
+      width: 100%;
+      .eyesLeft {
+        display: flex;
+        align-items: center;
+        .eyesImg {
+          min-width: 104px;
+          height: 104px;
+        }
+        .eyesFont {
+          margin-left: 24px;
+          .eyesFontOne {
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: bold;
+            font-size: 34px;
+            color: #1a1a1a;
+            margin-bottom: 18px;
+          }
+          .eyesFontTwo {
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 30px;
+            color: #8c8c8c;
+          }
+        }
+      }
+      .eyesRight {
+        position: relative;
+        .eyesRightImg {
+          width: 158px;
+          height: 88px;
+        }
+        .dian {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 16px;
+          height: 16px;
+          background: #ea1c00;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  .callBigBox {
+    height: 168px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    padding-left: 32px;
+    padding-right: 32px;
+    .callBoxItem {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 168px;
+      border-bottom: 2px solid #f5f5f5;
+      width: 100%;
+      .callBoxItemLeft {
+        display: flex;
+        align-items: center;
+        .callBoxItemLeftImg {
+          border-radius: 50%;
+          min-width: 108px;
+          max-width: 108px;
+          height: 108px;
+          margin-right: 32px;
+        }
+        .callContent {
+          .callContentTop {
+            width: 260px;
+            height: 42px;
+            font-weight: bold;
+            font-size: 36px;
+            color: #1a1a1a;
+            font-family: "SF Pro Display", sans-serif;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin-bottom: 8px;
+          }
+          .callContentTime {
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            color: #00d88a;
+            margin-bottom: 8px;
+          }
+          .callContentBottom {
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            color: #8c8c8c;
+          }
+        }
+      }
+      .callBoxItemRight {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  }
+}
+</style>
