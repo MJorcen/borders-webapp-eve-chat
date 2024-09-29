@@ -63,35 +63,48 @@ const emits = defineEmits([
   "update:modalValue",
 ]);
 
-evenBus.on("updateonSessions", (data: any) => {
-  const res = data.map((item: any) => {
-    if (item?.localCustom) {
-      try {
-        item.localCustom = JSON.parse(item.localCustom);
-      } catch (err) {
-        console.warn(err);
+const { nim } = useImHook();
+
+const getLocalSessions = () => {
+  return new Promise((resolve, reject) => {
+    let arr: any = [];
+    nim?.getLocalSessions({
+      limit: 100,
+      done: getLocalSessionsDone,
+    });
+
+    function getLocalSessionsDone(error: any, obj: any) {
+      if (!error) {
+        arr = obj.sessions.map((item: any) => {
+          if (item?.localCustom) {
+            try {
+              item.localCustom = JSON.parse(item.localCustom);
+            } catch (err) {
+              console.warn(err);
+            }
+          }
+          return item;
+        });
+        resolve(arr);
       }
     }
-    return item;
   });
-  state.badge = sumUnreadAndLocalCustomUnread(res);
-  localStorage.setItem("badge", state.badge.toString());
+};
+
+evenBus.on("updateonSessions", (data: any) => {
+  getLocalSessions().then((res: any) => {
+    state.badge = sumUnreadAndLocalCustomUnread(res);
+  });
+  // localStorage.setItem("badge", state.badge.toString());
   // emits("update:modalValue", 23);
 });
 
 evenBus.on("updateSession", (data: any) => {
-  const res = data.map((item: any) => {
-    if (item?.localCustom) {
-      try {
-        item.localCustom = JSON.parse(item.localCustom);
-      } catch (err) {
-        console.warn(err);
-      }
-    }
-    return item;
+  getLocalSessions().then((res: any) => {
+    state.badge = sumUnreadAndLocalCustomUnread(res);
   });
-  state.badge = sumUnreadAndLocalCustomUnread(res);
-  localStorage.setItem("badge", state.badge.toString());
+
+  // localStorage.setItem("badge", state.badge.toString());
 });
 
 const sumUnreadAndLocalCustomUnread = (arr: any) => {
@@ -109,7 +122,6 @@ const sumUnreadAndLocalCustomUnread = (arr: any) => {
 
 const router = useRouter();
 
-// const { nim } = useImHook();
 // let nim: any;
 
 // evenBus.on("setFunc", (data: any) => {
@@ -118,28 +130,10 @@ const router = useRouter();
 
 onMounted(() => {
   const currentTab = getCurrentTab();
-  state.badge = localStorage.getItem("badge") || 0;
-
-  // nim?.getLocalSessions({
-  //   limit: 100,
-  //   done: getLocalSessionsDone,
-  // });
-
-  // function getLocalSessionsDone(error: any, obj: any) {
-  //   if (!error) {
-  //     state.msgList = obj.sessions.map((item: any) => {
-  //       if (item?.localCustom) {
-  //         try {
-  //           item.localCustom = JSON.parse(item.localCustom);
-  //         } catch (err) {
-  //           console.warn(err);
-  //         }
-  //       }
-  //       return item;
-  //     });
-  //   }
-  // }
-  // state.badge = sumUnreadAndLocalCustomUnread(state.msgList);
+  // state.badge = localStorage.getItem("badge") || 0;
+  getLocalSessions().then((res: any) => {
+    state.badge = sumUnreadAndLocalCustomUnread(res);
+  });
 
   emits("update:tabsCurrent", currentTab);
 
@@ -178,28 +172,11 @@ onMounted(() => {
 
 onActivated(() => {
   const currentTab = getCurrentTab();
-  state.badge = localStorage.getItem("badge") || 0;
+  // state.badge = localStorage.getItem("badge") || 0;
 
-  // nim.getLocalSessions({
-  //   limit: 100,
-  //   done: getLocalSessionsDone,
-  // });
-
-  // function getLocalSessionsDone(error: any, obj: any) {
-  //   if (!error) {
-  //     state.msgList = obj.sessions.map((item: any) => {
-  //       if (item?.localCustom) {
-  //         try {
-  //           item.localCustom = JSON.parse(item.localCustom);
-  //         } catch (err) {
-  //           console.warn(err);
-  //         }
-  //       }
-  //       return item;
-  //     });
-  //   }
-  // }
-  // state.badge = sumUnreadAndLocalCustomUnread(state.msgList);
+  getLocalSessions().then((res: any) => {
+    state.badge = sumUnreadAndLocalCustomUnread(res);
+  });
 
   emits("update:tabsCurrent", currentTab);
 

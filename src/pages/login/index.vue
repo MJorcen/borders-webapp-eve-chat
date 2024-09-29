@@ -87,6 +87,20 @@ const { setUser } = useUserStore();
 
 const { setUser: setUserDetail }: any = useUserDetailStore();
 
+let deviceId = "";
+
+onMounted(() => {
+  const deviceIdCookie = Cookies.get("deviceId");
+
+  if (!deviceIdCookie) {
+    deviceId = uuidv4();
+
+    Cookies.set("deviceId", deviceId, { expires: 365 });
+  } else {
+    deviceId = deviceIdCookie;
+  }
+});
+
 const {
   fetchData: uploadFetch,
   msg: uploadMsg,
@@ -151,18 +165,6 @@ const handleLogin = async () => {
     androidId: "123456",
   });
   if (activateSuccess.value) {
-    const deviceIdCookie = Cookies.get("deviceId");
-
-    let deviceId = "";
-
-    if (!deviceIdCookie) {
-      deviceId = uuidv4();
-
-      Cookies.set("deviceId", deviceId, { expires: 365 });
-    } else {
-      deviceId = deviceIdCookie;
-    }
-
     await fetchData({ deviceId: deviceId });
     if (success.value) {
       // localStorage.setItem("userInfo", JSON.stringify(data.value));

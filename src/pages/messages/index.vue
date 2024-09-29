@@ -264,6 +264,7 @@ evenBus.on("updateonSessions", (data: any) => {
   function getLocalSessionsDone(error: any, obj: any) {
     if (!error) {
       getMsgList(obj.sessions);
+      closeToast();
     }
   }
 });
@@ -277,6 +278,7 @@ evenBus.on("updateSession", (data: any) => {
   function getLocalSessionsDone(error: any, obj: any) {
     if (!error) {
       getMsgList(obj.sessions);
+      closeToast();
     }
   }
 });
