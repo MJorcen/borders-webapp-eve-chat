@@ -48,13 +48,17 @@ service.interceptors.request.use(
 
     const navigatorInfo = navigator.languages;
 
+    const preferredLanguage = navigator.language;
+
     if (userInfo) {
       config.headers.Authorization = `Bearer ${userInfo?.token}`;
     }
     const deviceId = Cookies.get("deviceId");
     config.headers["Eve-Payload"] = `deviceId=${deviceId}${
       import.meta.env.VITE_APP_EVE_PAYLOAD
-    }&lang=${navigatorInfo[1]}&locale=${navigatorInfo[0]}&region=${region}`;
+    }&lang=${preferredLanguage}&locale=${
+      navigatorInfo?.[0] || navigatorInfo?.[1]
+    }&region=${region}`;
     config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     return config;
   },
