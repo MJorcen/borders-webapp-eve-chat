@@ -144,7 +144,7 @@ const handleSubmit = async () => {
 </script>
 <style lang="scss" scoped>
 .titleOne {
-  padding-top: 50px;
+  padding-top: 100px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: 600;
   font-size: 32px;

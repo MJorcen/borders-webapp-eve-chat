@@ -108,18 +108,23 @@
               v-if="it.to !== roomUserId"
             ></van-image>
             <!-- 文字 -->
-            <div>
+            <!-- <div> -->
+            <div
+              :class="
+                it.to !== roomUserId
+                  ? 'userLeftBoxContent'
+                  : 'userRightBoxContent'
+              "
+              v-if="it.type === 'text'"
+            >
+              {{ it.text }}
               <div
-                :class="
-                  it.to !== roomUserId
-                    ? 'userLeftBoxContent'
-                    : 'userRightBoxContent'
+                style="
+                  position: absolute;
+                  bottom: -60px;
+                  width: 200px;
+                  left: -10px;
                 "
-                v-if="it.type === 'text'"
-              >
-                {{ it.text }}
-              </div>
-              <div
                 v-if="it.type === 'text' && it.to !== roomUserId"
                 class="flex items-center pb-[30px]"
                 @click="handleTranslate(it)"
@@ -131,6 +136,8 @@
                 <div class="text-[#FF4D42] text-[12px]">See translation</div>
               </div>
             </div>
+
+            <!-- </div> -->
             <!-- 文字 -->
 
             <!-- 礼物 -->
@@ -1191,7 +1198,11 @@ const handleGive = async (item: any) => {
       }
 
       .userLeftBoxContent {
+        position: relative;
+        // min-width: 100px;
         max-width: 494px;
+        // min-width: auto; /* 自动最小宽度 */
+        // max-width: none; /* 不设置最大宽度 */
         background: #ffffff;
         border-radius: 0px 32px 32px 32px;
         padding: 24px;
@@ -1200,7 +1211,9 @@ const handleGive = async (item: any) => {
         font-size: 28px;
         color: #1a1a1a;
         line-height: 33px;
-        margin-bottom: 32px;
+        // margin-bottom: 32px;
+
+        margin-bottom: 62px;
       }
       .yuan {
         margin-top: 30px;

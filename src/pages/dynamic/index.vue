@@ -82,12 +82,13 @@
               collapse-text="close"
             />
           </div>
-          <div class="transBox" @click="handleTranslate(item)">
-            <img class="transImg" src="./assets/icon_translate@2x.png" />
-            <div class="transFont">See translation</div>
+          <div class="transBox" >
+            <img @click="handleTranslate(item)" class="transImg" src="./assets/icon_translate@2x.png" />
+            <div @click="handleTranslate(item)" class="transFont">See translation</div>
           </div>
           <div class="imgFlexBox">
             <van-image
+              v-if="item.images?.[0]?.video !== 1"
               fit="cover"
               radius="8"
               class="photoImg"
@@ -102,6 +103,12 @@
               "
             >
             </van-image>
+            <video
+              v-else
+              class="videoClass"
+              :src="item.images?.[0]?.resourcePath"
+              controls
+            ></video>
           </div>
           <div class="bottomBox">
             <img
@@ -558,6 +565,7 @@ const getCountryImg = (item: any) => {
       display: flex;
       align-items: center;
       padding-left: 96px;
+      max-width: 350px;
       .transImg {
         width: 40px;
         height: 40px;
@@ -576,6 +584,11 @@ const getCountryImg = (item: any) => {
       padding-left: 96px;
       gap: 16px;
       .photoImg {
+        width: 172px;
+        height: 172px;
+        border-radius: 16px 16px 16px 16px;
+      }
+      .videoClass {
         width: 172px;
         height: 172px;
         border-radius: 16px 16px 16px 16px;
