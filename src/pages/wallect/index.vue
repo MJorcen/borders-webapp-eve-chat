@@ -109,7 +109,7 @@ import {
   rechargeV2pricesubmit,
   userwallet,
 } from "@/api/allApi";
-import { showLoadingToast, showToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
 
 const { fetchData, data } = rechargeV2priceList();
 
@@ -171,6 +171,7 @@ const handleSelect = async (item: any) => {
   if (submitSuccess.value) {
     state.payUrl = submitData.value.data.payInfo;
     state.showLink = true;
+    closeToast();
   } else {
     showToast(submitMsg.value);
   }

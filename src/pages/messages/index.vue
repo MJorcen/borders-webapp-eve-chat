@@ -325,6 +325,7 @@ const getMsgList = async (data: any) => {
       });
     }
   });
+  closeToast();
 };
 
 const getUserDone = (error: any, user: any) => {

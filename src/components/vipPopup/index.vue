@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from "vue";
 import { vippriceList, vipbuy } from "@/api/allApi";
-import { showLoadingToast, showToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
 import router from "@/router";
 
 interface Prop {
@@ -151,6 +151,7 @@ const handleSelect = async (item: any, index: number) => {
   if (buySuccess.value) {
     state.payUrl = buyData.value.data.payInfo;
     state.showLink = true;
+    closeToast();
     // emit("update:modelValue", false);
   } else {
     showToast(buyMsg.value);
