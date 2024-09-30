@@ -7,7 +7,7 @@ yarn
 yarn run build:test
 docker build . -t "$image"  -f deploy/docker/Dockerfile-run
 
-#docker stop eve-admin || true && docker rm eve-admin || true
+docker stop webapps-eve-chat-dev  || true && docker rm webapps-eve-chat-dev  || true
 docker run -d -p 13000:80  --name webapps-eve-chat-dev  "$image"
 
 
