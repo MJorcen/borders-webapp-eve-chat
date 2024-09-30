@@ -3,7 +3,7 @@
 BUILD_ID=dev
 image=ccr.ccs.tencentyun.com/borders-webapps/eve-chat:${BUILD_ID}
 
-docker build . -t "$image"  -f deploy/docker/Dockerfile-dev
+docker build . -t "$image"  -f deploy/docker/Dockerfile-run
 
 
 #docker stop eve-admin || true && docker rm eve-admin || true
