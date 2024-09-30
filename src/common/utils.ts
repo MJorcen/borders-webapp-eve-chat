@@ -136,3 +136,19 @@ export const formatSecondsToTime = (seconds: number) => {
 
   return `${pad(hours)}:${pad(minutes)}:${pad(remainingSeconds)}`;
 };
+
+/**
+ *
+ * @returns 返回链接的查询参数对象
+ */
+
+export const getCurrentQueryParams = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryParamsObject: any = {};
+
+  urlParams.forEach((value, key) => {
+    queryParamsObject[key] = value;
+  });
+
+  return queryParamsObject;
+};

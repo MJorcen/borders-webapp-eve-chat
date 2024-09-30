@@ -17,11 +17,16 @@
       >
         <van-swipe-item v-for="(rowItems, rowIndex) in data?.images">
           <van-image
-            fit="fill"
+            fit="cover"
             :src="rowItems?.image"
             height="600"
             width="100%"
             lazy-load
+            @click.stop="
+              () => {
+                showImagePreview([rowItems.image]);
+              }
+            "
           ></van-image>
         </van-swipe-item>
       </van-swipe>
@@ -44,6 +49,11 @@
           :src="data?.user?.avatar"
           class="imgClass"
           lazy-load
+          @click.stop="
+            () => {
+              showImagePreview([data?.user?.avatar]);
+            }
+          "
         ></van-image>
         <div
           v-if="data?.user?.liked === 0"

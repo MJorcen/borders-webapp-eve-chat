@@ -255,32 +255,31 @@ const router = useRouter();
 
 const { nim, hooksState } = useImHook();
 
-evenBus.on("updateonSessions", (data: any) => {
-  nim?.getLocalSessions({
-    limit: 100,
-    done: getLocalSessionsDone,
-  });
+const getLocalSessions = () => {
+  return new Promise((resolve, reject) => {
+    nim?.getLocalSessions({
+      limit: 100,
+      done: getLocalSessionsDone,
+    });
 
-  function getLocalSessionsDone(error: any, obj: any) {
-    if (!error) {
-      getMsgList(obj.sessions);
-      closeToast();
+    function getLocalSessionsDone(error: any, obj: any) {
+      if (!error) {
+        resolve(obj.sessions);
+      }
     }
-  }
+  });
+};
+
+evenBus.on("updateonSessions", (data: any) => {
+  getLocalSessions().then((sessions: any) => {
+    getMsgList(sessions);
+  });
 });
 
 evenBus.on("updateSession", (data: any) => {
-  nim?.getLocalSessions({
-    limit: 100,
-    done: getLocalSessionsDone,
+  getLocalSessions().then((sessions: any) => {
+    getMsgList(sessions);
   });
-
-  function getLocalSessionsDone(error: any, obj: any) {
-    if (!error) {
-      getMsgList(obj.sessions);
-      closeToast();
-    }
-  }
 });
 
 const tabsList: any = reactive([
@@ -291,11 +290,6 @@ const tabsList: any = reactive([
 const { fetchData: noticeFetch, data: noticeData } = notiflist();
 
 onMounted(async () => {
-  showLoadingToast({
-    duration: 0,
-    message: "Loading...",
-    forbidClick: true,
-  });
   await getList();
   await noticeFetch({
     tab: 3,
@@ -305,17 +299,14 @@ onMounted(async () => {
 });
 
 onActivated(() => {
-  nim?.getLocalSessions({
-    limit: 100,
-    done: getLocalSessionsDone,
+  showLoadingToast({
+    duration: 0,
+    message: "Loading...",
+    forbidClick: true,
   });
-
-  function getLocalSessionsDone(error: any, obj: any) {
-    if (!error) {
-      getMsgList(obj.sessions);
-      closeToast();
-    }
-  }
+  getLocalSessions().then((sessions: any) => {
+    getMsgList(sessions);
+  });
 });
 
 const { user: userInfo }: any = useUserStore();

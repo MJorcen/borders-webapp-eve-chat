@@ -127,18 +127,6 @@ const {
 
 const router = useRouter();
 
-// const { connectWebSocket, sendMessage } = useWebSocketHeartbeat();
-
-const dataObj = {
-  body: {
-    path: "active/on",
-    code: 0,
-  },
-  ts: new Date().getTime(),
-  tp: 10,
-  id: generateRandomString(10),
-};
-
 // 登录
 const handleLogin = async () => {
   showLoadingToast({
@@ -147,9 +135,9 @@ const handleLogin = async () => {
     duration: 0,
   });
 
-  // localStorage.clear();
-  localStorage.removeItem("userInfo");
-  localStorage.removeItem("user");
+  localStorage.clear();
+  // localStorage.removeItem("userInfo");
+  // localStorage.removeItem("user");
 
   sessionStorage.clear();
   if (state.nickname === "" || fileObj.value.content === "") {

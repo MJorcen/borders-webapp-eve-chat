@@ -31,7 +31,7 @@ import { useZego } from "@/hook/useZego";
 import { useUserStore } from "@/stores/user";
 import CallDetail from "@/components/callDetail/index.vue";
 import CallFreeDialog from "@/components/callFreeDialog/index.vue";
-import { generateRandomString } from "./common/utils";
+import { generateRandomString, getCurrentQueryParams } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
 
@@ -195,6 +195,8 @@ evenBus.on("onSendMsg", (data: any) => {
 });
 
 onMounted(() => {
+  const res = getCurrentQueryParams();
+
   // 使用 fetch API 请求一个公开的 IP 地理位置服务
   fetch("https://ipapi.co/json/")
     .then(function (response) {

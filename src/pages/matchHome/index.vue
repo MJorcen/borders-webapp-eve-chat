@@ -296,7 +296,8 @@ const handleStop = async () => {
     background: #85001b;
     border-radius: 40px 40px 0px 0px;
     position: fixed;
-    bottom: 95px;
+    // bottom: 95px;
+    bottom: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
