@@ -1,0 +1,18 @@
+FROM --platform=linux/amd64 ccr.ccs.tencentyun.com/borders/ant-builder:1 as builder
+
+ADD . /webapp/
+
+WORKDIR /webapp
+
+#RUN npm install -g nrm && nrm use taobao  &&
+RUN npm install
+RUN npm run build:alpha
+
+EXPOSE 8000
+ENTRYPOINT ["npm" ,"run","start"]
+
+# ng
+FROM --platform=linux/amd64 nginx
+COPY --from=builder /webapp/dist/ /usr/share/nginx/html
+
+

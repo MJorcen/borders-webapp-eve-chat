@@ -1,0 +1,6 @@
+FROM --platform=linux/amd64 ccr.ccs.tencentyun.com/borders-webapps/nginx
+COPY ./dist/ /usr/share/nginx/html
+COPY ./deploy/docker/defualt.conf /etc/nginx/conf.d/default.conf
+
+# docker build .  -f deploy/docker/Dockerfile-run -t ccr.ccs.tencentyun.com/borders-webapps/app-agency-admin:2
+

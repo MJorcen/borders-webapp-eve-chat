@@ -1,0 +1,12 @@
+#FROM  --platform=linux/amd64 node:21.7.1
+FROM --platform=linux/amd64 ccr.ccs.tencentyun.com/borders/ant-builder:1
+
+ADD package.json /webapp/
+
+WORKDIR /webapp
+
+RUN npm install -g nrm && nrm use taobao && npm install
+
+EXPOSE 8000
+
+#  docker build .  -t ccr.ccs.tencentyun.com/borders/ant-builder:1 -f deploy/docker/Dockerfile-builder

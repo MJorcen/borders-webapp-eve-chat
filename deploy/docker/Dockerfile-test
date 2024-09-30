@@ -1,0 +1,12 @@
+FROM node:20 as builder
+WORKDIR /funni_admin
+COPY ../../package.json package-lock.json ./
+RUN npm ci
+COPY ../.. .
+RUN npm install && npm run build:test
+
+FROM node:20
+WORKDIR /funni_admin
+COPY --from=builder ../../node_modules node_modules
+COPY --from=builder dist dist
+CMD ["npm", "start"]
