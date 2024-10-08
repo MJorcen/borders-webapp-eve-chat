@@ -28,6 +28,9 @@
           >
             Follow
           </div>
+          <div v-else class="rightBtnUn" @click.stop="handleCancelFollow">
+            UnFollow
+          </div>
           <!-- <img src="./assets/列表图标@2x.png" class="w-[24px] h-[24px]" /> -->
         </div>
       </template>
@@ -461,7 +464,7 @@ import "recorder-core/src/engine/mp3-engine";
 import Dialog from "./compoents/Dialog.vue";
 import SvgaDialog from "@/components/svgaDialog/index.vue";
 import giftPopup from "@/components/giftPopup/index.vue";
-import { giftsend, datatranslate } from "@/api/allApi";
+import { giftsend, datatranslate, userunfollow } from "@/api/allApi";
 import { handleGo } from "@/common/fetchCommon";
 
 const preFix = import.meta.env.VITE_APP_ACCOUNT_PREFIX;
@@ -978,6 +981,29 @@ const handleTranslate = async (item: any) => {
   }
 };
 
+const {
+  fetchData: UnFollowFetch,
+  msg: UnFollowMsg,
+  success: UnFollowSuccess,
+} = userunfollow();
+
+const handleCancelFollow = async () => {
+  showLoadingToast({
+    duration: 0,
+    message: "Please wait...",
+    forbidClick: true,
+  });
+  await UnFollowFetch({
+    toUserId: data.value.user.id,
+  });
+  if (UnFollowSuccess.value) {
+    showToast("Success");
+    getUserData();
+  } else {
+    showToast(UnFollowMsg.value);
+  }
+};
+
 const regions = [
   "bgd",
   "bra",
@@ -1040,6 +1066,19 @@ const handleGive = async (item: any) => {
 <style lang="scss" scoped>
 .rightBtn {
   width: 116px;
+  height: 48px;
+  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  border-radius: 24px 24px 24px 24px;
+  font-family: "SF Pro Display", sans-serif;
+  font-weight: bold;
+  font-size: 28px;
+  color: #ffffff;
+  text-align: center;
+  line-height: 48px;
+  margin-right: 20px;
+}
+.rightBtnUn {
+  width: 150px;
   height: 48px;
   background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
   border-radius: 24px 24px 24px 24px;

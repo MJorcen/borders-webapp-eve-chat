@@ -62,6 +62,9 @@
         >
           Follow
         </div>
+        <div v-else @click.stop="handleCancelFollow" class="followBoxUn">
+          UnFollow
+        </div>
       </div>
       <div class="nameBox">
         <div class="name">{{ data?.user?.nickname }}</div>
@@ -212,6 +215,7 @@ import {
   userfollow,
   userreceiveStats,
   postuser,
+  userunfollow,
 } from "@/api/allApi";
 import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
@@ -272,6 +276,28 @@ const handleFollow = async () => {
   }
 };
 
+const {
+  fetchData: UnFollowFetch,
+  msg: UnFollowMsg,
+  success: UnFollowSuccess,
+} = userunfollow();
+
+const handleCancelFollow = async () => {
+  showLoadingToast({
+    duration: 0,
+    message: "Please wait...",
+    forbidClick: true,
+  });
+  await UnFollowFetch({
+    toUserId: data.value.user.id,
+  });
+  if (UnFollowSuccess.value) {
+    showToast("Success");
+    getUserDetail();
+  } else {
+    showToast(UnFollowMsg.value);
+  }
+};
 const regions = [
   "bgd",
   "bra",
@@ -393,6 +419,21 @@ const onChange = (index: number) => {
         top: 96px;
         right: 40px;
         width: 116px;
+        height: 48px;
+        background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+        border-radius: 24px 24px 24px 24px;
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: bold;
+        font-size: 28px;
+        color: #ffffff;
+        line-height: 48px;
+        text-align: center;
+      }
+      .followBoxUn {
+        position: absolute;
+        top: 96px;
+        right: 40px;
+        width: 140px;
         height: 48px;
         background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 24px 24px 24px 24px;

@@ -424,3 +424,11 @@ export const userconfig = () => {
     method: "get",
   });
 };
+
+// 删除关注
+export const userunfollow = () => {
+  return useRequest({
+    url: "/user/follow",
+    method: "delete",
+  });
+};
