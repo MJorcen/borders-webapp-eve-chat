@@ -101,11 +101,12 @@ const { userDetail: user }: any = useUserDetailStore();
 const { fetchData: configFetch, data: configData } = vipconfig();
 
 onMounted(async () => {
-  getList();
   await configFetch();
   // nextTick(() => {
   if (user.user.vipLevel === 0) {
     DialogRef.value.state.showModal = true;
+  } else {
+    getList();
   }
   // })
 });
