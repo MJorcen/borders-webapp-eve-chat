@@ -49,6 +49,9 @@
       <div class="bottomFixedBoxBtn" @click="handleStop">Stop match</div>
     </div>
   </div>
+  <audio style="display: none" controls loop ref="audioMatchRef">
+    <source src="./assets/match.mp3" />
+  </audio>
   <Tabbar></Tabbar>
 </template>
 
@@ -66,6 +69,8 @@ const route = useRoute();
 const state = reactive({
   showBottomFixedBox: false,
 });
+
+const audioMatchRef: any = ref(null);
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -101,6 +106,7 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
+  audioMatchRef.value.play();
   state.showBottomFixedBox = true;
   await fetchMatchStart({
     type,
@@ -118,12 +124,14 @@ const handleMatch = async (type: number) => {
 
 evenBus.on("matchDone", () => {
   state.showBottomFixedBox = false;
+  audioMatchRef.value.pause();
 });
 
 const handleStop = async () => {
   await fetchMatchStop();
   if (matchStopSuccess.value) {
     state.showBottomFixedBox = false;
+    audioMatchRef.value.pause();
   } else {
     showToast(matchStopMsg.value);
   }
