@@ -324,6 +324,7 @@ const handleCallHangUp = async () => {
     zg.logoutRoom();
     emit("update:modelValue", false);
     closeToast();
+    localStorage.setItem("isCall", "false");
   } else {
     showToast(handupMsg.value);
   }
@@ -358,6 +359,7 @@ const handleCallPickUp = async () => {
     const token = callpickUpData.value.token;
 
     handleLoginRoom(roomID, token, userID, userName);
+    closeToast();
   } else {
     showToast(callpickUpMsg.value);
   }
@@ -603,7 +605,7 @@ defineExpose({
   justify-content: center;
   align-items: flex-end; */
   transition: all 0.3s ease;
-  z-index: 40;
+  z-index: 2240;
   // position: relative;
 }
 

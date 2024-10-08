@@ -589,8 +589,8 @@ const getCountryImg = (item: any) => {
         border-radius: 16px 16px 16px 16px;
       }
       .videoClass {
-        width: 172px;
-        height: 172px;
+        width: 272px;
+        height: 272px;
         border-radius: 16px 16px 16px 16px;
       }
     }

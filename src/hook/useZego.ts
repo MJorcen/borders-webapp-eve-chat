@@ -83,9 +83,9 @@ export const useZego = () => {
         { userUpdate: true }
       ).then((result) => {
         if (result == true) {
+          localStorage.setItem("isCall", "true");
           resolve(result);
         } else {
-          debugger;
           reject(result);
         }
       });

@@ -135,6 +135,7 @@ const handleCallPickUp = async () => {
   if (pickUpSuccess.value) {
     state.showVideo = true;
     showToast("Success");
+    emit("handleCallPickUp");
   } else {
     showToast(pickUpMsg.value);
   }
@@ -158,6 +159,7 @@ const handleCallHangUp = async () => {
   if (hangUpSuccess.value) {
     showToast("Success");
     emit("update:modelValue", false);
+    emit("handleCallHangUp");
   } else {
     emit("update:modelValue", false);
     showToast(hangUpMsg.value);
@@ -168,7 +170,11 @@ const onVideoEnded = () => {
   emit("update:modelValue", false);
 };
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits([
+  "update:modelValue",
+  "handleCallHangUp",
+  "handleCallPickUp",
+]);
 </script>
 <style lang="scss" scoped>
 .popup {

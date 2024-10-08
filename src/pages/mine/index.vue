@@ -69,7 +69,11 @@
       <div class="coinsBoxRight">{{ walletData?.wallet?.gold }}</div>
     </div>
 
-    <div class="vipBox" @click="state.showVipPopup = true">
+    <div
+      class="vipBox"
+      v-if="data?.user?.vipLevel === 0"
+      @click="state.showVipPopup = true"
+    >
       <div class="vipBoxLeft">
         Become <span style="color: #ffec40">VIP</span>
       </div>

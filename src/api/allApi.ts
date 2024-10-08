@@ -416,3 +416,11 @@ export const matchstop = () => {
     method: "post",
   });
 };
+
+// 获取用户配置
+export const userconfig = () => {
+  return useRequest({
+    url: "/user/config",
+    method: "get",
+  });
+};

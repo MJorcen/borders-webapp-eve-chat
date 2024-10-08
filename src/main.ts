@@ -24,6 +24,8 @@ if (import.meta.env.NODE_ENV !== "prod") {
   new Vconsole();
 }
 
+// 刷新页面则重置接听状态
+localStorage.setItem("isCall", "false");
 
 const app = createApp(App);
 

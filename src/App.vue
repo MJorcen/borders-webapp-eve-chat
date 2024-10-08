@@ -19,12 +19,18 @@
       <CallFreeDialog
         :wsData="state.wsData"
         v-model="state.showFreeDialog"
+        @handleCallHangUp="audioRef.muted = true"
+        @handleCallPickUp="audioRef.muted = true"
       ></CallFreeDialog>
     </div>
   </div>
+
+  <audio style="display: none" controls loop muted ref="audioRef">
+    <source src="./assets/call.mp3" />
+  </audio>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref } from "vue";
 import CallDialog from "@/components/callDialog/index.vue";
 import evenBus from "@/common/evenBus";
 import { useZego } from "@/hook/useZego";
@@ -45,13 +51,28 @@ const state = reactive({
 
 const { zg } = useZego();
 
+const audioRef = ref<any>(null);
+
 const showCallDialog = ref(false);
 
 const callDialogRef = ref<any>(null);
 
+document.addEventListener("click", () => {
+  audioRef.value.play();
+});
+
 evenBus.on("inviteCall", (data: any) => {
   // 被呼叫时
   if (data[0].body.type === "call/dial") {
+    // 判断是否已在通话中
+    const isCall = localStorage.getItem("isCall");
+    if (isCall === "true") {
+      return;
+    }
+
+    // audioRef.value.play();
+    audioRef.value.muted = false;
+
     evenBus.emit("byeCall");
     // callDialogRef.value.state.isReactive = false;
     showCallDialog.value = true;
@@ -65,14 +86,20 @@ evenBus.on("inviteCall", (data: any) => {
     //匹配接听后传值过去隐藏停止匹配按钮
     evenBus.emit("matchDone");
   }
+  //开始收费的通知
+  if (data[0].body.type === "call/data") {
+    audioRef.value.muted = true;
+  }
   // 免费通话
   if (data[0].body.type === "freeCall/dial") {
     state.wsData = data[0].body.data;
     state.showFreeDialog = true;
+    audioRef.value.muted = false;
   }
 
   if (data[0].body.type === "call/hangUp") {
     zg.logoutRoom(data[0].body.data.call.id);
+    audioRef.value.muted = true;
     showCallDialog.value = false;
 
     if (data[0].body.data.call.duration > 0) {

@@ -207,6 +207,15 @@
     </div> -->
     <div class="w-[100%] h-[100px]"></div>
   </div>
+  <!-- 签到弹窗 -->
+  <SignPopup v-model="showSignPopup"></SignPopup>
+  <!-- 首冲活动VIP弹窗 -->
+  <FirstChargeVipPopup
+    :money="configDataTwo?.monthlyCheckInGoldValue"
+    v-model="showChargePopup"
+    @handleOpen="state.showVipPopup = true"
+  ></FirstChargeVipPopup>
+  <VipPopup :vipConfg="configDataTwo" v-model="state.showVipPopup"></VipPopup>
   <Tabbar></Tabbar>
 </template>
 
@@ -214,12 +223,23 @@
 import { ref, reactive, onMounted, onActivated } from "vue";
 import Empty from "@/components/Empty.vue";
 import Tabbar from "@/components/Tabbar/index.vue";
-import { userrecommendList, userfollowfollowingList } from "@/api/allApi";
+import {
+  userrecommendList,
+  userfollowfollowingList,
+  userconfig,
+  vipconfig,
+} from "@/api/allApi";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
 import { onDeactivated } from "vue";
+import SignPopup from "@/components/signPopup/index.vue";
+import FirstChargeVipPopup from "@/components/firstChargeVipPopup/index.vue";
+import VipPopup from "@/components/vipPopup/index.vue";
 
 const active = ref(0);
+
+const showSignPopup = ref(false);
+const showChargePopup = ref(false);
 
 const state = reactive<any>({
   offset: 0,
@@ -228,6 +248,7 @@ const state = reactive<any>({
   finishedTwo: false,
   offsetTwo: 0,
   followList: [],
+  showVipPopup: false,
 });
 
 const tabsList: any = reactive([
@@ -238,13 +259,17 @@ const tabsList: any = reactive([
 
 const router = useRouter();
 
+const { fetchData: configFetch, data: configData } = userconfig();
+
+const { fetchData: configFetchTwo, data: configDataTwo } = vipconfig();
+
 const scrollY = ref<any>(window.pageYOffset);
 
 const handleScroll = () => {
   scrollY.value = window.pageYOffset;
 };
 
-onActivated(() => {
+onActivated(async () => {
   document.body.style.overflow = "auto";
   window.addEventListener("scroll", handleScroll);
   const scrollY = localStorage.getItem("hostListScroll") || 0;
@@ -252,6 +277,14 @@ onActivated(() => {
     top: scrollY,
     behavior: "instant",
   });
+  await configFetch();
+  await configFetchTwo();
+  if (configData.value.canVipCheckIn) {
+    showSignPopup.value = true;
+  }
+  if (configData.value.showFirstVipPrompt) {
+    showChargePopup.value = true;
+  }
 });
 
 onDeactivated(() => {
