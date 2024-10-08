@@ -276,6 +276,9 @@ const handleChange = (it: any, index: number) => {
 };
 </script>
 <style lang="scss" scoped>
+.van-tabbar {
+  height: 100px !important;
+}
 .imgClass {
   width: 72px;
   height: 72px;

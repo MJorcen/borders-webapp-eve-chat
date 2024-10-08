@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import eventBus from "@/common/evenBus";
 
 // 心跳间隔时间（单位：毫秒）
@@ -20,8 +20,6 @@ const useWebSocketHeartbeat = () => {
 
   // 连接WebSocket服务器
   const connectWebSocket = () => {
-    const wsMsgArr = ref<any[]>([]);
-
     let userInfo: any;
     try {
       const info = localStorage.getItem("userInfo");
@@ -86,6 +84,15 @@ const useWebSocketHeartbeat = () => {
       console.error("WebSocket is not supported by your browser.");
     }
   };
+
+  watch(
+    () => ws.value,
+    (newVal) => {
+      if (newVal.readyState === 3) {
+        connectWebSocket();
+      }
+    }
+  );
 
   // 尝试重连
   const attemptReconnect = () => {
