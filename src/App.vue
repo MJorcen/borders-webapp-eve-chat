@@ -41,6 +41,7 @@ import { userDetail } from "@/api/allApi";
 import { generateRandomString, getCurrentQueryParams } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
+import screenfull from "screenfull";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -61,7 +62,8 @@ const showCallDialog = ref(false);
 const callDialogRef = ref<any>(null);
 
 document.addEventListener("click", () => {
-  audioRef.value.play();
+  // screenfull.request();
+  audioRef?.value?.play();
 });
 
 evenBus.on("inviteCall", async (data: any) => {
