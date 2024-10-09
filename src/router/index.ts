@@ -26,6 +26,15 @@ router.beforeEach((to, from: any) => {
     if (ws?.value?.readyState === 3) {
       connectWebSocket();
     }
+    // 存在用户信息的时候不需要去登录页面
+    if (userInfo && to.name === "Login") {
+      return {
+        name: "HostList",
+        query: {
+          redirect: to.fullPath,
+        },
+      };
+    }
     return true;
   }
 });
