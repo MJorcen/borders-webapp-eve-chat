@@ -122,6 +122,7 @@ export default defineConfig(({ command, mode }) => {
       hmr: true,
     },
     build: {
+      base: "./",
       // sourcemap: isDevEnv(mode),
       rollupOptions: {
         output: {

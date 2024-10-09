@@ -678,6 +678,7 @@ const afterRead = async (file: any) => {
     type: "image",
     fileInput: "upload-files",
     fastPass: `{"w":200,"h":110,"md5":${md532Str}}`,
+    env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
     beginupload: function (upload: any) {
       // - 如果开发者传入 fileInput, 在此回调之前不能修改 fileInput
       // - 在此回调之后可以取消图片上传, 此回调会接收一个参数 `upload`, 调用 `upload.abort();` 来取消文件上传
@@ -743,6 +744,7 @@ const handleSend = async () => {
     scene: "p2p",
     to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
     text: state.inputText,
+    env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
     done: sendMsgDone,
   });
 };
@@ -909,6 +911,7 @@ function stopRecording() {
       to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
       type: "audio",
       blob: blob,
+      env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
       beginupload: function (upload: any) {
         // - 如果开发者传入 fileInput, 在此回调之前不能修改 fileInput
         // - 在此回调之后可以取消图片上传, 此回调会接收一个参数 `upload`, 调用 `upload.abort();` 来取消文件上传

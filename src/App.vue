@@ -231,20 +231,6 @@ evenBus.on("onSendMsg", (data: any) => {
 onMounted(() => {
   const res = getCurrentQueryParams();
 
-  // 使用 fetch API 请求一个公开的 IP 地理位置服务
-  fetch("https://ipapi.co/json/")
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log(data.country_code_iso3); // 输出国家代码，如 'USA'
-      console.log(data.country_calling_code); // 输出国家拨号代码，如 '1'
-      console.log(data.country_name); // 输出国家名称，如 'United States'
-      localStorage.setItem("region", data.country_code_iso3);
-    })
-    .catch(function (error) {
-      console.log("Error fetching API: ", error);
-    });
   // 切换语言 仅供测试使用
   (window as any)?.translate?.changeLanguage("english");
 });
