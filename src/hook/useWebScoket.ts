@@ -13,7 +13,7 @@ type HeartbeatMessage = {
 };
 
 const useWebSocketHeartbeat = () => {
-  const ws = ref<WebSocket | null>(null);
+  const ws = ref<WebSocket | null | any>(null);
   let heartbeatTimer: NodeJS.Timeout | null = null;
   let reconnectTimer: NodeJS.Timeout | null = null;
   let reconnectDelay = INITIAL_RECONNECT_DELAY;
@@ -85,14 +85,14 @@ const useWebSocketHeartbeat = () => {
     }
   };
 
-  watch(
-    () => ws.value,
-    (newVal) => {
-      if (newVal.readyState === 3) {
-        connectWebSocket();
-      }
-    }
-  );
+  // watch(
+  //   () => ws.value,
+  //   (newVal) => {
+  //     if (newVal.readyState === 3) {
+  //       connectWebSocket();
+  //     }
+  //   }
+  // );
 
   // 尝试重连
   const attemptReconnect = () => {

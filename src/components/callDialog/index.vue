@@ -608,7 +608,7 @@ defineExpose({
   justify-content: center;
   align-items: flex-end; */
   transition: all 0.3s ease;
-  z-index: 2240;
+  z-index: 40;
   // position: relative;
 }
 
