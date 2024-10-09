@@ -34,14 +34,17 @@ import { nextTick, onMounted, reactive, ref } from "vue";
 import CallDialog from "@/components/callDialog/index.vue";
 import evenBus from "@/common/evenBus";
 import { useZego } from "@/hook/useZego";
-import { useUserStore } from "@/stores/user";
+import { useUserDetailStore } from "@/stores/userDetail";
 import CallDetail from "@/components/callDetail/index.vue";
 import CallFreeDialog from "@/components/callFreeDialog/index.vue";
+import { userDetail } from "@/api/allApi";
 import { generateRandomString, getCurrentQueryParams } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
 
-const { user }: any = useUserStore();
+const { setUser, user }: any = useUserDetailStore();
+
+const { fetchData, data } = userDetail();
 
 const state = reactive({
   wsData: {},
@@ -61,7 +64,7 @@ document.addEventListener("click", () => {
   audioRef.value.play();
 });
 
-evenBus.on("inviteCall", (data: any) => {
+evenBus.on("inviteCall", async (data: any) => {
   // 被呼叫时
   if (data[0].body.type === "call/dial") {
     // 判断是否已在通话中
@@ -105,6 +108,10 @@ evenBus.on("inviteCall", (data: any) => {
     if (data[0].body.data.call.duration > 0) {
       state.showCallDetail = true;
     }
+  }
+  if (data[0].body.type === "payment/success") {
+    await fetchData();
+    setUser(data.value);
   }
 });
 

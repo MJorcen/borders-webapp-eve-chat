@@ -219,7 +219,7 @@ import {
 } from "@/api/allApi";
 import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
-import { useUserStore } from "@/stores/user";
+import { useUserDetailStore } from "@/stores/userDetail";
 import { handleGo } from "@/common/fetchCommon";
 
 onMounted(() => {
@@ -251,7 +251,7 @@ const getReciveGifs = async () => {
   await reciveFetch({ userId: route.query.id?.toString() });
 };
 
-const { user }: any = useUserStore();
+const { userDetail: user  }: any = useUserDetailStore();
 
 const {
   fetchData: followFetch,
