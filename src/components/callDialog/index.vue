@@ -53,15 +53,18 @@
                 </div>
                 <div class="nameBoxBottom">
                   <img src="./assets/coin_300@2x.png" class="goldIcon" alt="" />
-                  <div
+                  <div class="goldNum" >
+                    {{ props?.wsData?.call?.goldPrice }}/min
+                  </div> 
+                  <!-- <div
                     class="goldNum"
-                    v-if="props?.wsData?.fromUser?.id !== user?.user?.id"
+                    v-if="props?.wsData?.fromUser?.id === user?.user?.id"
                   >
                     {{ props?.wsData?.fromUser?.videoCallPrice }}/min
                   </div>
                   <div class="goldNum" v-else>
                     {{ props?.wsData?.toUser?.videoCallPrice }}/min
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
