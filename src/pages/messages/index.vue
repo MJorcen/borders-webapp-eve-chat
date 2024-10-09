@@ -223,6 +223,21 @@
 
     <div class="w-[100%] h-[100px]"></div>
   </div>
+
+  <!-- <van-floating-bubble
+    axis="xy"
+    icon="chat"
+    magnetic="x"
+    v-model:offset="offsetPover"
+    style="width: 85px; height: 84px; background-color: rgba(255, 255, 255, 0)"
+  >
+    <template #default>
+      <div>
+        <img src="./assets/xuanfu.png" class="w-[60px] h-[50px]" />
+        <div class="freeFont">Free</div>
+      </div>
+    </template>
+  </van-floating-bubble> -->
   <Tabbar></Tabbar>
 </template>
 
@@ -247,6 +262,11 @@ const state = reactive<any>({
   callList: [],
   offset: 0,
   finished: true,
+});
+
+const offsetPover = ref({
+  x: -138,
+  y: 500,
 });
 
 const active = ref(0);
@@ -752,5 +772,18 @@ const handleClick = (index: number) => {
       }
     }
   }
+}
+.freeFont {
+  width: 120px;
+  height: 43px;
+  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  border-radius: 90px 90px 90px 90px;
+  border: 3px solid #f7ff5a;
+  font-family: "SF Pro Display", sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+  color: #ffffff;
+  line-height: 43px;
+  text-align: center;
 }
 </style>

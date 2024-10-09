@@ -112,6 +112,7 @@
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
     </div>
+    <a :href="state.href">跳转</a>
     <div class="w-[100%] h-[100px]"></div>
   </div>
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
@@ -130,10 +131,6 @@ import { showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
 
-const state = reactive({
-  showVipPopup: false,
-});
-
 const router = useRouter();
 
 const { fetchData, data } = userDetail();
@@ -149,6 +146,11 @@ onMounted(() => {
   getUserDetail();
 });
 
+const state = reactive({
+  showVipPopup: false,
+  href: "",
+});
+
 // onActivated(() => {
 //   getUserDetail();
 // });
@@ -160,6 +162,7 @@ const getUserDetail = async () => {
   await wollectFetch();
   await configFetch();
   setUser(data.value);
+  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&uid=${data?.value?.user?.id}`;
 };
 
 const handleSign = async () => {
