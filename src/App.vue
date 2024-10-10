@@ -41,7 +41,7 @@ import { userDetail } from "@/api/allApi";
 import { generateRandomString, getCurrentQueryParams } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
-import screenfull from "screenfull";
+// import screenfull from "screenfull";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -52,8 +52,6 @@ const state = reactive({
   showCallDetail: false,
   showFreeDialog: false,
 });
-
-const { zg } = useZego();
 
 const audioRef = ref<any>(null);
 
@@ -103,6 +101,7 @@ evenBus.on("inviteCall", async (data: any) => {
   }
 
   if (data[0].body.type === "call/hangUp") {
+    const { zg } = useZego();
     zg.logoutRoom(data[0].body.data.call.id);
     audioRef.value.muted = true;
     showCallDialog.value = false;

@@ -327,6 +327,7 @@ onActivated(() => {
   getLocalSessions().then((sessions: any) => {
     getMsgList(sessions);
   });
+  document.body.style.overflow = "auto";
 });
 
 const { user: userInfo }: any = useUserStore();

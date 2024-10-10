@@ -1,6 +1,14 @@
 const routes: any = [
   {
     path: "/",
+    name: "HostList",
+    meta: {
+      title: "",
+    },
+    component: async () => await import("@/pages/hostList/index.vue"),
+  },
+  {
+    path: "/login",
     name: "Login",
     meta: {
       title: "",
@@ -23,14 +31,7 @@ const routes: any = [
     },
     component: async () => await import("@/pages/mine/index.vue"),
   },
-  {
-    path: "/hostList",
-    name: "HostList",
-    meta: {
-      title: "",
-    },
-    component: async () => await import("@/pages/hostList/index.vue"),
-  },
+
   {
     path: "/editProfile",
     name: "EditProfile",

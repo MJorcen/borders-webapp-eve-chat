@@ -12,6 +12,8 @@ type HeartbeatMessage = {
   type: "heartbeat";
 };
 
+const isConnect = ref(false);
+
 const useWebSocketHeartbeat = () => {
   const ws = ref<WebSocket | null | any>(null);
   let heartbeatTimer: NodeJS.Timeout | null = null;
@@ -39,6 +41,7 @@ const useWebSocketHeartbeat = () => {
       // 监听WebSocket连接打开事件
       ws.value.addEventListener("open", () => {
         console.log("websocket 连接成功");
+        isConnect.value = true;
         // startHeartbeat();
         reconnectDelay = INITIAL_RECONNECT_DELAY; // 重置重连延迟时间
         clearTimeout(reconnectTimer); // 取消重连定时器
@@ -70,6 +73,7 @@ const useWebSocketHeartbeat = () => {
       // 监听WebSocket连接关闭事件
       ws.value.addEventListener("close", () => {
         console.log("WebSocket 连接已关闭");
+        isConnect.value = false;
         stopHeartbeat();
         // attemptReconnect();
       });
@@ -77,6 +81,7 @@ const useWebSocketHeartbeat = () => {
       // 监听WebSocket错误事件
       ws.value.addEventListener("error", (error) => {
         console.error("WebSocket 错误:", error);
+        isConnect.value = false;
         stopHeartbeat();
         // attemptReconnect();
       });
@@ -84,15 +89,6 @@ const useWebSocketHeartbeat = () => {
       console.error("WebSocket is not supported by your browser.");
     }
   };
-
-  // watch(
-  //   () => ws.value,
-  //   (newVal) => {
-  //     if (newVal.readyState === 3) {
-  //       connectWebSocket();
-  //     }
-  //   }
-  // );
 
   // 尝试重连
   const attemptReconnect = () => {
@@ -155,10 +151,11 @@ const useWebSocketHeartbeat = () => {
   };
 
   // onMounted(connectWebSocket);
-  onUnmounted(disconnectWebSocket);
+  // onUnmounted(disconnectWebSocket);
 
   return {
     ws,
+    isConnect,
     connectWebSocket,
     sendMessage,
     stopConnect,

@@ -151,6 +151,7 @@ const handleLogin = async () => {
       console.log(data.country_calling_code); // 输出国家拨号代码，如 '1'
       console.log(data.country_name); // 输出国家名称，如 'United States'
       localStorage.setItem("region", data.country_code_iso3);
+      localStorage.setItem("country", data.country);
     })
     .catch(function (error) {
       console.log("Error fetching API: ", error);
@@ -172,8 +173,8 @@ const handleLogin = async () => {
     await fetchData({ deviceId: deviceId });
     if (success.value) {
       // localStorage.setItem("userInfo", JSON.stringify(data.value));
-      setUser(data.value);
-      setUserDetail(data.value);
+      localStorage.setItem("web_token", data.value.token);
+
       const md532Str = generateRandomString();
       const filesObg = {
         name: fileObj.value.file.name,
@@ -205,7 +206,8 @@ const handleLogin = async () => {
           showToast("Success");
           // closeToast();
           router.push({ name: "HostList" });
-
+          setUser(data.value);
+          setUserDetail(data.value);
           useImHook();
         } else {
           if (userMsg.value === "User existed") {

@@ -118,6 +118,7 @@ const handleMatch = async (type: number) => {
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
+      audioMatchRef.value.pause();
     }
   }
 };

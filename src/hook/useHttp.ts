@@ -38,6 +38,8 @@ service.interceptors.request.use(
   (config: any) => {
     let userInfo: any;
     const region = localStorage.getItem("region");
+    const country = localStorage.getItem("country");
+    const token = localStorage.getItem("web_token");
 
     try {
       const info = localStorage.getItem("userInfo");
@@ -50,15 +52,17 @@ service.interceptors.request.use(
 
     const preferredLanguage = navigator.language;
 
-    if (userInfo) {
-      config.headers.Authorization = `Bearer ${userInfo?.token}`;
-    }
+    // if (userInfo) {
+    //   config.headers.Authorization = `Bearer ${token}`;
+    // }
+    config.headers.Authorization = `Bearer ${token}`;
     const deviceId = Cookies.get("deviceId");
     config.headers["Eve-Payload"] = `deviceId=${deviceId}${
       import.meta.env.VITE_APP_EVE_PAYLOAD
     }&lang=${preferredLanguage}&locale=${
       navigatorInfo?.[0] || navigatorInfo?.[1]
     }&region=${region}`;
+    config.headers["CF-IPCountry"] = country;
     config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     return config;
   },

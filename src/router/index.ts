@@ -11,7 +11,7 @@ const router = createRouter({
   routes,
 });
 
-const { ws, connectWebSocket } = useWebSocketHeartbeat();
+const { isConnect, connectWebSocket } = useWebSocketHeartbeat();
 
 router.beforeEach((to, from: any) => {
   const userInfo = localStorage.getItem("userInfo");
@@ -27,19 +27,14 @@ router.beforeEach((to, from: any) => {
     return true;
   } else {
     console.log("to.name:::", to.name);
-    if (ws?.value?.readyState === 3) {
-      connectWebSocket();
-    }
-    // 存在用户信息的时候不需要去登录页面
-    if (userInfo && to.name === "Login") {
-      return {
-        name: "HostList",
-        query: {
-          redirect: to.fullPath,
-        },
-      };
-    }
     return true;
+  }
+});
+
+document.addEventListener("click", () => {
+  console.log(`ws连接状态`, isConnect.value);
+  if (!isConnect.value) {
+    connectWebSocket();
   }
 });
 
