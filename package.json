@@ -27,6 +27,7 @@
     "dayjs": "^1.11.12",
     "js-cookie": "^3.0.5",
     "mitt": "^3.0.1",
+    "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",
     "qs": "^6.12.1",

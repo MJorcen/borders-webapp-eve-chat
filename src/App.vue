@@ -30,7 +30,7 @@
   </audio>
 </template>
 <script setup lang="ts">
-import { nextTick, onMounted, reactive, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, reactive, ref } from "vue";
 import CallDialog from "@/components/callDialog/index.vue";
 import evenBus from "@/common/evenBus";
 import { useZego } from "@/hook/useZego";
@@ -58,11 +58,6 @@ const audioRef = ref<any>(null);
 const showCallDialog = ref(false);
 
 const callDialogRef = ref<any>(null);
-
-document.addEventListener("click", () => {
-  // screenfull.request();
-  audioRef?.value?.play();
-});
 
 evenBus.on("inviteCall", async (data: any) => {
   // 被呼叫时
@@ -231,9 +226,19 @@ evenBus.on("onSendMsg", (data: any) => {
 
 onMounted(() => {
   const res = getCurrentQueryParams();
+  document.addEventListener("click", () => {
+    // screenfull.request();
+    audioRef?.value?.play();
+  });
 
   // 切换语言 仅供测试使用
   (window as any)?.translate?.changeLanguage("english");
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", () => {
+    audioRef?.value?.pause();
+  });
 });
 </script>
 <style lang="scss" scoped>

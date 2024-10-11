@@ -4,7 +4,11 @@ import {
   createWebHistory,
   createWebHashHistory,
 } from "vue-router";
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
+
+NProgress.configure({ showSpinner: true })
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -15,6 +19,7 @@ const { isConnect, connectWebSocket } = useWebSocketHeartbeat();
 
 router.beforeEach((to, from: any) => {
   const userInfo = localStorage.getItem("userInfo");
+  NProgress.start()
   if (!userInfo) {
     if (!["Login"].includes(to.name as string)) {
       return {
@@ -30,6 +35,10 @@ router.beforeEach((to, from: any) => {
     return true;
   }
 });
+
+router.afterEach(() => {
+  NProgress.done()
+})
 
 document.addEventListener("click", () => {
   console.log(`ws连接状态`, isConnect.value);
