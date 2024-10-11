@@ -8,7 +8,7 @@
     >
     </van-nav-bar>
     <div class="contBox">
-      <van-uploader :after-read="afterRead">
+      <!-- <van-uploader :after-read="afterRead">
         <div class="imgBox">
           <img
             v-if="fileObj?.content === ''"
@@ -29,7 +29,10 @@
             class="editIcon"
           />
         </div>
-      </van-uploader>
+      </van-uploader> -->
+      <div class="imgBox">
+        <img src="./assets/Avatar@2x.png" alt="" class="upLoadClass" />
+      </div>
     </div>
     <div class="inputBoxBig">
       <div class="inputBox">
@@ -157,8 +160,13 @@ const handleLogin = async () => {
       console.log("Error fetching API: ", error);
     });
 
-  if (state.nickname === "" || fileObj.value.content === "") {
-    closeToast();
+  // if (state.nickname === "" || fileObj.value.content === "") {
+  //   closeToast();
+  //   showToast("Please fill in all required information");
+  //   return;
+  // }
+
+  if (state.nickname === "") {
     showToast("Please fill in all required information");
     return;
   }
@@ -175,50 +183,50 @@ const handleLogin = async () => {
       // localStorage.setItem("userInfo", JSON.stringify(data.value));
       localStorage.setItem("web_token", data.value.token);
 
-      const md532Str = generateRandomString();
-      const filesObg = {
-        name: fileObj.value.file.name,
-        size: fileObj.value.file.size,
-        md5: md532Str,
-        width: 100,
-        height: 100,
-      };
-      await uploadFetch({
-        files: JSON.stringify([filesObg]),
-        scene: "avatar",
+      // const md532Str = generateRandomString();
+      // const filesObg = {
+      //   name: fileObj.value.file.name,
+      //   size: fileObj.value.file.size,
+      //   md5: md532Str,
+      //   width: 100,
+      //   height: 100,
+      // };
+      // await uploadFetch({
+      //   files: JSON.stringify([filesObg]),
+      //   scene: "avatar",
+      // });
+      // const xhr = new XMLHttpRequest();
+      // xhr.open("PUT", upploadData.value.list[0].token);
+
+      // xhr.onerror = (evt) => {
+      //   showToast("文件上传失败");
+      // };
+
+      // xhr.send(fileObj.value.file);
+      // if (uploadSuccess.value) {
+      await userFetch({
+        nickname: state.nickname,
+        gender: "M",
+        // avatarFileId: upploadData.value.list[0].id,
+        birthDate: dayjs().format("YYYY-MM-DD"),
       });
-      const xhr = new XMLHttpRequest();
-      xhr.open("PUT", upploadData.value.list[0].token);
-
-      xhr.onerror = (evt) => {
-        showToast("文件上传失败");
-      };
-
-      xhr.send(fileObj.value.file);
-      if (uploadSuccess.value) {
-        await userFetch({
-          nickname: state.nickname,
-          gender: "M",
-          avatarFileId: upploadData.value.list[0].id,
-          birthDate: dayjs().format("YYYY-MM-DD"),
-        });
-        if (userSuccess.value) {
-          showToast("Success");
-          // closeToast();
-          router.push({ name: "HostList" });
-          setUser(data.value);
-          setUserDetail(data.value);
-          useImHook();
-        } else {
-          if (userMsg.value === "User existed") {
-            router.push({ name: "HostList" });
-            useImHook();
-          }
-          // showToast(userMsg.value);
-        }
+      if (userSuccess.value) {
+        showToast("Success");
+        // closeToast();
+        router.push({ name: "HostList" });
+        setUser(data.value);
+        setUserDetail(data.value);
+        useImHook();
       } else {
-        showToast(uploadMsg.value);
+        if (userMsg.value === "User existed") {
+          router.push({ name: "HostList" });
+          useImHook();
+        }
+        // showToast(userMsg.value);
       }
+      // } else {
+      //   showToast(uploadMsg.value);
+      // }
     } else {
       showToast(msg.value);
     }
