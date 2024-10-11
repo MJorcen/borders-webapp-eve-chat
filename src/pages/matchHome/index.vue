@@ -1,6 +1,9 @@
 <template>
   <div class="bigBox">
-    <img src="./assets/Group 1000004710@2x.png" class="bigImg" />
+    <div class="kongBox">
+      <img src="./assets/Group 1000004710@2x.png" class="bigImg" />
+    </div>
+
     <div class="matchBig">
       <div class="matchBigLeft" @click="handleMatch(1)">
         <div class="matchBigLeftTop">Random</div>
@@ -52,6 +55,7 @@
   <audio style="display: none" controls loop ref="audioMatchRef">
     <source src="./assets/match.mp3" />
   </audio>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <Tabbar></Tabbar>
 </template>
 
@@ -63,11 +67,13 @@ import { matchprice, matchstart, matchstop } from "@/api/allApi";
 import { showToast } from "vant";
 import evenBus from "@/common/evenBus";
 import { useUserDetailStore } from "@/stores/userDetail";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 const route = useRoute();
 
 const state = reactive({
   showBottomFixedBox: false,
+  showRechargePopup: false,
 });
 
 const audioMatchRef: any = ref(null);
@@ -90,7 +96,8 @@ const {
 onMounted(() => {
   nextTick(() => {
     // if (route.name === "MatchHome") {
-    document.body.style.overflow = "hidden";
+    // document.body.style.overflow = "hidden";
+    window.scrollTo({ top: 0, behavior: "instant" });
     // }
   });
 });
@@ -98,7 +105,7 @@ onMounted(() => {
 onActivated(() => {
   getPrice();
   window.scrollTo({ top: 0, behavior: "instant" });
-  document.body.style.overflow = "hidden";
+  // document.body.style.overflow = "hidden";
 });
 
 const getPrice = async () => {
@@ -106,18 +113,19 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
-  audioMatchRef.value.play();
   state.showBottomFixedBox = true;
   await fetchMatchStart({
     type,
   });
   if (matchStartSuccess.value) {
+    audioMatchRef.value.play();
   } else {
     if (code.value !== 402) {
       handleMatch(type);
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
+      state.showRechargePopup = true;
       audioMatchRef.value.pause();
     }
   }
@@ -139,13 +147,16 @@ const handleStop = async () => {
 };
 </script>
 <style lang="scss" scoped>
-.body {
-  overflow: hidden;
+body {
+  background: linear-gradient(180deg, #29191a 0%, #481816 100%);
 }
 .bigBox {
+  overflow: hidden;
+  overflow-x: hidden;
   width: 100%;
-  //   max-height: 100vh;
-  height: 100vh;
+  height: 100%;
+  // max-height: 100vh;
+  // height: 100vh;
   background: linear-gradient(180deg, #29191a 0%, #481816 100%);
   border-radius: 0px 0px 0px 0px;
   display: flex;
@@ -153,11 +164,21 @@ const handleStop = async () => {
   justify-content: center;
   flex-direction: column;
   overflow-y: hidden;
-  .bigImg {
-    margin-left: 26px;
-    margin-right: 26px;
-    height: 696px;
+  .kongBox {
+    width: 100%;
+    background: linear-gradient(180deg, #29191a 0%, #481816 100%);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .bigImg {
+      margin-left: 26px;
+      margin-right: 26px;
+      height: 696px;
+    }
   }
+
   .matchBig {
     width: 100%;
     position: fixed;
