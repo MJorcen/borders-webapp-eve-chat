@@ -235,6 +235,7 @@ import { onDeactivated } from "vue";
 import SignPopup from "@/components/signPopup/index.vue";
 import FirstChargeVipPopup from "@/components/firstChargeVipPopup/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
+import Cookies from "js-cookie";
 
 const active = ref(0);
 
@@ -279,11 +280,17 @@ onActivated(async () => {
   });
   await configFetch();
   await configFetchTwo();
-  if (configData.value.canVipCheckIn) {
+  const canVipCheckIn = Cookies.get("canVipCheckIn");
+
+  if (configData.value.canVipCheckIn && !canVipCheckIn) {
     showSignPopup.value = true;
+    Cookies.set("canVipCheckIn", true, { expires: 1 });
   }
-  if (configData.value.showFirstVipPrompt) {
+  const showFirstVipPrompt = Cookies.get("showFirstVipPrompt");
+
+  if (configData.value.showFirstVipPrompt && !showFirstVipPrompt) {
     showChargePopup.value = true;
+    Cookies.set("showFirstVipPrompt", true, { expires: 1 });
   }
 });
 

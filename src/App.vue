@@ -42,6 +42,7 @@ import { generateRandomString, getCurrentQueryParams } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
 // import screenfull from "screenfull";
+import useWebSocketHeartbeat from "@/hook/useWebScoket";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -224,13 +225,25 @@ evenBus.on("onSendMsg", (data: any) => {
   }
 });
 
+const dataObj = {
+  body: {
+    path: "active/on",
+    code: 0,
+  },
+  ts: new Date().getTime(),
+  tp: 10,
+  id: generateRandomString(10),
+};
+
+const { connectWebSocket, isConnect } = useWebSocketHeartbeat();
+
 onMounted(() => {
   const res = getCurrentQueryParams();
   document.addEventListener("click", () => {
     // screenfull.request();
     audioRef?.value?.play();
   });
-
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用
   (window as any)?.translate?.changeLanguage("english");
 });
@@ -239,7 +252,14 @@ onUnmounted(() => {
   window.removeEventListener("click", () => {
     audioRef?.value?.pause();
   });
+  window.removeEventListener("visibilitychange", () => {});
 });
+
+const handleVisibilityChange = async () => {
+  // if (!isConnect.value) {
+  await connectWebSocket(true);
+  // }
+};
 </script>
 <style lang="scss" scoped>
 .appBox {

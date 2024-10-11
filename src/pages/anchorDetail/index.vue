@@ -1,10 +1,15 @@
 <template>
-  <div class="bigBox">
+  <div
+    class="bigBox"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+  >
     <van-icon
       name="arrow-left"
       class="backBtn"
       color="white"
-      size="20"
+      size="30"
       @click.stop="router.go(-1)"
     />
     <div class="swiperBox">
@@ -234,6 +239,30 @@ const swipeRef = ref(null);
 
 const router = useRouter();
 
+const startX = ref(0);
+const startY = ref(0);
+
+const handleTouchStart = (event) => {
+  startX.value = event.touches[0].clientX;
+  startY.value = event.touches[0].clientY;
+};
+
+const handleTouchMove = (event) => {
+  // 防止默认行为，避免页面滚动
+  event.preventDefault();
+};
+
+const handleTouchEnd = (event) => {
+  const endX = event.changedTouches[0].clientX;
+  const endY = event.changedTouches[0].clientY;
+  const swipeDistance = endX - startX.value;
+
+  // 判断是否为左滑手势
+  if (swipeDistance > 50 && Math.abs(endY - startY.value) < 50) {
+    router.back();
+  }
+};
+
 const { fetchData, data } = userdetail();
 
 const { fetchData: reciveFetch, data: reciveData } = userreceiveStats();
@@ -251,7 +280,7 @@ const getReciveGifs = async () => {
   await reciveFetch({ userId: route.query.id?.toString() });
 };
 
-const { userDetail: user  }: any = useUserDetailStore();
+const { userDetail: user }: any = useUserDetailStore();
 
 const {
   fetchData: followFetch,

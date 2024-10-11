@@ -6,7 +6,7 @@ import {
 } from "vue-router";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import useWebSocketHeartbeat from "@/hook/useWebScoket";
+// import useWebSocketHeartbeat from "@/hook/useWebScoket";
 
 NProgress.configure({ showSpinner: true })
 
@@ -15,7 +15,7 @@ const router = createRouter({
   routes,
 });
 
-const { isConnect, connectWebSocket } = useWebSocketHeartbeat();
+// const { isConnect, connectWebSocket } = useWebSocketHeartbeat();
 
 router.beforeEach((to, from: any) => {
   const userInfo = localStorage.getItem("userInfo");
@@ -40,11 +40,11 @@ router.afterEach(() => {
   NProgress.done()
 })
 
-document.addEventListener("click", () => {
-  console.log(`ws连接状态`, isConnect.value);
-  if (!isConnect.value) {
-    connectWebSocket();
-  }
-});
+// document.addEventListener("click", () => {
+//   console.log(`ws连接状态`, isConnect.value);
+//   if (!isConnect.value) {
+//     connectWebSocket();
+//   }
+// });
 
 export default router;

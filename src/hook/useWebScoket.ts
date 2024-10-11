@@ -1,6 +1,15 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import eventBus from "@/common/evenBus";
-
+import { generateRandomString } from "@/common/utils";
+const dataObj = {
+  body: {
+    path: "active/on",
+    code: 0,
+  },
+  ts: new Date().getTime(),
+  tp: 10,
+  id: generateRandomString(10),
+};
 // 心跳间隔时间（单位：毫秒）
 const HEARTBEAT_INTERVAL = 5000;
 // 最初重连等待时间（单位：毫秒）
@@ -21,7 +30,7 @@ const useWebSocketHeartbeat = () => {
   let reconnectDelay = INITIAL_RECONNECT_DELAY;
 
   // 连接WebSocket服务器
-  const connectWebSocket = () => {
+  const connectWebSocket = (isSend: boolean = false) => {
     let userInfo: any;
     try {
       const info = localStorage.getItem("userInfo");
@@ -42,6 +51,12 @@ const useWebSocketHeartbeat = () => {
       ws.value.addEventListener("open", () => {
         console.log("websocket 连接成功");
         isConnect.value = true;
+        // if (window.performance.navigation.type !== 1) {
+        if (isSend) {
+          ws.value.send(JSON.stringify(dataObj));
+        }
+        // }
+
         // startHeartbeat();
         reconnectDelay = INITIAL_RECONNECT_DELAY; // 重置重连延迟时间
         clearTimeout(reconnectTimer); // 取消重连定时器
@@ -128,11 +143,7 @@ const useWebSocketHeartbeat = () => {
 
   const sendMessage = (message: any) => {
     if (ws.value?.readyState === WebSocket.OPEN) {
-      // debugger;
-
       ws.value.send(JSON.stringify(message));
-      // debugger;
-
       console.log("Message sent:", message);
     }
   };

@@ -10,15 +10,6 @@ import vant from "vant";
 import "vant/lib/index.css";
 import { Lazyload } from "vant";
 import { ImagePreview } from "vant";
-import useWebSocketHeartbeat from "@/hook/useWebScoket";
-
-const { connectWebSocket } = useWebSocketHeartbeat();
-
-// 应用刷新重进后连接ws
-const userInfo = localStorage.getItem("userInfo");
-if (userInfo) {
-  connectWebSocket();
-}
 
 if (import.meta.env.NODE_ENV !== "prod") {
   new Vconsole();
