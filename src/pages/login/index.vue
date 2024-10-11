@@ -44,13 +44,10 @@
         />
       </div>
     </div>
+    <!-- || fileObj?.content === '' -->
     <div
       @click="handleLogin"
-      :class="
-        state.nickname === '' || fileObj?.content === ''
-          ? 'btnBox'
-          : 'btnActiveBox'
-      "
+      :class="state.nickname === '' ? 'btnBox' : 'btnActiveBox'"
     >
       Done
     </div>
@@ -74,11 +71,14 @@ import { generateRandomString } from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import { useImHook } from "@/hook/useIm";
 import { useUserDetailStore } from "@/stores/userDetail";
+import randomData from "@/common/randomName";
 
 const state = reactive({
   nickname: "",
   img: "",
 });
+
+console.log(`output->`, randomData.randomNickArr);
 
 const fileObj = ref<any>({
   content: "",
@@ -102,7 +102,24 @@ onMounted(() => {
   } else {
     deviceId = deviceIdCookie;
   }
+  state.nickname = generateRandomNameWithNumber();
 });
+
+const nicknames = randomData.randomNickArr;
+
+// 生成随机名字和三个随机数字
+function generateRandomNameWithNumber() {
+  // 随机选择一个名字
+  const randomName = nicknames[Math.floor(Math.random() * nicknames.length)];
+
+  // 生成三个随机数字
+  const randomNumbers = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0");
+
+  // 返回结果
+  return `${randomName}${randomNumbers}`;
+}
 
 const {
   fetchData: uploadFetch,
@@ -132,18 +149,6 @@ const router = useRouter();
 
 // 登录
 const handleLogin = async () => {
-  showLoadingToast({
-    message: "Loding...",
-    forbidClick: true,
-    duration: 0,
-  });
-
-  localStorage.clear();
-  // localStorage.removeItem("userInfo");
-  // localStorage.removeItem("user");
-
-  sessionStorage.clear();
-
   // 使用 fetch API 请求一个公开的 IP 地理位置服务
   await fetch("https://ipapi.co/json/")
     .then(function (response) {
@@ -170,6 +175,18 @@ const handleLogin = async () => {
     showToast("Please fill in all required information");
     return;
   }
+
+  showLoadingToast({
+    message: "Loding...",
+    forbidClick: true,
+    duration: 0,
+  });
+
+  localStorage.clear();
+  // localStorage.removeItem("userInfo");
+  // localStorage.removeItem("user");
+
+  sessionStorage.clear();
 
   await activateFetch({
     brand: "XIAOMI",

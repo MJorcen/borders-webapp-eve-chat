@@ -13,8 +13,9 @@ const {
 } = calldial();
 
 export const handleGo = async (item: any) => {
-  if (item.user.inCall === 0 && item.user.active === 0)
+  if (item.user.inCall === 0 && item.user.active === 0) {
     return showToast("Not Online");
+  }
   if (item.user.inCall === 0 && item.user.active === 1) {
     await callFetch({ type: 1, toUserId: item.user.id });
     if (callSuccess.value) {

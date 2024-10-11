@@ -19,12 +19,9 @@
           <div class="matchBigLeftBottomThree">/match</div>
         </div>
         <div class="posBox">
-          <div class="posBoxOne">
+          <div class="posBoxOne" v-if="matchPriceData.freeCouponCount > 0">
             Free
-            <div
-              v-if="matchPriceData.freeCouponCount > 0"
-              class="posBoxOneImgBox"
-            >
+            <div class="posBoxOneImgBox">
               {{ matchPriceData.freeCouponCount }}
             </div>
           </div>
@@ -134,6 +131,7 @@ const handleMatch = async (type: number) => {
 evenBus.on("matchDone", () => {
   state.showBottomFixedBox = false;
   audioMatchRef.value.pause();
+  getPrice();
 });
 
 const handleStop = async () => {
@@ -151,8 +149,6 @@ body {
   background: linear-gradient(180deg, #29191a 0%, #481816 100%);
 }
 .bigBox {
-  overflow: hidden;
-  overflow-x: hidden;
   width: 100%;
   height: 100%;
   // max-height: 100vh;
@@ -163,7 +159,6 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  overflow-y: hidden;
   .kongBox {
     width: 100%;
     background: linear-gradient(180deg, #29191a 0%, #481816 100%);

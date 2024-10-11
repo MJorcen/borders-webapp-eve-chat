@@ -256,6 +256,7 @@ onUnmounted(() => {
 });
 
 const handleVisibilityChange = async () => {
+  console.log(`我重新进来了`,name)
   // if (!isConnect.value) {
   await connectWebSocket(true);
   // }

@@ -8,7 +8,7 @@
     <van-icon
       name="arrow-left"
       class="backBtn"
-      color="white"
+      color="#000000"
       size="30"
       @click.stop="router.go(-1)"
     />
@@ -204,8 +204,8 @@
         <div class="nums">
           {{
             user?.user?.vipLevel === 0
-              ? data?.user?.videoCallPrice
-              : data?.user?.videoCallVipPrice
+              ? data?.user?.videoCallPrice || 0
+              : data?.user?.videoCallVipPrice || 0
           }}/min
         </div>
       </div>
@@ -230,6 +230,8 @@ import { handleGo } from "@/common/fetchCommon";
 onMounted(() => {
   getUserDetail();
   getReciveGifs();
+  document.body.style.overflow = "auto";
+  console.log("呵呵呵da");
   nextTick(() => {
     window.scroll({ top: 0 });
   });
@@ -249,7 +251,7 @@ const handleTouchStart = (event) => {
 
 const handleTouchMove = (event) => {
   // 防止默认行为，避免页面滚动
-  event.preventDefault();
+  // event.preventDefault();
 };
 
 const handleTouchEnd = (event) => {
@@ -384,6 +386,7 @@ const onChange = (index: number) => {
 </script>
 <style lang="scss" scoped>
 .bigBox {
+  min-height: 100%;
   position: relative;
   .backBtn {
     position: absolute;
