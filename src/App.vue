@@ -243,18 +243,24 @@ onMounted(async () => {
   } catch (error) {
     console.error("Fetch error:", error);
   }
-
-  document.addEventListener("click", () => {
-    // screenfull.request();
-    audioRef?.value?.play();
-  });
+  // 监听是否在触碰屏幕。在的话，播放音乐
+  document.addEventListener(
+    "touchmove",
+    (e) => {
+      // screenfull.request();
+      audioRef?.value?.play();
+      // e.preventDefault();
+    },
+    // { passive: false }
+  );
+  // 监听是否重新返回程序
   document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用
   (window as any)?.translate?.changeLanguage("english");
 });
 
 onUnmounted(() => {
-  window.removeEventListener("click", () => {
+  window.removeEventListener("touchmove", () => {
     audioRef?.value?.pause();
   });
   window.removeEventListener("visibilitychange", () => {});

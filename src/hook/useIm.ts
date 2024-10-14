@@ -138,8 +138,14 @@ export const useImHook = () => {
   function onSyncDone() {
     console.log("同步完成");
     // debugger;
-    connectWebSocket();
-    sendMessage(dataObj);
+    const webToken = localStorage.getItem("web_token");
+    if (!webToken) {
+      connectWebSocket();
+      sendMessage(dataObj);
+    } else {
+      connectWebSocket();
+    }
+
     evenBus.emit("setFunc", nim);
   }
 

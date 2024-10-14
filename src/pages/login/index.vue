@@ -236,6 +236,8 @@ const handleLogin = async () => {
       } else {
         if (userMsg.value === "User existed") {
           router.push({ name: "HostList" });
+          setUser(data.value);
+          setUserDetail(data.value);
           useImHook();
         }
         // showToast(userMsg.value);

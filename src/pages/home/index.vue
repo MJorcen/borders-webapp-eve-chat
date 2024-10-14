@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="bigBox">
     <h4>Local video</h4>
     <h4>Remote video</h4>
@@ -141,4 +141,108 @@ zg.loginRoom(
     height: auto;
   }
 }
-</style>
+</style> -->
+
+<template>
+  <div class="bigBox">
+    <div id="container" @click="handleClick()">Pay with Google Pay</div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted, h, nextTick } from "vue";
+
+const paymentsClient: any = ref(null);
+
+// 初始化api支付环境
+const initializePaymentsClient = () => {
+  paymentsClient.value = new google.payments.api.PaymentsClient({
+    environment: "TEST", // 生产环境中应改为 'PRODUCTION'
+  });
+};
+
+// 指定您的 Google Pay API 版本
+const baseRequest = {
+  apiVersion: 2,
+  apiVersionMinor: 0,
+};
+
+// 为您的付款服务机构申请付款令牌
+const tokenizationSpecification = {
+  type: "PAYMENT_GATEWAY",
+  parameters: {
+    gateway: "example",
+    gatewayMerchantId: "exampleGatewayMerchantId",
+  },
+};
+
+// 指定支持的支付卡网络
+const allowedCardNetworks = [
+  "AMEX",
+  "DISCOVER",
+  "INTERAC",
+  "JCB",
+  "MASTERCARD",
+  "VISA",
+];
+
+const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+
+// 说明您允许的付款方式
+const baseCardPaymentMethod = {
+  type: "CARD",
+  parameters: {
+    allowedAuthMethods: allowedCardAuthMethods,
+    allowedCardNetworks: allowedCardNetworks,
+  },
+};
+
+const cardPaymentMethod = Object.assign(
+  { tokenizationSpecification: tokenizationSpecification },
+  baseCardPaymentMethod
+);
+
+// 确定是否能使用 Google Pay API 进行付款
+onMounted(() => {
+  const isReadyToPayRequest = Object.assign({}, baseRequest);
+  isReadyToPayRequest.allowedPaymentMethods = [cardPaymentMethod];
+});
+
+// 创建 PaymentDataRequest 对象
+const paymentDataRequest = Object.assign({}, baseRequest);
+
+paymentDataRequest.transactionInfo = {
+  totalPriceStatus: "FINAL",
+  totalPrice: "123.45",
+  currencyCode: "USD",
+  countryCode: "US",
+};
+
+// paymentDataRequest.merchantInfo = {
+//   merchantName: "Example Merchant",
+//   merchantId: "12345678901234567890",
+// };
+
+const handleClick = () => {
+  initializePaymentsClient();
+  // nextTick(() => {
+  //   const button = paymentsClient.value.createButton({
+  //     onClick: () => console.log("TODO: click handler"),
+  //     allowedPaymentMethods: [],
+  //   }); // make sure to provide an allowed payment method
+  //   document.getElementById("container").appendChild(button);
+  // });
+  // 为用户手势注册事件处理程序
+  paymentsClient.value
+    .loadPaymentData(paymentDataRequest)
+    .then(function (paymentData) {
+      // 如果使用网关令牌化，则传递此令牌而不进行修改
+      paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+    })
+    .catch(function (err) {
+      // 在开发人员控制台中显示调试错误
+      console.error(err);
+    });
+};
+</script>
+<style lang="scss" scoped></style>
