@@ -225,20 +225,25 @@ evenBus.on("onSendMsg", (data: any) => {
   }
 });
 
-const dataObj = {
-  body: {
-    path: "active/on",
-    code: 0,
-  },
-  ts: new Date().getTime(),
-  tp: 10,
-  id: generateRandomString(10),
-};
-
 const { connectWebSocket, isConnect } = useWebSocketHeartbeat();
 
-onMounted(() => {
+onMounted(async () => {
   const res = getCurrentQueryParams();
+
+  try {
+    const response = await fetch(
+      `https://pwa-backend-prod.roibest.com/fbclid/get?link_id=${res?.link_id}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+
   document.addEventListener("click", () => {
     // screenfull.request();
     audioRef?.value?.play();
@@ -256,7 +261,7 @@ onUnmounted(() => {
 });
 
 const handleVisibilityChange = async () => {
-  console.log(`我重新进来了`,name)
+  console.log(`我重新进来了`, name);
   // if (!isConnect.value) {
   await connectWebSocket(true);
   // }

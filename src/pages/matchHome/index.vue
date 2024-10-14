@@ -18,8 +18,8 @@
           <img src="./assets/coin_20@2x.png" class="matchBigLeftBottomTwo" />
           <div class="matchBigLeftBottomThree">/match</div>
         </div>
-        <div class="posBox">
-          <div class="posBoxOne" v-if="matchPriceData.freeCouponCount > 0">
+        <div class="posBox" v-if="matchPriceData.freeCouponCount > 0">
+          <div class="posBoxOne">
             Free
             <div class="posBoxOneImgBox">
               {{ matchPriceData.freeCouponCount }}
@@ -110,12 +110,12 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
-  state.showBottomFixedBox = true;
   await fetchMatchStart({
     type,
   });
   if (matchStartSuccess.value) {
     audioMatchRef.value.play();
+    state.showBottomFixedBox = true;
   } else {
     if (code.value !== 402) {
       handleMatch(type);

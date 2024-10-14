@@ -149,6 +149,11 @@ const router = useRouter();
 
 // 登录
 const handleLogin = async () => {
+  showLoadingToast({
+    message: "Loding...",
+    forbidClick: true,
+    duration: 0,
+  });
   // 使用 fetch API 请求一个公开的 IP 地理位置服务
   await fetch("https://ipapi.co/json/")
     .then(function (response) {
@@ -175,12 +180,6 @@ const handleLogin = async () => {
     showToast("Please fill in all required information");
     return;
   }
-
-  showLoadingToast({
-    message: "Loding...",
-    forbidClick: true,
-    duration: 0,
-  });
 
   localStorage.clear();
   // localStorage.removeItem("userInfo");

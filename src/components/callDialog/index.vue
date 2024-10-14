@@ -7,7 +7,7 @@
         <van-image
           v-if="!state.isReactive"
           :src="
-            user.user.id !== props?.wsData?.fromUser?.id
+            user?.user?.id !== props?.wsData?.fromUser?.id
               ? props?.wsData?.fromUser?.avatar
               : props?.wsData?.toUser?.avatar
           "
@@ -21,7 +21,7 @@
                 fit="cover"
                 radius="50"
                 :src="
-                  user.user.id !== props?.wsData?.fromUser?.id
+                  user?.user?.id !== props?.wsData?.fromUser?.id
                     ? props?.wsData?.fromUser?.avatar
                     : props?.wsData?.toUser?.avatar
                 "
@@ -42,7 +42,7 @@
                   <img
                     :src="
                       getCountryImg(
-                        user.user.id !== props?.wsData?.fromUser?.id
+                        user?.user?.id !== props?.wsData?.fromUser?.id
                           ? props?.wsData?.fromUser
                           : props?.wsData?.toUser
                       )
@@ -82,7 +82,7 @@
         <div class="bottomBoxConnect" v-if="!state.isReactive">
           <div
             class="bottomBoxConnectFont"
-            v-if="user.user.id === props?.wsData?.fromUser?.id"
+            v-if="user?.user?.id === props?.wsData?.fromUser?.id"
           >
             Connecting video call
           </div>
@@ -92,7 +92,7 @@
           <!-- 挂断 -->
           <div
             class="bottomBoxConnectGua"
-            v-if="user.user.id === props?.wsData?.fromUser?.id"
+            v-if="user?.user?.id === props?.wsData?.fromUser?.id"
             @click.stop="handleCallHangUp"
           >
             <img
@@ -478,7 +478,7 @@ evenBus.on("activeCall", async (data: any) => {
 // 聊天逻辑
 const handleSendMsg = (obj: any = null) => {
   const userId =
-    user.user.id !== props?.wsData?.fromUser?.id
+    user?.user?.id !== props?.wsData?.fromUser?.id
       ? props?.wsData?.fromUser?.id
       : props?.wsData?.toUser?.id;
 
@@ -533,7 +533,7 @@ const giftPopupRef = ref<any>();
 
 const handleGive = async (item: any) => {
   const userId =
-    user.user.id !== props?.wsData?.fromUser?.id
+    user?.user?.id !== props?.wsData?.fromUser?.id
       ? props?.wsData?.fromUser?.id
       : props?.wsData?.toUser?.id;
   await giftFetch({
