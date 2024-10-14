@@ -7,6 +7,7 @@ import VueSetupExtend from "vite-plugin-vue-setup-extend";
 import pxtorem from "postcss-pxtorem";
 import fs from "fs";
 import { VitePWA } from "vite-plugin-pwa";
+import viteCompression from "vite-plugin-compression";
 
 //这个配置 为了在html中使用 环境变量
 const getViteEnv = (mode, target) => {
@@ -19,6 +20,9 @@ export default defineConfig(({ command, mode }) => {
     plugins: [
       vue(),
       VueSetupExtend(),
+      viteCompression({
+        threshold: 1024000, // 对大于 1mb 的文件进行压缩
+      }),
       createHtmlPlugin({
         inject: {
           data: {
