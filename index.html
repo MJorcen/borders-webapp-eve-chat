@@ -15,8 +15,39 @@
     <meta name="google" content="notranslate" />
     <meta name="google" content="noindex" />
     <meta name="google" content="nositelinkssearchbox" />
+    <style>
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      #app-loading-wrapper {
+        position: fixed;
+        z-index: 99999;
+        top: 29%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        line-height: 20px;
+        font-size: 64px;
+        color: #282828;
+        text-align: center;
+      }
+      #app-loading-wrapper .app-loading-img {
+        margin: 0 auto 4px;
+        width: 260px;
+        height: 260px;
+        background-image: url("./public/loading.png");
+        background-size: 100% 100%;
+        -webkit-animation: spin 1s linear infinite;
+        animation: spin 1s linear infinite;
+      }
+    </style>
   </head>
   <body>
+    <div id="app-loading-wrapper">
+      <div class="app-loading-img"></div>
+      <div>Loading...</div>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
     <!-- 谷歌登录 -->

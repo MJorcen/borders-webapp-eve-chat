@@ -15,6 +15,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from: any) => {
+  let loadingDom: any = document.getElementById("app-loading-wrapper");
+  loadingDom.parentNode.removeChild(loadingDom);
   const userInfo = localStorage.getItem("userInfo");
   NProgress.start();
   if (!userInfo) {
