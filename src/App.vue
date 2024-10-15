@@ -225,7 +225,7 @@ evenBus.on("onSendMsg", (data: any) => {
   }
 });
 
-const { connectWebSocket, isConnect } = useWebSocketHeartbeat();
+const { connectWebSocket } = useWebSocketHeartbeat();
 
 onMounted(async () => {
   // 监听是否在触碰屏幕。在的话，播放音乐
@@ -248,14 +248,15 @@ onUnmounted(() => {
   window.removeEventListener("touchmove", () => {
     audioRef?.value?.pause();
   });
-  window.removeEventListener("visibilitychange", () => {});
 });
 
 const handleVisibilityChange = async () => {
-  console.log(`我重新进来了`, name);
-  // if (!isConnect.value) {
-  await connectWebSocket(true);
-  // }
+  console.log(`我重新进来了`, document.visibilityState);
+  if (document.visibilityState === "hidden") {
+    window.removeEventListener("visibilitychange", () => {});
+  } else {
+    await connectWebSocket(true);
+  }
 };
 </script>
 <style lang="scss" scoped>
