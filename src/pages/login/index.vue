@@ -211,7 +211,13 @@ const handleLogin = async () => {
   // localStorage.removeItem("user");
 
   sessionStorage.clear();
-
+  console.log(`激活的参数`, {
+    brand: "XIAOMI",
+    model: "MI 10",
+    userAgent: "cs",
+    androidId: "123456",
+    ...state.urlData,
+  });
   await activateFetch({
     brand: "XIAOMI",
     model: "MI 10",

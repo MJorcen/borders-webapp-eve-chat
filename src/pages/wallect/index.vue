@@ -42,6 +42,7 @@
             state.showPopup = true;
             state.selectMoney = item.goldResult;
             state.payData = item;
+            state.channelData = item.channelList;
           }
         "
       >
@@ -78,7 +79,7 @@
       <div class="itemBig">
         <div
           class="itemBox"
-          v-for="(item, index) in data?.list?.[0]?.channelList"
+          v-for="(item, index) in state.channelData"
           :key="index"
           @click="handleSelect(item)"
         >
@@ -132,6 +133,7 @@ const state = reactive<any>({
   selectMoney: 0,
   payData: {},
   payUrl: "",
+  channelData: [],
 });
 
 const getRemainingMilliseconds = () => {
@@ -170,6 +172,7 @@ const handleSelect = async (item: any) => {
   });
   if (submitSuccess.value) {
     state.payUrl = submitData.value.data.payInfo;
+
     state.showLink = true;
     closeToast();
   } else {
@@ -487,8 +490,9 @@ const router = useRouter();
         }
       }
       .itemBoxRight {
-        width: 160px;
-        height: 64px;
+        // width: 160px;
+        // height: 64px;
+        padding: 7px;
         background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;

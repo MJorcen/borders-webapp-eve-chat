@@ -21,6 +21,7 @@
             state.showPopup = true;
             state.selectMoney = item.goldResult;
             state.payData = item;
+            state.channelData = item.channelList;
           }
         "
       >
@@ -57,7 +58,7 @@
       <div class="itemBig">
         <div
           :class="item.active ? 'itemBoxActive' : 'itemBox'"
-          v-for="(item, index) in state.channelList"
+          v-for="(item, index) in state.channelData"
           :key="index"
           @click="handleSelect(item)"
         >
@@ -87,7 +88,7 @@ import {
   rechargeV2pricesubmit,
   userwallet,
 } from "@/api/allApi";
-import { showLoadingToast, showToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
 import { useRouter } from "vue-router";
 
 const { fetchData, data } = rechargeV2priceList();
@@ -123,6 +124,7 @@ const state = reactive<any>({
   channelList: [],
   payUrl: "",
   showLink: false,
+  channelData: [],
 });
 
 watch(
@@ -192,6 +194,7 @@ const handleSelect = async (item: any) => {
   if (submitSuccess.value) {
     state.payUrl = submitData.value.data.payInfo;
     state.showLink = true;
+    closeToast();
   } else {
     showToast(submitMsg.value);
   }
@@ -494,8 +497,9 @@ const router = useRouter();
         }
       }
       .itemBoxRight {
-        width: 160px;
-        height: 64px;
+        // width: 160px;
+        // height: 64px;
+        padding: 7px;
         background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;
