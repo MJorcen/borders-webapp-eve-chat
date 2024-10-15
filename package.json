@@ -22,6 +22,8 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^4.5.2",
     "axios": "^1.6.8",
     "dayjs": "^1.11.12",

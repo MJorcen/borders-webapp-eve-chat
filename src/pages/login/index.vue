@@ -61,30 +61,32 @@ import {
   fileupload,
   deviceactivate,
   userfillInfo,
+  webconfig,
 } from "@/api/allApi";
 import { v4 as uuidv4 } from "uuid";
 import Cookies from "js-cookie";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
-import { generateRandomString } from "@/common/utils";
+import { generateRandomString, getCurrentQueryParams } from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import { useImHook } from "@/hook/useIm";
 import { useUserDetailStore } from "@/stores/userDetail";
-import randomData from "@/common/randomName";
+import randomData from "@/common/randomName.json";
 
 const state = reactive({
   nickname: "",
   img: "",
+  urlData: {},
 });
-
-console.log(`output->`, randomData.randomNickArr);
 
 const fileObj = ref<any>({
   content: "",
 });
 
 const { fetchData, msg, success, data } = logindevice();
+
+const { fetchData: webConfigFetch, data: webConfigData } = webconfig();
 
 const { setUser } = useUserStore();
 
@@ -170,6 +172,29 @@ const handleLogin = async () => {
       console.log("Error fetching API: ", error);
     });
 
+  //根据缓存获取广告参数
+
+  const link_id: any = JSON.parse(
+    localStorage.getItem("__rb_9982674608_link_id")
+  );
+
+  // const res = getCurrentQueryParams(parmas);
+
+  try {
+    const response = await fetch(
+      `https://pwa-backend-prod.roibest.com/fbclid/get?link_id=${link_id}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+
+    state.urlData = data.data;
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+
   // if (state.nickname === "" || fileObj.value.content === "") {
   //   closeToast();
   //   showToast("Please fill in all required information");
@@ -192,6 +217,8 @@ const handleLogin = async () => {
     model: "MI 10",
     userAgent: "cs",
     androidId: "123456",
+    ...state.urlData,
+    // ...res,
   });
   if (activateSuccess.value) {
     await fetchData({ deviceId: deviceId });
@@ -220,6 +247,7 @@ const handleLogin = async () => {
 
       // xhr.send(fileObj.value.file);
       // if (uploadSuccess.value) {
+      await webConfigFetch();
       await userFetch({
         nickname: state.nickname,
         gender: "M",
@@ -233,12 +261,15 @@ const handleLogin = async () => {
         setUser(data.value);
         setUserDetail(data.value);
         useImHook();
+        // 写入当前版本号
+        localStorage.setItem("version", webConfigData.value.version);
       } else {
         if (userMsg.value === "User existed") {
           router.push({ name: "HostList" });
           setUser(data.value);
           setUserDetail(data.value);
           useImHook();
+          localStorage.setItem("version", webConfigData.value.version);
         }
         // showToast(userMsg.value);
       }

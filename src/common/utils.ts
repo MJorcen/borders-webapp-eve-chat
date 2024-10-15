@@ -142,13 +142,35 @@ export const formatSecondsToTime = (seconds: number) => {
  * @returns 返回链接的查询参数对象
  */
 
-export const getCurrentQueryParams = () => {
-  const urlParams = new URLSearchParams(window.location.search);
+export const getCurrentQueryParams = (urlParamsStr: string) => {
+  const urlParams = new URLSearchParams(urlParamsStr);
   const queryParamsObject: any = {};
-
-  urlParams.forEach((value, key) => {
-    queryParamsObject[key] = value;
-  });
+  // 创建一个对象来存储查询参数
+  const params: any = {};
+  for (const [key, value] of urlParams.entries()) {
+    params[key] = value;
+  }
 
   return queryParamsObject;
+  // const objectParams: any = {};
+  // let url = decodeURI(window.location.search || window.location.hash);
+  // let strs;
+  // if (url.indexOf("?") != -1) {
+  //   // hash模式进此判断
+  //   if (window.location.hash) {
+  //     strs = url.split("?")[1].toString().split("&");
+  //     // history模式
+  //   } else {
+  //     strs = url.substr(1).split("&");
+  //   }
+  //   // 循环遍历并添加到对象中
+  //   for (let i = 0; i < strs.length; i++) {
+  //     objectParams[strs[i].split("=")[0]] = strs[i].split("=")[1];
+  //   }
+  // }
+  // // 判断objectParams对象的长度，大于1则有值
+  // if (Object.keys(objectParams).length > 0) {
+  //   console.log(objectParams);
+  // }
+  // return objectParams;
 };

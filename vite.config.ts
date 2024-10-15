@@ -76,9 +76,9 @@ export default defineConfig(({ command, mode }) => {
           //   // Add more runtime caching rules as needed
           // ],
         },
-        devOptions: {
-          enabled: true,
-        },
+        // devOptions: {
+        //   enabled: true,
+        // },
       }),
     ],
     resolve: {

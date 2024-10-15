@@ -228,6 +228,7 @@ import {
   userfollowfollowingList,
   userconfig,
   vipconfig,
+  webconfig,
 } from "@/api/allApi";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
@@ -264,6 +265,8 @@ const { fetchData: configFetch, data: configData } = userconfig();
 
 const { fetchData: configFetchTwo, data: configDataTwo } = vipconfig();
 
+const { fetchData: webConfigFetch, data: webConfigData } = webconfig();
+
 const scrollY = ref<any>(window.pageYOffset);
 
 const handleScroll = () => {
@@ -280,6 +283,13 @@ onActivated(async () => {
   });
   await configFetch();
   await configFetchTwo();
+  await webConfigFetch();
+  const localVersion = localStorage.getItem("version");
+  if (localVersion !== webConfigData.value.version) {
+    localStorage.setItem("version", webConfigData.value.version);
+    window.location.reload();
+    // return true;
+  }
   const canVipCheckIn = Cookies.get("canVipCheckIn");
 
   if (configData.value.canVipCheckIn && !canVipCheckIn) {

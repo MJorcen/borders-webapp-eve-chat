@@ -432,3 +432,11 @@ export const userunfollow = () => {
     method: "delete",
   });
 };
+
+// 获取版本号
+export const webconfig = () => {
+  return useRequest({
+    url: "/web/config",
+    method: "get",
+  });
+};

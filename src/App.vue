@@ -38,7 +38,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import CallDetail from "@/components/callDetail/index.vue";
 import CallFreeDialog from "@/components/callFreeDialog/index.vue";
 import { userDetail } from "@/api/allApi";
-import { generateRandomString, getCurrentQueryParams } from "./common/utils";
+import { generateRandomString } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
 // import screenfull from "screenfull";
@@ -228,21 +228,6 @@ evenBus.on("onSendMsg", (data: any) => {
 const { connectWebSocket, isConnect } = useWebSocketHeartbeat();
 
 onMounted(async () => {
-  const res = getCurrentQueryParams();
-
-  try {
-    const response = await fetch(
-      `https://pwa-backend-prod.roibest.com/fbclid/get?link_id=${res?.link_id}`
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-  } catch (error) {
-    console.error("Fetch error:", error);
-  }
   // 监听是否在触碰屏幕。在的话，播放音乐
   document.addEventListener(
     "touchmove",
@@ -250,7 +235,7 @@ onMounted(async () => {
       // screenfull.request();
       audioRef?.value?.play();
       // e.preventDefault();
-    },
+    }
     // { passive: false }
   );
   // 监听是否重新返回程序

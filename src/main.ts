@@ -11,7 +11,7 @@ import "vant/lib/index.css";
 import { Lazyload } from "vant";
 import { ImagePreview } from "vant";
 
-if (import.meta.env.NODE_ENV !== "prod") {
+if (import.meta.env.VITE_NODE_ENV !== "prod") {
   new Vconsole();
 }
 
