@@ -91,7 +91,10 @@
         <div class="noticeTopBoxRight">
           <div class="noticeTopBoxRightTop">
             <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
-            <div class="noticeTopBoxRightTopRight" v-if="item.unread === 0">
+            <div
+              class="noticeTopBoxRightTopRight"
+              v-if="!item?.localCustom || item?.localCustom?.cusstomMsg === ''"
+            >
               {{ dayjs(item?.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
             </div>
             <div v-else class="noticeTopBoxRightTopRight">
