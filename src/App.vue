@@ -106,9 +106,38 @@ evenBus.on("inviteCall", async (data: any) => {
       state.showCallDetail = true;
     }
   }
+  // 收到支付成功的通知
   if (data[0].body.type === "payment/success") {
     await fetchData();
     setUser(data.value);
+    const link_id = localStorage.getItem("link_id");
+    const extra = {
+      currency: "USD",
+      value: data[0].body.data?.money,
+    };
+    const obj = {
+      link_id,
+      event_name: "Purchase",
+      extra: JSON.stringify(extra),
+    };
+    try {
+      const response = await fetch(
+        "https://sdk-report.bttzs.com/report/fb/event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(obj),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
   }
 });
 

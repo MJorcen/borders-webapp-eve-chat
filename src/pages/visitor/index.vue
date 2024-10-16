@@ -1,7 +1,7 @@
 <template>
   <van-nav-bar left-text="" title="Visitor" fixed :border="false">
     <template #left>
-      <van-icon name="arrow-left" size="18" color="#000000" />
+      <van-icon @click="router.back()"name="arrow-left" size="18" color="#000000" />
     </template>
   </van-nav-bar>
   <div class="w-[100%] h-[50px]"></div>

@@ -151,11 +151,11 @@ export const useImHook = () => {
 
   // 获取单聊消息
   const getRoomMsg = (userId: number) => {
-    showLoadingToast({
-      duration: 0,
-      message: "Loading...",
-      forbidClick: true,
-    });
+    // showLoadingToast({
+    //   duration: 0,
+    //   message: "Loading...",
+    //   forbidClick: true,
+    // });
     return new Promise((resolve, reject) => {
       let msgHistoryArr: any = [];
       // getHistoryMsgs;  云端历史消息
@@ -167,7 +167,7 @@ export const useImHook = () => {
         done: (error: any, obj: any) => {
           if (error) {
             reject(error);
-            closeToast();
+            // closeToast();
           } else {
             msgHistoryArr = obj.msgs || [];
             resolve(msgHistoryArr);

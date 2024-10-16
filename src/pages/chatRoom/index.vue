@@ -596,7 +596,6 @@ const getUserData = async () => {
   });
   getRoomMsg(data.value.user.cuteId).then((res) => {
     getChatMsgList(res || []);
-    closeToast();
   });
 };
 
@@ -609,7 +608,6 @@ evenBus.on("onConnect", () => {
   });
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
     getChatMsgList(res || []);
-    closeToast();
   });
 });
 
@@ -625,6 +623,7 @@ const getChatMsgList = (msgList: any) => {
 
   state.messageList = groupMessagesByDay(state.messageList);
   console.log(state.messageList, "最终获取的数据");
+  closeToast();
 };
 
 const {
@@ -671,7 +670,6 @@ const afterRead = async (file: any) => {
     forbidClick: true,
     duration: 0,
   });
-
   nim.sendFile({
     scene: "p2p",
     to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
@@ -696,7 +694,6 @@ const afterRead = async (file: any) => {
     },
     beforesend: function (msg: any) {
       console.log("正在发送p2p image消息, id=" + msg.idClient);
-      closeToast();
       getNowMsgList(msg);
       // 判断是不是存在自定义消息的用户，存在则需要去清洗自定义数据
       nim.getLocalSession({
@@ -726,6 +723,7 @@ const afterRead = async (file: any) => {
         },
       });
     },
+    done: sendMsgDone,
   });
 };
 
@@ -734,6 +732,7 @@ const handleSend = async () => {
   if (state.inputText.trim() === "") {
     return;
   }
+
   showLoadingToast({
     message: "Please wait...",
     forbidClick: true,
@@ -747,6 +746,7 @@ const handleSend = async () => {
     env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
     done: sendMsgDone,
   });
+  state.inputText = "";
 };
 
 // 发送消息回调
@@ -766,8 +766,6 @@ function sendMsgDone(error: any, msg: any) {
   if (error) {
     showToast(error);
   } else {
-    state.inputText = "";
-    closeToast();
     if (state.messageList.length) {
       getNowMsgList(msg);
     } else {
@@ -809,6 +807,11 @@ evenBus.on("onMsg", (msg: any) => {
 });
 
 const getNowMsgList = (msg: any) => {
+  showLoadingToast({
+    message: "Please wait...",
+    forbidClick: true,
+    duration: 0,
+  });
   const time = extractDate(msg.time);
   let newMsg = msg;
   if (msg.type === "audio") {
@@ -835,11 +838,11 @@ const getNowMsgList = (msg: any) => {
   if (flag) {
     state.messageList = [...state.messageList].reverse();
   }
-  // debugger;
+
   nextTick(() => {
-    // var height = document.body.clientHeight;
     if (route.name === "chatRoom") {
       window.scroll({ top: 100000000, behavior: "instant" });
+      closeToast();
     }
   });
 };

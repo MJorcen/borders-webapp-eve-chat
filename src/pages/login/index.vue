@@ -78,6 +78,7 @@ const state = reactive({
   nickname: "",
   img: "",
   urlData: {},
+  linkId: "",
 });
 
 const fileObj = ref<any>({
@@ -177,6 +178,8 @@ const handleLogin = async () => {
   const link_id: any = JSON.parse(
     localStorage.getItem("__rb_9982674608_link_id")
   );
+  state.linkId = link_id;
+  // state.linkId = "L2410143112486100044585990";
 
   // const res = getCurrentQueryParams(parmas);
 
@@ -206,7 +209,7 @@ const handleLogin = async () => {
     return;
   }
 
-  localStorage.clear();
+  // localStorage.clear();
   // localStorage.removeItem("userInfo");
   // localStorage.removeItem("user");
 
@@ -216,14 +219,17 @@ const handleLogin = async () => {
     model: "MI 10",
     userAgent: "cs",
     androidId: "123456",
-    ...state.urlData,
+    installReferrer: JSON.stringify(state.urlData),
+    // ...state.urlData,
   });
+  localStorage.setItem("link_id", state.linkId);
   await activateFetch({
     brand: "XIAOMI",
     model: "MI 10",
     userAgent: "cs",
     androidId: "123456",
-    ...state.urlData,
+    installReferrer: JSON.stringify(state.urlData),
+
     // ...res,
   });
   if (activateSuccess.value) {

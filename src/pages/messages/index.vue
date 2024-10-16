@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="noticeTopBoxRightBottom">
-            {{ noticeData?.list?.[0]?.content }}
+            {{ noticeData?.list?.[0]?.content || "No new notifications" }}
           </div>
         </div>
       </div>
@@ -71,76 +71,80 @@
       </div>
     </div>
     <!-- 访客 -->
-
-    <div
-      class="noticeTopBoxBig"
-      v-for="(item, index) in state.messageList"
-      :key="index"
-      v-if="active === 0 && state.messageList.length"
-      @click.stop="handleChatRoom(item)"
-    >
-      <div class="noticeTopBox">
-        <van-image
-          round
-          fit="cover"
-          radius="50"
-          :src="item.avatar"
-          class="noticeTopImg"
-          lazy-load
-        ></van-image>
-        <div class="noticeTopBoxRight">
-          <div class="noticeTopBoxRightTop">
-            <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
-            <div
-              class="noticeTopBoxRightTopRight"
-              v-if="!item?.localCustom || item?.localCustom?.cusstomMsg === ''"
-            >
-              {{ dayjs(item?.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+    <div class="msgBigOverflow" v-if="active === 0 && state.messageList.length">
+      <div
+        class="noticeTopBoxBigMsg"
+        v-for="(item, index) in state.messageList"
+        :key="index"
+        @click.stop="handleChatRoom(item)"
+      >
+        <div class="noticeTopBox">
+          <van-image
+            round
+            fit="cover"
+            radius="50"
+            :src="item.avatar"
+            class="noticeTopImg"
+            lazy-load
+          ></van-image>
+          <div class="noticeTopBoxRight">
+            <div class="noticeTopBoxRightTop">
+              <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
+              <div
+                class="noticeTopBoxRightTopRight"
+                v-if="
+                  !item?.localCustom || item?.localCustom?.cusstomMsg === ''
+                "
+              >
+                {{ dayjs(item?.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+              </div>
+              <div v-else class="noticeTopBoxRightTopRight">
+                {{
+                  dayjs(item?.localCustom?.time).format("YYYY-MM-DD HH:mm:ss")
+                }}
+              </div>
             </div>
-            <div v-else class="noticeTopBoxRightTopRight">
-              {{ dayjs(item?.localCustom?.time).format("YYYY-MM-DD HH:mm:ss") }}
+            <div class="noticeTopBoxRightBottomFlex">
+              <!-- !item.localCustom?.cusstomMsg -->
+              <div
+                class="noticeTopBoxRightBottomFlexFont"
+                v-if="
+                  (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
+                  item?.localCustom?.cusstomMsg === ''
+                "
+              >
+                {{
+                  item?.lastMsg?.type === "image"
+                    ? "[Picture]"
+                    : item?.lastMsg?.type === "audio"
+                    ? "[Audio]"
+                    : item.lastMsg?.type === "custom" &&
+                      JSON.parse(item?.lastMsg?.content)?.type === 2
+                    ? "[Video Call]"
+                    : item.lastMsg?.type === "custom" &&
+                      JSON.parse(item?.lastMsg?.content)?.type === 1
+                    ? "[Gift]"
+                    : item?.lastMsg?.text
+                }}
+              </div>
+              <div v-else class="noticeTopBoxRightBottomFlexFont">
+                {{ item?.localCustom.cusstomMsg }}
+              </div>
+              <div
+                class="nums"
+                v-if="
+                  (item.unread <= 99 && item.unread > 0) ||
+                  item?.localCustom?.unread > 0
+                "
+              >
+                {{
+                  !item?.localCustom && !item?.localCustom?.unread
+                    ? item.unread
+                    : item?.localCustom?.unread
+                }}
+              </div>
+              <div class="numsPlus" v-if="item.unread >= 99">99+</div>
             </div>
-          </div>
-          <div class="noticeTopBoxRightBottomFlex">
-            <!-- !item.localCustom?.cusstomMsg -->
-            <div
-              class="noticeTopBoxRightBottomFlexFont"
-              v-if="
-                (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
-                item?.localCustom?.cusstomMsg === ''
-              "
-            >
-              {{
-                item?.lastMsg?.type === "image"
-                  ? "[Picture]"
-                  : item?.lastMsg?.type === "audio"
-                  ? "[Audio]"
-                  : item.lastMsg?.type === "custom" &&
-                    JSON.parse(item?.lastMsg?.content)?.type === 2
-                  ? "[Video Call]"
-                  : item.lastMsg?.type === "custom" &&
-                    JSON.parse(item?.lastMsg?.content)?.type === 1
-                  ? "[Gift]"
-                  : item?.lastMsg?.text
-              }}
-            </div>
-            <div v-else class="noticeTopBoxRightBottomFlexFont">
-              {{ item?.localCustom.cusstomMsg }}
-            </div>
-            <div
-              class="nums"
-              v-if="
-                (item.unread <= 99 && item.unread > 0) ||
-                item?.localCustom?.unread > 0
-              "
-            >
-              {{
-                !item?.localCustom && !item?.localCustom?.unread
-                  ? item.unread
-                  : item?.localCustom?.unread
-              }}
-            </div>
-            <div class="numsPlus" v-if="item.unread >= 99">99+</div>
           </div>
         </div>
       </div>
@@ -224,7 +228,7 @@
       </van-list>
     </van-pull-refresh>
 
-    <div class="w-[100%] h-[100px]"></div>
+    <div v-if="active === 1"lass="w-[100%] h-[100px]"></div>
   </div>
 
   <!-- <van-floating-bubble
@@ -714,6 +718,159 @@ const handleClick = (index: number) => {
           height: 16px;
           background: #ea1c00;
           border-radius: 50%;
+        }
+      }
+    }
+  }
+  .msgBigOverflow {
+    height: calc(100vh - 710px);
+    overflow-y: scroll;
+    .noticeTopBoxBigMsg {
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding-left: 32px;
+      padding-right: 32px;
+      width: 100%;
+      .noticeTopBox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 168px;
+        border-bottom: 2px solid #f5f5f5;
+        width: 100%;
+
+        .noticeTopImg {
+          min-width: 108px;
+          max-width: 108px;
+          height: 108px;
+          border-radius: 50%;
+          margin-right: 32px;
+        }
+        .noticeTopBoxRight {
+          width: 100%;
+          .noticeTopBoxRightTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            width: 100%;
+            .noticeTopBoxRightTopLeft {
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: bold;
+              font-size: 36px;
+              color: #1a1a1a;
+            }
+            .noticeTopBoxRightTopRight {
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: 400;
+              font-size: 28px;
+              color: #8c8c8c;
+            }
+          }
+          .noticeTopBoxRightBottom {
+            width: 556px;
+            height: 34px;
+            font-family: "SF Pro Display", sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+            color: #404040;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .noticeTopBoxRightBottomFlex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .noticeTopBoxRightBottomFlexFont {
+              width: 504px;
+              height: 34px;
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: 400;
+              font-size: 28px;
+              color: #404040;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+            .nums {
+              // padding: 2px 15px 2px 15px;
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              line-height: 40px;
+              text-align: center;
+              background: #ff4d42;
+              border: 2px solid #ffffff;
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: 400;
+              font-size: 24px;
+              color: #ffffff;
+            }
+            .numsPlus {
+              width: 64px;
+              height: 32px;
+              background: #ff4d42;
+              border-radius: 20px 20px 20px 20px;
+              border: 2px solid #ffffff;
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: 400;
+              font-size: 24px;
+              color: #ffffff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+        }
+      }
+      .eyeBig {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 168px;
+        border-bottom: 2px solid #f5f5f5;
+        width: 100%;
+        .eyesLeft {
+          display: flex;
+          align-items: center;
+          .eyesImg {
+            min-width: 104px;
+            height: 104px;
+          }
+          .eyesFont {
+            margin-left: 24px;
+            .eyesFontOne {
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: bold;
+              font-size: 34px;
+              color: #1a1a1a;
+              margin-bottom: 18px;
+            }
+            .eyesFontTwo {
+              font-family: "SF Pro Display", sans-serif;
+              font-weight: 400;
+              font-size: 30px;
+              color: #8c8c8c;
+            }
+          }
+        }
+        .eyesRight {
+          position: relative;
+          .eyesRightImg {
+            width: 158px;
+            height: 88px;
+          }
+          .dian {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 16px;
+            height: 16px;
+            background: #ea1c00;
+            border-radius: 50%;
+          }
         }
       }
     }

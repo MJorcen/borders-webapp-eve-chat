@@ -42,6 +42,7 @@
             state.showPopup = true;
             state.selectMoney = item.goldResult;
             state.payData = item;
+            state.showLink = false;
             state.channelData = item.channelList;
           }
         "

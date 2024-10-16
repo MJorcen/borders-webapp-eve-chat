@@ -134,6 +134,9 @@ export default defineConfig(({ command, mode }) => {
             if (id.includes("src/index.css")) {
               return "tailwindcss";
             }
+            if (id.includes("node_modules")) {
+              return "vendor";
+            }
           },
         },
         // input: 'index.html'
