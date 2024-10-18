@@ -112,7 +112,7 @@
       </div>
       <div class="BioFont">Bio</div>
       <div class="BioFont2" v-html="data?.user?.intro"></div>
-      <div class="momentBox">
+      <div class="momentBox" v-if="postData?.list?.length > 0">
         <div class="momentBoxLeft">Moment</div>
         <van-icon
           @click="
@@ -198,7 +198,18 @@
           }
         "
       />
-      <div class="bottomBoxRight" @click.stop="handleGo(data)">
+      <div
+        class="bottomBoxRight"
+        @click.stop="
+          () => {
+            handleGo(data).then((res) => {
+              if (!res) {
+                state.showRechargePopup = true;
+              }
+            });
+          }
+        "
+      >
         <img src="./assets/ic_call_video@2x.png" class="bottomBoxRightImg" />
         <img src="./assets/coin_300@2x.png" class="bottomBoxRightImgGold" />
         <div class="nums">
@@ -211,6 +222,7 @@
       </div>
     </div>
   </div>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
 <script setup lang="ts">
@@ -226,15 +238,19 @@ import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
 import { handleGo } from "@/common/fetchCommon";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 onMounted(() => {
   getUserDetail();
   getReciveGifs();
   document.body.style.overflow = "auto";
-  console.log("呵呵呵da");
   nextTick(() => {
     window.scroll({ top: 0 });
   });
+});
+
+const state = reactive({
+  showRechargePopup: false,
 });
 
 const swipeRef = ref(null);

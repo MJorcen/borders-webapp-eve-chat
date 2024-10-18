@@ -12,7 +12,7 @@
               : props?.wsData?.toUser?.avatar
           "
           class="hostImg"
-          fit="cover"
+          fit="fill"
         />
         <div class="topbox" v-if="state.isReactive">
           <div class="topLeft">
@@ -71,18 +71,12 @@
 
             <!-- <div class="followBtn">Follow</div> -->
           </div>
-
           <img
             src="./assets/ic_calling_quit@2x.png"
             class="closeImg"
             alt=""
             @click="handleClosePopup"
           />
-        </div>
-        <div class="timerDisplay" v-if="state.isReactive">
-          <!-- <span>{{ hours }}:</span> -->
-          <span>{{ minutes }}:</span>
-          <span>{{ seconds }}</span>
         </div>
         <!-- 底部待接听 -->
         <div class="bottomBoxConnect" v-if="!state.isReactive">
@@ -212,7 +206,6 @@
               class="inputBox"
               type="text"
               placeholder="Say somethig..."
-              @keyup.center="handleSendMsg"
             />
             <img
               src="./assets/ic_send_2@2x.png"
@@ -303,56 +296,12 @@ onUnmounted(() => {
   state.isReactive = false;
 });
 
-const hours = computed(() => {
-  return Math.floor(currentTime.value / 3600)
-    .toString()
-    .padStart(2, "0");
-});
-
-const minutes = computed(() => {
-  return Math.floor((currentTime.value % 3600) / 60)
-    .toString()
-    .padStart(2, "0");
-});
-
-const seconds = computed(() => {
-  return (currentTime.value % 60).toString().padStart(2, "0");
-});
-
-const startTimer = () => {
-  startTime.value = Date.now() - currentTime.value * 1000;
-  timerId.value = setInterval(() => {
-    currentTime.value = Math.floor((Date.now() - startTime.value) / 1000);
-  }, 1000);
-};
-
-const resetTimer = () => {
-  stopTimer();
-  currentTime.value = 0;
-};
-
-const stopTimer = () => {
-  clearInterval(timerId.value);
-};
-
-// 计时器
-const startTime = ref(0);
-const currentTime = ref(0);
-const timerId = ref(null);
-
 watch(
   () => props.modelValue,
-
   (newValue) => {
-    startTime.value = 0;
-    currentTime.value = 0;
-    stopTimer();
-    if (newValue) {
-      startTimer();
-      state.cammera = 0;
-      state.msgList = [];
-      toggleBodyScroll(newValue);
-    }
+    state.cammera = 0;
+    state.msgList = [];
+    toggleBodyScroll(newValue);
   },
   { immediate: true }
 );
@@ -620,7 +569,6 @@ const handleGive = async (item: any) => {
     giftPopupRef.value.wollectFetch();
     // handleSendMsg(item);
   } else {
-    state.showRechargePopup = true;
     showToast(giftMsg.value);
   }
 };
@@ -779,22 +727,12 @@ defineExpose({
       text-align: center;
     }
   }
-
   .closeImg {
     width: 96px;
     height: 96px;
   }
 }
-.timerDisplay {
-  position: absolute;
-  font-size: 28px;
-  font-weight: bold;
-  color: #fff;
-  animation: pulse 2s infinite;
-  top: 250px;
-  left: 30px;
-  z-index: 20;
-}
+
 .bottomBoxConnect {
   position: absolute;
   bottom: 120px;

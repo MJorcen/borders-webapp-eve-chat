@@ -5,7 +5,13 @@
         v-for="(item, index) in tabsList"
         :key="index"
         @click="handleChange(item, index)"
-        :badge="item.showBadge && state.badge > 0 ? state.badge : null"
+        :badge="
+          item.showBadge && state.badge > 0
+            ? state.badge > 99
+              ? '99+'
+              : state.badge
+            : null
+        "
       >
         <template #icon>
           <img
@@ -94,7 +100,11 @@ const getLocalSessions = () => {
 evenBus.on("updateonSessions", (data: any) => {
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
+    // if (state.badge > 99) {
+    //   state.badge = "99+";
+    // }
   });
+
   // localStorage.setItem("badge", state.badge.toString());
   // emits("update:modalValue", 23);
 });
@@ -102,10 +112,20 @@ evenBus.on("updateonSessions", (data: any) => {
 evenBus.on("updateSession", (data: any) => {
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
+    // if (state.badge > 99) {
+    //   state.badge = "99+";
+    // }
   });
 
   // localStorage.setItem("badge", state.badge.toString());
 });
+
+// watch(
+//   () => state.badge,
+//   (newVal) => {
+//     console.log(`state.badge`, newVal);
+//   }
+// );
 
 const sumUnreadAndLocalCustomUnread = (arr: any) => {
   return arr.reduce((accumulator: any, current: any) => {

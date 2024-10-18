@@ -1,5 +1,7 @@
 <template>
-  <div class="topBox">Moment</div>
+  <div class="toptop">
+    <div class="topBox">Moment</div>
+  </div>
   <div class="itemBig">
     <van-pull-refresh
       v-model="loading"
@@ -82,9 +84,15 @@
               collapse-text="close"
             />
           </div>
-          <div class="transBox" >
-            <img @click="handleTranslate(item)" class="transImg" src="./assets/icon_translate@2x.png" />
-            <div @click="handleTranslate(item)" class="transFont">See translation</div>
+          <div class="transBox">
+            <img
+              @click="handleTranslate(item)"
+              class="transImg"
+              src="./assets/icon_translate@2x.png"
+            />
+            <div @click="handleTranslate(item)" class="transFont">
+              See translation
+            </div>
           </div>
           <div class="imgFlexBox">
             <van-image
@@ -153,12 +161,28 @@
             </div>
             <img
               class="likeImg"
-              @click.stop="handleGo(item)"
+              @click.stop="
+                () => {
+                  handleGo(item).then((res) => {
+                    if (!res) {
+                      state.showRechargePopup = true;
+                    }
+                  });
+                }
+              "
               src="./assets/video.png"
             />
             <div
               class="likeFont"
-              @click.stop="handleGo(item)"
+              @click.stop="
+                () => {
+                  handleGo(item).then((res) => {
+                    if (!res) {
+                      state.showRechargePopup = true;
+                    }
+                  });
+                }
+              "
               style="margin-right: 0"
             >
               Call
@@ -216,6 +240,7 @@
     </template>
   </van-floating-bubble>
   <Tabbar></Tabbar>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
 <script lang="ts" setup name="Dynamic">
@@ -232,6 +257,7 @@ import {
 } from "@/api/allApi";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 const scrollY = ref<any>(window.pageYOffset);
 
@@ -274,6 +300,7 @@ const state = reactive<any>({
     },
   ],
   blockAndReportId: "",
+  showRechargePopup: false,
 });
 
 onMounted(() => {
@@ -592,6 +619,7 @@ const getCountryImg = (item: any) => {
         width: 272px;
         height: 272px;
         border-radius: 16px 16px 16px 16px;
+        object-fit: fill;
       }
     }
     .bottomBox {

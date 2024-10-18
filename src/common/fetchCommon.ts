@@ -10,23 +10,31 @@ const {
   data: callData,
   msg: callMsg,
   success: callSuccess,
+  code,
 } = calldial();
 
 export const handleGo = async (item: any) => {
-  if (item.user.inCall === 0 && item.user.active === 0) {
-    return showToast("Not Online");
-  }
-  if (item.user.inCall === 0 && item.user.active === 1) {
-    await callFetch({ type: 1, toUserId: item.user.id });
-    if (callSuccess.value) {
-      evenBus.emit("activeCall", { ...callData.value });
-    } else {
-      showToast(callMsg.value);
+  return new Promise(async (resolve, reject) => {
+    if (item.user.inCall === 0 && item.user.active === 0) {
+      return showToast("Not Online");
     }
-  } else {
-    router?.push({
-      name: "ChatRoom",
-      query: { user: JSON.stringify(item.user) },
-    });
-  }
+    if (item.user.inCall === 0 && item.user.active === 1) {
+      await callFetch({ type: 1, toUserId: item.user.id });
+      if (callSuccess.value) {
+        evenBus.emit("activeCall", { ...callData.value });
+        resolve(true);
+      } else {
+        showToast(callMsg.value);
+        if (code.value === 402) {
+          resolve(false);
+        }
+        // evenBus.emit("noMony");
+      }
+    } else {
+      router?.push({
+        name: "ChatRoom",
+        query: { user: JSON.stringify(item.user) },
+      });
+    }
+  });
 };

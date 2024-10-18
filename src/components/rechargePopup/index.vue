@@ -22,6 +22,7 @@
             state.selectMoney = item.goldResult;
             state.payData = item;
             state.showLink = false;
+
             state.channelData = item.channelList;
           }
         "
@@ -64,6 +65,16 @@
           @click="handleSelect(item)"
         >
           <div class="itemBoxLeft">
+            <img
+              src="./assets/ic_select@2x.png"
+              v-if="item.selected"
+              class="choseBoxImg"
+            />
+            <img
+              src="./assets/ic_select@2x (1).png"
+              v-else
+              class="choseBoxImg"
+            />
             <img :src="item.channel.icon" class="activeSelectImg" alt="" />
             <div class="activeSelectText">{{ item.channel.displayName }}</div>
             <div class="activeSelectText">{{ item.channel.discountText }}</div>
@@ -181,6 +192,14 @@ const handleSelect = async (item: any) => {
   //     }
   //     return channel;
   //   });
+  state.channelData = state.channelData.map((i: any) => {
+    if (item.channel.id === i.channel.id) {
+      i.selected = true;
+    } else {
+      i.selected = false;
+    }
+    return i;
+  });
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
@@ -484,6 +503,11 @@ const router = useRouter();
       .itemBoxLeft {
         display: flex;
         align-items: center;
+        .choseBoxImg {
+          width: 32px;
+          height: 32px;
+          margin-right: 8px;
+        }
         .activeSelectImg {
           min-width: 32px;
           height: 32px;

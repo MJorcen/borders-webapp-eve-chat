@@ -1,5 +1,5 @@
 <template>
-  <div class="bigBox" ref="companyListRef">
+  <div class="bigBox">
     <div class="tabsBox">
       <div
         :class="item.active ? 'activeTabs' : 'tabs'"
@@ -63,7 +63,15 @@
                 class="caozuo"
                 src="./assets/caozuo.png"
                 v-if="item.user.inCall === 0 && item.user.active === 1"
-                @click.stop="handleGo(item)"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        state.showRechargePopup = true;
+                      }
+                    });
+                  }
+                "
               />
               <img
                 v-else
@@ -90,7 +98,13 @@
               <div class="bottmBox2">
                 <div class="yuan" v-if="item.user.onDuty"></div>
                 <div class="yuan2" v-else></div>
-
+                <div
+                  class="online"
+                  v-if="item.user.inCall === 0 && item.user.active === 1"
+                >
+                  onLine
+                </div>
+                <div class="online" v-else>offline</div>
                 <div class="name">{{ item.user.nickname }}</div>
               </div>
             </div>
@@ -101,6 +115,7 @@
     </div>
     <div v-else>
       <van-pull-refresh
+        style="min-height: 700px"
         v-model="loadingTwo"
         @refresh="
           () => {
@@ -152,7 +167,15 @@
                 class="caozuo"
                 src="./assets/caozuo.png"
                 v-if="item?.inCall === 0 && item?.active === 1"
-                @click.stop="handleGo(item)"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        state.showRechargePopup = true;
+                      }
+                    });
+                  }
+                "
               />
               <img
                 v-else
@@ -216,11 +239,13 @@
     @handleOpen="state.showVipPopup = true"
   ></FirstChargeVipPopup>
   <VipPopup :vipConfg="configDataTwo" v-model="state.showVipPopup"></VipPopup>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+
   <Tabbar></Tabbar>
 </template>
 
 <script setup lang="ts" name="HostList">
-import { ref, reactive, onMounted, onActivated } from "vue";
+import { ref, reactive, onMounted, onActivated, nextTick } from "vue";
 import Empty from "@/components/Empty.vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import {
@@ -237,6 +262,7 @@ import SignPopup from "@/components/signPopup/index.vue";
 import FirstChargeVipPopup from "@/components/firstChargeVipPopup/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import Cookies from "js-cookie";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 const active = ref(0);
 
@@ -251,6 +277,7 @@ const state = reactive<any>({
   offsetTwo: 0,
   followList: [],
   showVipPopup: false,
+  showRechargePopup: false,
 });
 
 const tabsList: any = reactive([
@@ -401,7 +428,6 @@ const onLoad = () => {
 <style lang="scss" scoped>
 .bigBox {
   min-height: 100%;
-
   background-color: #fff;
   .tabsBox {
     display: flex;
@@ -410,9 +436,10 @@ const onLoad = () => {
     padding-top: 20px;
     margin-bottom: 42px;
     padding-left: 32px;
-    // position: sticky;
-    // top: 0;
-    // z-index: 999;
+    position: sticky;
+    top: 0;
+    z-index: 29;
+    background-color: #ffffff;
     .tabs {
       font-family: "SF Pro Display", sans-serif;
       font-weight: bold;
@@ -519,11 +546,22 @@ const onLoad = () => {
           border-radius: 50%;
           background-color: #ffb443;
         }
+        .online {
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: bold;
+          font-size: 24px;
+          color: #ffffff;
+          margin-right: 8px;
+        }
         .name {
           font-family: "SF Pro Display", sans-serif;
           font-weight: bold;
           font-size: 28px;
           color: #ffffff;
+          width: 100px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
       }
     }

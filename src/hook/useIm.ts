@@ -139,12 +139,13 @@ export const useImHook = () => {
     console.log("同步完成");
     // debugger;
     const webToken = localStorage.getItem("web_token");
-    if (!webToken) {
-      connectWebSocket();
-      sendMessage(dataObj);
-    } else {
-      connectWebSocket();
-    }
+    // if (!webToken) {
+    //   connectWebSocket();
+    //   sendMessage(dataObj);
+    // } else {
+    //   connectWebSocket();
+    // }
+    connectWebSocket(true);
 
     evenBus.emit("setFunc", nim);
   }

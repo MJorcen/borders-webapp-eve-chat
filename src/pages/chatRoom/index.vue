@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bigBox">
     <van-nav-bar
       :title="data?.user?.nickname"
       left-text=""
@@ -112,31 +112,35 @@
             ></van-image>
             <!-- 文字 -->
             <!-- <div> -->
+            <img
+              class="noSendSuccessImg"
+              src="./assets/Slice 404@2x.png"
+              v-if="it.to === roomUserId && it?.callbackExt"
+            />
             <div
               :class="
                 it.to !== roomUserId
                   ? 'userLeftBoxContent'
                   : 'userRightBoxContent'
               "
-              v-if="it.type === 'text'"
+              v-if="
+                it.type === 'text' &&
+                !it.text.includes('md5') &&
+                !it.text.includes('anchorUserId') &&
+                !it.text.includes('ext')
+              "
             >
               {{ it.text }}
               <div
-                style="
-                  position: absolute;
-                  bottom: -60px;
-                  width: 200px;
-                  left: -10px;
-                "
+                class="transBox"
                 v-if="it.type === 'text' && it.to !== roomUserId"
-                class="flex items-center pb-[30px]"
                 @click="handleTranslate(it)"
               >
                 <img
                   src="./assets/icon_translate@2x.png"
                   class="w-[20px] h-[20px] mr-[8px]"
                 />
-                <div class="text-[#FF4D42] text-[12px]">See translation</div>
+                <div>See translation</div>
               </div>
             </div>
 
@@ -178,11 +182,16 @@
             <!-- 发送图片 -->
 
             <img
-              v-if="it.type === 'image'"
-              :src="it.file?.url"
+              v-if="
+                it.type === 'image' ||
+                it.text.includes('png') ||
+                it.text.includes('jpg') ||
+                it.text.includes('jpeg')
+              "
+              :src="it.file?.url || JSON.parse(it?.text)?.url"
               @click.stop="
                 () => {
-                  showImagePreview([it.file?.url]);
+                  showImagePreview([it.file?.url || JSON.parse(it?.text)?.url]);
                 }
               "
               class="sendImg"
@@ -240,18 +249,56 @@
 
             <!-- 拨打完成和未完成 -->
 
+            <!-- 搭讪视频的通话完成和未完成 -->
+            <div
+              v-if="it.text.includes('anchorUserId')"
+              :class="
+                it.to !== roomUserId ? 'audioBoxUserLeft' : 'audioBoxUserRight'
+              "
+            >
+              <img
+                v-if="it.to !== roomUserId"
+                src="./assets/ic_video-off@3x.png"
+                class="w-[24px] h-[24px]"
+              />
+              <div
+                class="cancelFont"
+                v-if="JSON.parse(it.text)?.duration === 0"
+              >
+                Canceled
+              </div>
+              <div v-else class="callTime">
+                Video call
+                {{ formatSecondsToTime(JSON.parse(it.text)?.duration) }}
+              </div>
+              <img
+                v-if="it.to === roomUserId"
+                src="./assets/ic_video-off@2x.png"
+                class="w-[24px] h-[24px]"
+              />
+            </div>
+            <!-- 搭讪视频的通话完成和未完成 -->
+
             <!-- 音频文件 -->
             <div
-              v-if="it.type === 'audio'"
+              v-if="
+                it.type === 'audio' ||
+                it.text.includes('audio') ||
+                it.text.includes('aac')
+              "
               :class="
                 it.to !== roomUserId ? 'audioBoxUserLeft' : 'audioBoxUserRight'
               "
               @click="
-                () => {
-                  it.file.isRead = true;
-                  it.file.isPlay = true;
-                  handlePlay(it.file.mp3Url);
-                  handlePlayOver(it.file);
+                (e) => {
+                  if (it?.file) {
+                    it.file.isRead = true;
+                    it.file.isPlay = true;
+                  }
+                  handlePlay(e, it?.file?.mp3Url || JSON.parse(it?.text)?.url);
+                  if (it?.file) {
+                    handlePlayOver(it?.file);
+                  }
                 }
               "
             >
@@ -271,7 +318,11 @@
                 class="w-[30px] h-[30px]"
               /> -->
               <div class="audioNums">
-                {{ Math.floor(it.file?.dur / 1000) }}"
+                {{
+                  Math.floor(
+                    it.file?.dur || JSON.parse(it?.text)?.dur / 1000
+                  ) || 2
+                }}"
               </div>
               <!-- <img
                 v-if="it.to !== roomUserId"
@@ -315,10 +366,8 @@
             <van-image
               fit="cover"
               radius="50"
-              :src="it.avatar"
-              :class="
-                it.to !== roomUserId ? 'userLeftBoxImg' : 'userRightBoxImg'
-              "
+              :src="userDetail?.user?.avatar"
+              class="userRightBoxImg"
               lazy-load
               v-if="it.to === roomUserId"
             ></van-image>
@@ -348,6 +397,7 @@
           type="text"
           placeholder="Say something..."
           class="bottomInput"
+          @keyup.enter="handleSend"
         />
         <div
           ref="touchElement"
@@ -410,7 +460,11 @@
     class="audioClass"
     ref="audioRef"
   >
-    <source />
+    <source type="audio/aac" />
+    <source type="audio/mp3" />
+    <source type="audio/mp4" />
+
+    <!-- <source type="audio/mpeg,mp3,mp4"/> -->
   </audio>
   <Dialog ref="DialogRef">
     <template v-slot:modalContent>
@@ -428,6 +482,7 @@
     v-model="showGiftPopup"
     @handleGive="handleGive"
   ></giftPopup>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
 <script setup lang="ts">
@@ -466,8 +521,12 @@ import SvgaDialog from "@/components/svgaDialog/index.vue";
 import giftPopup from "@/components/giftPopup/index.vue";
 import { giftsend, datatranslate, userunfollow } from "@/api/allApi";
 import { handleGo } from "@/common/fetchCommon";
+import { useUserDetailStore } from "@/stores/userDetail";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 const preFix = import.meta.env.VITE_APP_ACCOUNT_PREFIX;
+
+const { userDetail }: any = useUserDetailStore();
 
 let userInfo: any;
 try {
@@ -497,6 +556,7 @@ const state = reactive<any>({
   inputText: "",
   messageList: [],
   isInput: true,
+  showRechargePopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
@@ -511,6 +571,7 @@ onMounted(() => {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     console.error("getUserMedia not supported in this browser.");
   }
+  // useBetterScroll(".bigBox");
 });
 
 onUnmounted(() => {
@@ -766,6 +827,10 @@ function sendMsgDone(error: any, msg: any) {
   if (error) {
     showToast(error);
   } else {
+    if (msg.callbackExt) {
+      state.showRechargePopup = true;
+    }
+
     if (state.messageList.length) {
       getNowMsgList(msg);
     } else {
@@ -948,12 +1013,13 @@ function stopRecording() {
 const audioRef = ref<any>(null);
 
 // 播放语音
-const handlePlay = (url: string) => {
-  if (audioRef.value.paused) {
+const handlePlay = (e: any, url: string) => {
+  e.preventDefault();
+  if (audioRef?.value?.paused) {
     audioRef.value.src = url;
-    audioRef.value.play();
+    audioRef.value?.play();
   } else {
-    audioRef.value.pause();
+    audioRef.value?.pause();
   }
 };
 
@@ -1070,6 +1136,9 @@ const handleGive = async (item: any) => {
 };
 </script>
 <style lang="scss" scoped>
+.bigBox {
+  padding-bottom: 100px;
+}
 .rightBtn {
   width: 116px;
   height: 48px;
@@ -1181,10 +1250,11 @@ const handleGive = async (item: any) => {
     }
     .photoBox {
       display: flex;
-      overflow-x: auto;
+      overflow-x: scroll;
       gap: 16px;
       .photoImg {
-        width: 143px;
+        min-width: 143px;
+        max-width: 143px;
         height: 148px;
         border-radius: 12px 12px 12px 12px;
       }
@@ -1259,6 +1329,19 @@ const handleGive = async (item: any) => {
         // margin-bottom: 32px;
 
         margin-bottom: 62px;
+        .transBox {
+          display: flex;
+          align-items: center;
+          padding-bottom: 10px;
+          position: absolute;
+          bottom: -60px;
+          width: 230px;
+          left: -10px;
+          color: #ff4d42;
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: 400;
+          font-size: 24px;
+        }
       }
       .yuan {
         margin-top: 30px;
@@ -1336,7 +1419,9 @@ const handleGive = async (item: any) => {
     .userRightBox {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 20px;
+      margin-bottom: 32px;
+      align-items: center;
+
       .userRightBoxImg {
         min-width: 80px;
         max-width: 80px;
@@ -1391,7 +1476,13 @@ const handleGive = async (item: any) => {
         color: #fff;
         line-height: 33px;
         border-radius: 32px 32px 0px 32px;
-        margin-bottom: 32px;
+        // margin-bottom: 32px;
+      }
+      .noSendSuccessImg {
+        min-width: 40px;
+        max-width: 40px;
+        height: 40px;
+        margin-right: 8px;
       }
       .giftBox {
         display: flex;

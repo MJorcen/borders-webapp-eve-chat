@@ -16,22 +16,22 @@
           />
         </div>
         <div class="time">
-          {{ formatSecondsToTime(detailData?.call?.duration || 0) }}
+          {{ formatSecondsToTime(props?.wsData?.currentTime || 0) }}
         </div>
         <img class="fenge" src="./assets/分割线@2x.png" />
         <div class="callCost">
           Call cost:<img
             class="w-[16px] h-[16px]"
             src="./assets/coin_16@2x.png"
-          />{{ detailData?.call?.callCost || 0 }}
+          />{{ props?.wsData?.call?.callCost || 0 }}
         </div>
         <div class="callCost">
           Gift cost:<img
             class="w-[16px] h-[16px]"
             src="./assets/coin_16@2x.png"
-          />{{ detailData?.call?.giftCost || 0 }}
+          />{{ props?.wsData?.call?.giftCost || 0 }}
         </div>
-        <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
+        <div class="vipBox">
           <div class="vipFont">
             Get VIP for
             <span style="color: #e405ff">{{
@@ -93,8 +93,7 @@
   <van-popup v-model:show="freeBackPopups" position="center" round>
     <div class="feedBackBox">
       <div class="reasonTitle">
-        Thanks for the feedback, we will return you
-        {{ data?.goldBonus || 0 }} coins
+        Thanks for the feedback, we will return you 0 coins
       </div>
       <div class="bxBox">
         <img src="./assets/ic_Chest-close@2x.png" class="bxImg" />
@@ -104,36 +103,32 @@
       </div>
     </div>
   </van-popup>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, watch, onUnmounted } from "vue";
-import {
-  callfeedback,
-  callDetail,
-  vipconfig,
-  callfeedbackget,
-} from "@/api/allApi";
+import { callfeedback, vipconfig } from "@/api/allApi";
 import { showToast } from "vant";
 import { formatSecondsToTime } from "@/common/utils";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 interface Prop {
   modelValue: boolean;
-  callId?: string;
   wsData?: any;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
   modelValue: false,
-  callId: "",
   wsData: {},
 });
 
 const state = reactive({
   showVipPopup: false,
+  showRechargePopup: false,
 });
 
 const showReasonPopup = ref(false);
@@ -162,25 +157,19 @@ onUnmounted(() => {
 watch(
   () => props.modelValue,
   (newValue) => {
-    toggleBodyScroll(newValue);
+    state.showRechargePopup = false;
+    if (newValue) {
+      state.showRechargePopup = true;
+      toggleBodyScroll(newValue);
+    }
   },
   { immediate: true }
 );
 
-const { fetchData: detailFetch, data: detailData } = callDetail();
-
 const { fetchData: configFetch, data: configData } = vipconfig();
 
-const { fetchData: feedbackFetch, data: feedbackgetData } = callfeedbackget();
-
 const getDetail = async () => {
-  await detailFetch({ callId: props.callId });
   await configFetch();
-  await feedbackFetch({ callId: props.callId });
-
-  if (feedbackgetData.value.showPrompt) {
-    showReasonPopup.value = true;
-  }
 };
 
 const reasonList = ref<any>([

@@ -1,76 +1,85 @@
 <template>
-  <div class="bigBox">
-    <div class="tabsBox">
-      <div class="tabsBoxLeft">
+  <div class="bigBoxs">
+    <div class="topBox">
+      <div class="tabsBox">
+        <div class="tabsBoxLeft">
+          <div
+            :class="item.active ? 'activeTabs' : 'tabs'"
+            v-for="(item, index) in tabsList"
+            :key="index"
+            @click="handleClick(index)"
+          >
+            {{ item.title }}
+          </div>
+        </div>
+        <img
+          @click="handleClear"
+          src="./assets/Frame@2x.png"
+          class="deleteImg"
+        />
+      </div>
+      <div class="scollTop" v-if="active === 0 && state.messageList.length">
         <div
-          :class="item.active ? 'activeTabs' : 'tabs'"
-          v-for="(item, index) in tabsList"
+          :class="item.onLine ? 'userItem' : 'userItemNone'"
+          v-for="(item, index) in state.messageList"
           :key="index"
-          @click="handleClick(index)"
         >
-          {{ item.title }}
+          <van-image
+            round
+            radius="50"
+            fit="cover"
+            :src="item.avatar"
+            class="noticeTopImg"
+            lazy-load
+            @click.stop="handleChatRoom(item)"
+          ></van-image>
         </div>
       </div>
-      <img @click="handleClear" src="./assets/Frame@2x.png" class="deleteImg" />
-    </div>
-    <div class="scollTop" v-if="active === 0 && state.messageList.length">
-      <div
-        :class="item.onLine ? 'userItem' : 'userItemNone'"
-        v-for="(item, index) in state.messageList"
-        :key="index"
-      >
-        <van-image
-          round
-          fit="cover"
-          :src="item.avatar"
-          class="noticeTopImg"
-          lazy-load
-          @click.stop="handleChatRoom(item)"
-        ></van-image>
-      </div>
-    </div>
-    <!-- 系统消息 -->
-    <div class="noticeTopBoxBig" v-if="active === 0">
-      <div class="noticeTopBox" @click="router.push('/notification')">
-        <img
-          src="./assets/_Avatar／Notifications@2x.png"
-          class="noticeTopImg"
-        />
-        <div class="noticeTopBoxRight">
-          <div class="noticeTopBoxRightTop">
-            <div class="noticeTopBoxRightTopLeft">Notifications</div>
-            <div class="noticeTopBoxRightTopRight">
-              {{ noticeData?.list?.[0]?.updatedAt }}
+      <!-- 系统消息 -->
+      <div class="noticeTopBoxBig" v-if="active === 0">
+        <div class="noticeTopBox" @click="router.push('/notification')">
+          <img
+            src="./assets/_Avatar／Notifications@2x.png"
+            class="noticeTopImg"
+          />
+          <div class="noticeTopBoxRight">
+            <div class="noticeTopBoxRightTop">
+              <div class="noticeTopBoxRightTopLeft">Notifications</div>
+              <div class="noticeTopBoxRightTopRight">
+                {{ noticeData?.list?.[0]?.updatedAt }}
+              </div>
+            </div>
+            <div class="noticeTopBoxRightBottom">
+              {{ noticeData?.list?.[0]?.content || "No new notifications" }}
             </div>
           </div>
-          <div class="noticeTopBoxRightBottom">
-            {{ noticeData?.list?.[0]?.content || "No new notifications" }}
+        </div>
+      </div>
+      <!-- 系统消息 -->
+      <!-- 访客 -->
+      <div
+        class="noticeTopBoxBig"
+        v-if="active === 0"
+        @click="router.push('/visitor')"
+      >
+        <div class="eyeBig">
+          <div class="eyesLeft">
+            <img src="./assets/eyes.png" class="eyesImg" />
+            <div class="eyesFont">
+              <div class="eyesFontOne">Visitors</div>
+              <div class="eyesFontTwo">Have new visitors!</div>
+            </div>
+          </div>
+          <div class="eyesRight">
+            <img src="./assets/mohu.png" class="eyesRightImg" />
+            <div class="dian"></div>
           </div>
         </div>
       </div>
+      <!-- 访客 -->
     </div>
-    <!-- 系统消息 -->
-    <!-- 访客 -->
-    <div
-      class="noticeTopBoxBig"
-      v-if="active === 0"
-      @click="router.push('/visitor')"
-    >
-      <div class="eyeBig">
-        <div class="eyesLeft">
-          <img src="./assets/eyes.png" class="eyesImg" />
-          <div class="eyesFont">
-            <div class="eyesFontOne">Visitors</div>
-            <div class="eyesFontTwo">Have new visitors!</div>
-          </div>
-        </div>
-        <div class="eyesRight">
-          <img src="./assets/mohu.png" class="eyesRightImg" />
-          <div class="dian"></div>
-        </div>
-      </div>
-    </div>
-    <!-- 访客 -->
+    <!-- v-if="active === 0 && state.messageList.length" -->
+
     <div class="msgBigOverflow" v-if="active === 0 && state.messageList.length">
       <div
         class="noticeTopBoxBigMsg"
@@ -128,7 +137,11 @@
                 }}
               </div>
               <div v-else class="noticeTopBoxRightBottomFlexFont">
-                {{ item?.localCustom.cusstomMsg }}
+                {{
+                  item?.localCustom?.cusstomMsg?.includes?.("ext")
+                    ? "[Picture]"
+                    : item?.localCustom?.cusstomMsg
+                }}
               </div>
               <div
                 class="nums"
@@ -218,7 +231,15 @@
               /> -->
               <img
                 :src="videoImg"
-                @click="handleGo(item)"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        state.showRechargePopup = true;
+                      }
+                    });
+                  }
+                "
                 class="callBoxItemRight"
               />
             </div>
@@ -227,9 +248,8 @@
         <Empty v-if="active === 1 && !state.callList.length"></Empty>
       </van-list>
     </van-pull-refresh>
-
-    <div v-if="active === 1"lass="w-[100%] h-[100px]"></div>
   </div>
+  <div lass="w-[100%] h-[100px]"></div>
 
   <!-- <van-floating-bubble
     axis="xy"
@@ -246,10 +266,19 @@
     </template>
   </van-floating-bubble> -->
   <Tabbar></Tabbar>
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
 <script setup lang="ts" name="Messages">
-import { ref, reactive, onMounted, watch, nextTick, onActivated } from "vue";
+import {
+  ref,
+  reactive,
+  onMounted,
+  watch,
+  nextTick,
+  onActivated,
+  onDeactivated,
+} from "vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import Empty from "@/components/Empty.vue";
 import dayjs from "dayjs";
@@ -263,12 +292,14 @@ import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
 import { formatSecondsToTime, removeSubstrings } from "@/common/utils";
 import { useUserStore } from "@/stores/user";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 const state = reactive<any>({
   messageList: [],
   callList: [],
   offset: 0,
   finished: true,
+  showRechargePopup: false,
 });
 
 const offsetPover = ref({
@@ -300,12 +331,14 @@ const getLocalSessions = () => {
 evenBus.on("updateonSessions", (data: any) => {
   getLocalSessions().then((sessions: any) => {
     getMsgList(sessions);
+    closeToast();
   });
 });
 
 evenBus.on("updateSession", (data: any) => {
   getLocalSessions().then((sessions: any) => {
     getMsgList(sessions);
+    closeToast();
   });
 });
 
@@ -323,14 +356,15 @@ onMounted(async () => {
   });
   // await getMsgList(hooksState.messageList);
   document.body.style.overflow = "auto";
+
 });
 
 onActivated(() => {
-  showLoadingToast({
-    duration: 0,
-    message: "Loading...",
-    forbidClick: true,
-  });
+  // showLoadingToast({
+  //   duration: 0,
+  //   message: "Loading...",
+  //   forbidClick: true,
+  // });
   getLocalSessions().then((sessions: any) => {
     getMsgList(sessions);
   });
@@ -420,6 +454,7 @@ const handleClear = () => {
       state.messageList = [];
     }
   }
+  closeToast();
 };
 
 const handleChatRoom = (item: any) => {
@@ -473,7 +508,8 @@ const handleClick = (index: number) => {
 };
 </script>
 <style lang="scss" scoped>
-.bigBox {
+.bigBoxs {
+  // padding-bottom: 100px;
   .tabsBox {
     display: flex;
     align-items: center;
@@ -725,6 +761,7 @@ const handleClick = (index: number) => {
   .msgBigOverflow {
     height: calc(100vh - 710px);
     overflow-y: scroll;
+    padding-bottom: 100px;
     .noticeTopBoxBigMsg {
       overflow: hidden;
       display: flex;
@@ -760,6 +797,11 @@ const handleClick = (index: number) => {
               font-weight: bold;
               font-size: 36px;
               color: #1a1a1a;
+              width: 200px;
+              // height: 60px;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
             }
             .noticeTopBoxRightTopRight {
               font-family: "SF Pro Display", sans-serif;

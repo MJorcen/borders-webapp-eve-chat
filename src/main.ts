@@ -11,9 +11,9 @@ import "vant/lib/index.css";
 import { Lazyload } from "vant";
 import { ImagePreview } from "vant";
 
-if (import.meta.env.VITE_NODE_ENV !== "prod") {
+// if (import.meta.env.VITE_NODE_ENV !== "prod") {
   new Vconsole();
-}
+// }
 
 // 刷新页面则重置接听状态
 localStorage.setItem("isCall", "false");

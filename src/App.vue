@@ -16,11 +16,25 @@
         v-model="state.showCallDetail"
         :call-id="state.wsData?.call?.id"
       ></CallDetail>
+      <CallFreeDetail
+        :wsData="state.callFreeWsData"
+        v-model="state.showCallFreeDetail"
+      ></CallFreeDetail>
       <CallFreeDialog
         :wsData="state.wsData"
         v-model="state.showFreeDialog"
         @handleCallHangUp="audioRef.muted = true"
         @handleCallPickUp="audioRef.muted = true"
+        @handleCallFrend="
+          (res, currentTime, isPick) => {
+            state.callFreeWsData = { ...res, currentTime: currentTime };
+            console.log(`resres`, res);
+            state.showFreeDialog = false;
+            if (isPick) {
+              state.showCallFreeDetail = true;
+            }
+          }
+        "
       ></CallFreeDialog>
     </div>
   </div>
@@ -37,6 +51,8 @@ import { useZego } from "@/hook/useZego";
 import { useUserDetailStore } from "@/stores/userDetail";
 import CallDetail from "@/components/callDetail/index.vue";
 import CallFreeDialog from "@/components/callFreeDialog/index.vue";
+import CallFreeDetail from "@/components/CallFreeDetail/index.vue";
+
 import { userDetail } from "@/api/allApi";
 import { generateRandomString } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
@@ -52,6 +68,8 @@ const state = reactive({
   wsData: {},
   showCallDetail: false,
   showFreeDialog: false,
+  callFreeWsData: {},
+  showCallFreeDetail: false,
 });
 
 const audioRef = ref<any>(null);
@@ -91,6 +109,11 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   // 免费通话
   if (data[0].body.type === "freeCall/dial") {
+    alert("免费通话");
+    const isFreeCalling = localStorage.getItem("isFreeCalling");
+    if (isFreeCalling === "true") {
+      return;
+    }
     state.wsData = data[0].body.data;
     state.showFreeDialog = true;
     audioRef.value.muted = false;
@@ -118,7 +141,7 @@ evenBus.on("inviteCall", async (data: any) => {
     const obj = {
       link_id,
       event_name: "Purchase",
-      extra: JSON.stringify(extra),
+      extra: extra,
     };
     try {
       const response = await fetch(

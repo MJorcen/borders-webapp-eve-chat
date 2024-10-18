@@ -82,6 +82,12 @@ const useWebSocketHeartbeat = () => {
           newWsMsgArr.push(data[0].body.data);
           localStorage.setItem("wsMsgArr", JSON.stringify(newWsMsgArr));
         }
+        if (
+          data[0].body.type === "im/p2p/msg/insert" &&
+          data[0].body.data.subType === 2
+        ) {
+          eventBus.emit("insetCallMsg", data[0].body.data);
+        }
         eventBus.emit("onSendMsg", data);
       });
 
@@ -90,6 +96,7 @@ const useWebSocketHeartbeat = () => {
         console.log("WebSocket 连接已关闭");
         isConnect.value = false;
         stopHeartbeat();
+        connectWebSocket(true);
         // attemptReconnect();
       });
 

@@ -152,12 +152,28 @@
             </div>
             <img
               class="likeImg"
-              @click.stop="handleGo(item)"
+              @click.stop="
+                () => {
+                  handleGo(item).then((res) => {
+                    if (!res) {
+                      state.showRechargePopup = true;
+                    }
+                  });
+                }
+              "
               src="./assets/video.png"
             />
             <div
               class="likeFont"
-              @click.stop="handleGo(item)"
+              @click.stop="
+                () => {
+                  handleGo(item).then((res) => {
+                    if (!res) {
+                      state.showRechargePopup = true;
+                    }
+                  });
+                }
+              "
               style="margin-right: 0"
             >
               Call
@@ -176,6 +192,7 @@
     close-on-click-action
     @cancel="state.showPopup = false"
   />
+  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
 <script lang="ts" setup>
@@ -191,6 +208,7 @@ import {
 } from "@/api/allApi";
 import { useRoute, useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
+import RechargePopup from "@/components/rechargePopup/index.vue";
 
 const state = reactive<any>({
   showPopover: false,
@@ -207,6 +225,7 @@ const state = reactive<any>({
     },
   ],
   blockAndReportId: "",
+  showRechargePopup: false,
 });
 
 onMounted(() => {

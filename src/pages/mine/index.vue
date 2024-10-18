@@ -112,9 +112,17 @@
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
     </div>
-    <a :href="state.href">跳转</a>
-    <div class="w-[100%] h-[100px]"></div>
   </div>
+  <!-- <audio width="100%" height="100%" controls class="audioClass" ref="audioRef">
+    <source
+      src="https://img.duome.live/audio/230826/047a2f3954fb213f0a652624f75c7d57.aac"
+      type="audio/aac"
+    />
+
+  </audio>
+  <a :href="state.href">跳转</a> -->
+  <div class="w-[100%] h-[100px]"></div>
+
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
   <Tabbar></Tabbar>
 </template>
@@ -154,6 +162,9 @@ const state = reactive({
 // onActivated(() => {
 //   getUserDetail();
 // });
+console.log(
+  `https://img.duome.live/audio/230826/047a2f3954fb213f0a652624f75c7d57.aac`
+);
 
 const { setUser }: any = useUserDetailStore();
 

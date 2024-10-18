@@ -102,6 +102,7 @@ onMounted(() => {
 onActivated(() => {
   getPrice();
   window.scrollTo({ top: 0, behavior: "instant" });
+
   // document.body.style.overflow = "hidden";
 });
 
