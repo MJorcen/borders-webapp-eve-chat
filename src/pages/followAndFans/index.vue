@@ -26,7 +26,7 @@
       </div>
     </template>
   </van-nav-bar>
-  <div class="w-[100%] h-[50px]"></div>
+  <div class="w-[100%] h-[100px]"></div>
   <div v-if="active === 0">
     <van-pull-refresh
       v-model="loadingTwo"

@@ -34,13 +34,14 @@ const emit = defineEmits(["closeModal"]);
 
 const props = withDefaults(defineProps(), {
   top: 0,
-  svgaUrl: "",
+  // svgaUrl: "",
 });
 
 const state = reactive({
   showModal: false,
   showClose: true,
-  svgaUrl: "",
+  svgaUrl:
+    "https://img.duome.live/alpha/img/240902/05662582e2690d4d219c4d6e80ca00b2.png-small",
 });
 
 const player = ref(null);
@@ -49,34 +50,36 @@ const parser = ref(null);
 watch(
   () => state.showModal,
   () => {
-    console.log(`output->23232`, state.svgaUrl);
-
     if (state.showModal) {
       nextTick(() => {
         handlePlay();
       });
     }
-  }
+  },
+  { immediate: true, deep: true }
 );
 
 const handlePlay = () => {
   // 获取id的dom元素
   player.value = new SVGA.Player("#demoCanvas");
   parser.value = new SVGA.Parser();
-  try {
-    parser.value.load(state.svgaUrl, (videoItem) => {
+  parser.value.load(
+    state.svgaUrl,
+    function (videoItem) {
       // 你的svga文件路径
       player.value.loops = 1;
-      player.value.setVideoItem(videoItem);
-      player.value.startAnimation(); // 开始动画
-      player.value.onFinished(() => {
+      player?.value?.setVideoItem?.(videoItem);
+      player?.value?.startAnimation?.(); // 开始动画
+      player?.value?.onFinished(() => {
         state.showModal = false;
       });
-    });
-  } catch (e) {
-    console.log(e);
-    state.showModal = false;
-  }
+    },
+    function (error) {
+      console.log(error, "错误");
+      // alert(error);
+      state.showModal = false;
+    }
+  );
 };
 
 // 新增方法：控制body滚动

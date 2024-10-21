@@ -1,5 +1,6 @@
 <template>
   <div class="bigBox">
+    <div class="title">Match</div>
     <div class="kongBox">
       <img src="./assets/Group 1000004710@2x.png" class="bigImg" />
     </div>
@@ -160,6 +161,16 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  position: relative;
+  .title {
+    font-family: "Inter", sans-serif;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-weight: normal;
+    font-size: 44px;
+    color: #eb6300;
+  }
   .kongBox {
     width: 100%;
     background: linear-gradient(180deg, #29191a 0%, #481816 100%);

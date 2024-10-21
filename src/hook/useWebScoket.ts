@@ -96,6 +96,7 @@ const useWebSocketHeartbeat = () => {
         console.log("WebSocket 连接已关闭");
         isConnect.value = false;
         stopHeartbeat();
+        console.log(`output->`, ws.value);
         connectWebSocket(true);
         // attemptReconnect();
       });

@@ -36,55 +36,60 @@
       </template>
     </van-nav-bar>
     <div class="chatBox">
-      <div class="hostBox">
-        <div class="hostBoxTop">
-          <van-image
-            round
-            fit="cover"
-            radius="50"
-            lazy-load
-            :src="data?.user?.avatar"
-            alt=""
-            class="hostImg"
-            @click.stop="
-              () => {
-                showImagePreview([data?.user?.avatar]);
-              }
-            "
-          ></van-image>
-          <div class="hostBoxTopRight">
-            <div class="hostBoxTopRightFlex">
-              <div class="yuan" v-if="data?.user?.onDuty"></div>
-              <div class="hostName">{{ data?.user?.nickname }}</div>
-              <div class="age">{{ data?.user?.age }}</div>
-            </div>
-            <div class="hostBoxTopRightFlexBottom">
-              <img :src="getCountryImg(data?.user)" alt="" class="countryImg" />
-              <div class="country">{{ data?.user?.region }}</div>
+      <van-skeleton :loading="loading" title :row="3">
+        <div class="hostBox">
+          <div class="hostBoxTop">
+            <van-image
+              round
+              fit="cover"
+              radius="50"
+              lazy-load
+              :src="data?.user?.avatar"
+              alt=""
+              class="hostImg"
+              @click.stop="
+                () => {
+                  showImagePreview([data?.user?.avatar]);
+                }
+              "
+            ></van-image>
+            <div class="hostBoxTopRight">
+              <div class="hostBoxTopRightFlex">
+                <div class="yuan" v-if="data?.user?.onDuty"></div>
+                <div class="hostName">{{ data?.user?.nickname }}</div>
+                <div class="age">{{ data?.user?.age }}</div>
+              </div>
+              <div class="hostBoxTopRightFlexBottom">
+                <img
+                  :src="getCountryImg(data?.user)"
+                  alt=""
+                  class="countryImg"
+                />
+                <div class="country">{{ data?.user?.region }}</div>
+              </div>
             </div>
           </div>
+          <div class="contentBox">
+            {{ data?.user?.intro }}
+          </div>
+          <div class="photoBox">
+            <van-image
+              fit="cover"
+              radius="8"
+              class="photoImg"
+              v-for="(item, index) in data.images"
+              :src="item.image"
+              lazy-load
+              @click.stop="
+                () => {
+                  showImagePreview([item.image]);
+                }
+              "
+            >
+            </van-image>
+          </div>
         </div>
-        <div class="contentBox">
-          {{ data?.user?.intro }}
-        </div>
-        <div class="photoBox">
-          <van-image
-            fit="cover"
-            radius="8"
-            class="photoImg"
-            v-for="(item, index) in data.images"
-            :src="item.image"
-            lazy-load
-            @click.stop="
-              () => {
-                showImagePreview([item.image]);
-              }
-            "
-          >
-          </van-image>
-        </div>
-      </div>
-
+      </van-skeleton>
       <div
         class="chatMsgBox"
         v-for="(item, index) in state.messageList"
@@ -181,12 +186,17 @@
 
             <!-- 发送图片 -->
 
-            <img
+            <van-image
+              fit="cover"
+              lazy-load
+              radius="8"
+              style="min-width: 80px"
               v-if="
                 it.type === 'image' ||
                 it.text.includes('png') ||
                 it.text.includes('jpg') ||
-                it.text.includes('jpeg')
+                it.text.includes('jpeg') ||
+                it.text.includes('jfif')
               "
               :src="it.file?.url || JSON.parse(it?.text)?.url"
               @click.stop="
@@ -195,7 +205,11 @@
                 }
               "
               class="sendImg"
-            />
+            >
+              <template v-slot:loading>
+                <van-loading type="spinner" size="20" />
+              </template>
+            </van-image>
 
             <!-- 发送图片 -->
 
@@ -640,7 +654,7 @@ watch(
   { deep: true }
 );
 
-const { fetchData, data } = userget();
+const { fetchData, data, loading } = userget();
 
 const getUserData = async () => {
   await fetchData({
@@ -1122,11 +1136,12 @@ const handleGive = async (item: any) => {
     giftId: item.id,
     number: 1,
   });
+  // debugger
   if (giftSuccess.value) {
+    SvgaDialogRef.value.state.svgaUrl = item.icon;
     // showToast("Success");
     SvgaDialogRef.value.state.showModal = true;
     // svgaUrl.value = item.icon;
-    SvgaDialogRef.value.state.svgaUrl = item.icon;
 
     showGiftPopup.value = false;
     giftPopupRef.value.wollectFetch();
@@ -1285,6 +1300,7 @@ const handleGive = async (item: any) => {
       }
       .audioBoxUserLeft {
         max-width: 494px;
+        min-width: 120px;
         background: #ffffff;
         border-radius: 0px 32px 32px 32px;
         display: flex;
@@ -1431,6 +1447,7 @@ const handleGive = async (item: any) => {
       }
       .audioBoxUserRight {
         max-width: 494px;
+        min-width: 120px;
         background: #ff4d42;
         border-radius: 32px 32px 0px 32px;
         display: flex;

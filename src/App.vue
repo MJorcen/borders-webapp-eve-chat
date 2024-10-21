@@ -109,7 +109,7 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   // 免费通话
   if (data[0].body.type === "freeCall/dial") {
-    alert("免费通话");
+    // alert("免费通话");
     const isFreeCalling = localStorage.getItem("isFreeCalling");
     if (isFreeCalling === "true") {
       return;
@@ -263,6 +263,30 @@ evenBus.on("onSendMsg", (data: any) => {
       console.log(error);
       console.log(obj, "插入的本地会话结构体");
       console.log("插入本地会话" + (!error ? "成功" : "失败"));
+      // debugger;
+      // nim?.getLocalMsgs({
+      //   scene: "p2p",
+      //   limit: 500,
+      //   // to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userId}`,
+      //   sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+      //     data[0].body.data?.from
+      //   }`,
+      //   done: (error3: any, objMsg: any) => {
+      //     const insertData = obg || 0;
+      //     insertData.unread = objMsg?.msgs?.length;
+      //     // debugger;
+      //     nim.updateLocalSession({
+      //       localCustom: JSON.stringify(insertData),
+      //       id: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+      //         data[0].body.data?.from
+      //       }`,
+      //       done: (err: any, obj: any) => {
+      //         console.log(`output->错误`, err);
+      //         console.log(`output->更新的会话结构`, obj);
+      //       },
+      //     });
+      //   },
+      // });
       nim.updateLocalSession({
         localCustom: JSON.stringify(obg),
         id: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${

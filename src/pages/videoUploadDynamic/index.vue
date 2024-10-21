@@ -125,6 +125,11 @@ const handleSubmit = async () => {
     showToast("Please fill in the text");
     return;
   }
+  showLoadingToast({
+    message: "Submitting...",
+    forbidClick: true,
+    duration: 0,
+  });
   const arr: any = [];
   state.fileList.forEach((item: any) => {
     arr.push(item.id);
@@ -165,6 +170,8 @@ const handleSubmit = async () => {
       font-weight: 500;
       font-size: 26px;
       color: #1a1a1a;
+      min-height: 320px;
+      min-width: 100%;
     }
     .textRight {
       font-family: "SF Pro Display", sans-serif;

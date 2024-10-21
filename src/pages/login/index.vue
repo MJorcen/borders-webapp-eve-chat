@@ -176,7 +176,7 @@ const handleLogin = async () => {
   //根据缓存获取广告参数
 
   const link_id: any = JSON.parse(
-    localStorage.getItem("__rb_9982674608_link_id")
+    localStorage.getItem("__rb_3262701136_link_id")
   );
   state.linkId = link_id;
   // state.linkId = "L2410143112486100044585990";

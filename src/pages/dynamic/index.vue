@@ -111,12 +111,25 @@
               "
             >
             </van-image>
-            <video
-              v-else
-              class="videoClass"
-              :src="item.images?.[0]?.resourcePath"
-              controls
-            ></video>
+            <div v-else style="position: relative">
+              <video
+                class="videoClass"
+                :src="item.images?.[0]?.resourcePath"
+                controls
+                ref="videoRefDynamic"
+              ></video>
+              <div
+                style="
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                  z-index: 22;
+                "
+                @click="handlePlayVideo(item.images?.[0]?.resourcePath)"
+              ></div>
+            </div>
           </div>
           <div class="bottomBox">
             <img
@@ -445,6 +458,25 @@ const handleFollow = async (item: any) => {
   } else {
     showToast(followMsg.value);
   }
+};
+
+const videoRefDynamic = ref<any>();
+
+const handlePlayVideo = (url: String) => {
+  let currElement = videoRefDynamic.value[0];
+  currElement.src = url;
+  if (currElement.requestFullscreen) {
+    currElement.requestFullscreen();
+  } else if (currElement.mozRequestFullScreen) {
+    currElement.mozRequestFullScreen();
+  } else if (currElement.msRequestFullscreen) {
+    currElement.msRequestFullscreen();
+  } else if (currElement.oRequestFullscreen) {
+    currElement.oRequestFullscreen();
+  } else if (currElement.webkitRequestFullscreen) {
+    currElement.webkitRequestFullScreen();
+  }
+  videoRefDynamic.value.play();
 };
 
 const regions = [

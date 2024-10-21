@@ -282,6 +282,24 @@ evenBus.on("insetCallMsg", (data: any) => {
 
   state.insetData = JSON.parse(data?.bodyString);
   const obj = JSON.parse(data?.bodyString);
+
+  let newWsMsgArr: any = [];
+  try {
+    newWsMsgArr = JSON.parse(localStorage.getItem("wsMsgArr") || "[]");
+  } catch (e) {
+    console.log(e);
+  }
+
+  const insetObj = {
+    bodyString: "[Call]",
+    from: obj?.data?.call?.fromUserId,
+    to: obj?.data?.call?.toUserId,
+    ts: new Date().getTime(),
+  };
+
+  newWsMsgArr.push(insetObj);
+  localStorage.setItem("wsMsgArr", JSON.stringify(newWsMsgArr));
+
   nim.saveMsgsToLocal({
     msgs: [
       {
@@ -310,11 +328,18 @@ evenBus.on("insetCallMsg", (data: any) => {
     done: saveMsgsToLocalDone,
   });
 
-  function saveMsgsToLocalDone(error: any, obj: any) {
+  function saveMsgsToLocalDone(error: any, obj1: any) {
     console.log("我被执行了");
     console.log(error);
-    console.log(obj, "插入的会话构造体");
+    console.log(obj1, "插入的会话构造体");
     console.log("插入本地消息" + (!error ? "成功" : "失败"));
+    nim.insertLocalSession({
+      scene: "p2p",
+      to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+        obj?.data?.call?.fromUserId
+      }`,
+      done: () => {},
+    });
   }
 });
 
@@ -561,6 +586,7 @@ const getCountryImg = (item: any) => {
   .videoClass {
     width: 100%;
     height: 100vh;
+    object-fit: cover;
   }
   .closeImgMq {
     width: 96px;

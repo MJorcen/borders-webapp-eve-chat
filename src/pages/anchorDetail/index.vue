@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="bigBox"
-    @touchstart="handleTouchStart"
+  <!-- @touchstart="handleTouchStart"
     @touchmove="handleTouchMove"
-    @touchend="handleTouchEnd"
-  >
+    @touchend="handleTouchEnd" -->
+  <div class="bigBox">
     <van-icon
       name="arrow-left"
       class="backBtn"
@@ -417,8 +415,11 @@ const onChange = (index: number) => {
     .ovllowBox {
       position: absolute;
       bottom: 80px;
-      left: 324px;
-      width: 400px;
+      // left: 324px;
+      left: 20px;
+      // width: 400px;
+      width: 100%;
+      padding-right: 20px;
       height: 108px;
       overflow-x: auto;
       display: flex;

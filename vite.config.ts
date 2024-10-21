@@ -118,7 +118,7 @@ export default defineConfig(({ command, mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ""), // 重写路径，去除请求前缀
         },
         "/qqq": {
-          target: "http://devres.sqqy188.com", // 后端API的实际地址
+          target: "https://img.duome.live", // 后端API的实际地址
           changeOrigin: true, // 是否改变源，开启后会对主机头进行修改， 默认false
           rewrite: (path) => path.replace(/^\/qqq/, ""), // 重写路径，去除请求前缀
         },

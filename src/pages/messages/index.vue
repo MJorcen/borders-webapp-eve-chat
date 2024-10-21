@@ -18,10 +18,10 @@
           class="deleteImg"
         />
       </div>
-      <div class="scollTop" v-if="active === 0 && state.messageList.length">
+      <!-- <div class="scollTop" v-if="active === 0 && state.messageList.length">
         <div
           :class="item.onLine ? 'userItem' : 'userItemNone'"
-          v-for="(item, index) in state.messageList"
+          v-for="(item, index) in state.messageList.slice(0, 10)"
           :key="index"
         >
           <van-image
@@ -34,7 +34,7 @@
             @click.stop="handleChatRoom(item)"
           ></van-image>
         </div>
-      </div>
+      </div> -->
       <!-- 系统消息 -->
       <div class="noticeTopBoxBig" v-if="active === 0">
         <div class="noticeTopBox" @click="router.push('/notification')">
@@ -79,89 +79,99 @@
       <!-- 访客 -->
     </div>
     <!-- v-if="active === 0 && state.messageList.length" -->
-
     <div class="msgBigOverflow" v-if="active === 0 && state.messageList.length">
-      <div
-        class="noticeTopBoxBigMsg"
-        v-for="(item, index) in state.messageList"
-        :key="index"
-        @click.stop="handleChatRoom(item)"
-      >
-        <div class="noticeTopBox">
-          <van-image
-            round
-            fit="cover"
-            radius="50"
-            :src="item.avatar"
-            class="noticeTopImg"
-            lazy-load
-          ></van-image>
-          <div class="noticeTopBoxRight">
-            <div class="noticeTopBoxRightTop">
-              <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
-              <div
-                class="noticeTopBoxRightTopRight"
-                v-if="
-                  !item?.localCustom || item?.localCustom?.cusstomMsg === ''
-                "
-              >
-                {{ dayjs(item?.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
-              </div>
-              <div v-else class="noticeTopBoxRightTopRight">
-                {{
-                  dayjs(item?.localCustom?.time).format("YYYY-MM-DD HH:mm:ss")
-                }}
-              </div>
-            </div>
-            <div class="noticeTopBoxRightBottomFlex">
-              <!-- !item.localCustom?.cusstomMsg -->
-              <div
-                class="noticeTopBoxRightBottomFlexFont"
-                v-if="
-                  (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
-                  item?.localCustom?.cusstomMsg === ''
-                "
-              >
-                {{
-                  item?.lastMsg?.type === "image"
-                    ? "[Picture]"
-                    : item?.lastMsg?.type === "audio"
-                    ? "[Audio]"
-                    : item.lastMsg?.type === "custom" &&
-                      JSON.parse(item?.lastMsg?.content)?.type === 2
-                    ? "[Video Call]"
-                    : item.lastMsg?.type === "custom" &&
-                      JSON.parse(item?.lastMsg?.content)?.type === 1
-                    ? "[Gift]"
-                    : item?.lastMsg?.text
-                }}
-              </div>
-              <div v-else class="noticeTopBoxRightBottomFlexFont">
-                {{
-                  item?.localCustom?.cusstomMsg?.includes?.("ext")
-                    ? "[Picture]"
-                    : item?.localCustom?.cusstomMsg
-                }}
-              </div>
-              <div
-                class="nums"
-                v-if="
-                  (item.unread <= 99 && item.unread > 0) ||
-                  item?.localCustom?.unread > 0
-                "
-              >
-                {{
-                  !item?.localCustom && !item?.localCustom?.unread
-                    ? item.unread
-                    : item?.localCustom?.unread
-                }}
-              </div>
-              <div class="numsPlus" v-if="item.unread >= 99">99+</div>
+      <van-list>
+        <div
+          class="noticeTopBoxBigMsg"
+          v-for="(item, index) in state.messageList"
+          :key="item.id"
+          @click.stop="handleChatRoom(item)"
+        >
+          <div class="noticeTopBox">
+            <van-image
+              round
+              fit="cover"
+              lazy-load
+              radius="50"
+              :src="item.avatar"
+              class="noticeTopImg"
+            >
+              <template v-slot:loading>
+                <van-loading type="spinner" size="20" />
+              </template>
+            </van-image>
+            <div class="noticeTopBoxRight">
+              <van-skeleton title :row="4" :loading="loadingSkeleton">
+                <div class="noticeTopBoxRightTop">
+                  <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
+                  <div
+                    class="noticeTopBoxRightTopRight"
+                    v-if="
+                      !item?.localCustom || item?.localCustom?.cusstomMsg === ''
+                    "
+                  >
+                    {{ dayjs(item?.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+                  </div>
+                  <div v-else class="noticeTopBoxRightTopRight">
+                    {{
+                      dayjs(item?.localCustom?.time).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )
+                    }}
+                  </div>
+                </div>
+                <div class="noticeTopBoxRightBottomFlex">
+                  <!-- !item.localCustom?.cusstomMsg -->
+                  <div
+                    class="noticeTopBoxRightBottomFlexFont"
+                    v-if="
+                      (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
+                      item?.localCustom?.cusstomMsg === ''
+                    "
+                  >
+                    {{
+                      item?.lastMsg?.type === "image"
+                        ? "[Picture]"
+                        : item?.lastMsg?.type === "audio"
+                        ? "[Audio]"
+                        : item.lastMsg?.type === "custom" &&
+                          JSON.parse(item?.lastMsg?.content)?.type === 2
+                        ? "[Video Call]"
+                        : item.lastMsg?.type === "custom" &&
+                          JSON.parse(item?.lastMsg?.content)?.type === 1
+                        ? "[Gift]"
+                        : item?.lastMsg?.text
+                    }}
+                  </div>
+                  <div v-else class="noticeTopBoxRightBottomFlexFont">
+                    {{
+                      item?.localCustom?.cusstomMsg?.includes?.("ext")
+                        ? "[Picture]"
+                        : item?.localCustom?.cusstomMsg
+                    }}
+                  </div>
+                  <div
+                    class="nums"
+                    v-if="
+                      (item.unread <= 99 && item.unread > 0) ||
+                      item?.localCustom?.unread > 0
+                    "
+                  >
+                    {{
+                      !item?.localCustom && !item?.localCustom?.unread
+                        ? item.unread
+                        : item?.localCustom?.unread
+                    }}
+                  </div>
+                  <div class="numsPlus" v-if="item.unread >= 99">99+</div>
+                </div>
+              </van-skeleton>
             </div>
           </div>
         </div>
-      </div>
+      </van-list>
     </div>
+
     <Empty v-if="active === 0 && !state.messageList.length"></Empty>
 
     <van-pull-refresh
@@ -311,9 +321,10 @@ const active = ref(0);
 
 const router = useRouter();
 
-const { nim, hooksState } = useImHook();
+const { nim } = useImHook();
 
 const getLocalSessions = () => {
+  loadingSkeleton.value = true;
   return new Promise((resolve, reject) => {
     nim?.getLocalSessions({
       limit: 100,
@@ -327,6 +338,8 @@ const getLocalSessions = () => {
     }
   });
 };
+
+const loadingSkeleton = ref(true);
 
 evenBus.on("updateonSessions", (data: any) => {
   getLocalSessions().then((sessions: any) => {
@@ -356,7 +369,6 @@ onMounted(async () => {
   });
   // await getMsgList(hooksState.messageList);
   document.body.style.overflow = "auto";
-
 });
 
 onActivated(() => {
@@ -365,28 +377,50 @@ onActivated(() => {
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
   document.body.style.overflow = "auto";
+  closeToast();
 });
 
 const { user: userInfo }: any = useUserStore();
 
+function getCompareTime(item: any) {
+  try {
+    const localCustom = JSON.parse(item?.localCustom);
+    if (localCustom && localCustom.time) {
+      return localCustom.time;
+    }
+  } catch (error) {
+    // 如果解析失败，忽略错误
+  }
+  return item.updateTime;
+}
+
 const getMsgList = async (data: any) => {
   state.messageList = data;
-  state.messageList.map((item: any, index: number) => {
-    if (item.lastMsg) {
+  for (let i = 0; i < state.messageList.length; i++) {
+    if (state.messageList[i]?.lastMsg) {
       nim.getUser({
         account:
-          item.to ===
+          state.messageList[i].to ===
           `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
-            ? item.lastMsg.from
-            : item.to,
+            ? state.messageList[i].lastMsg.from
+            : state.messageList[i].to,
         done: (error: any, user: any) => getUserDone(error, user),
       });
     }
+  }
+  state.messageList = state.messageList.sort((a, b) => {
+    const timeA = getCompareTime(a);
+    const timeB = getCompareTime(b);
+    return timeB - timeA;
   });
+  // state.messageList = state.messageList.reverse();
+  setTimeout(() => {
+    loadingSkeleton.value = false;
+  }, 300);
   closeToast();
 };
 
@@ -508,6 +542,9 @@ const handleClick = (index: number) => {
 };
 </script>
 <style lang="scss" scoped>
+[v-cloak] {
+  display: none !important;
+}
 .bigBoxs {
   // padding-bottom: 100px;
   .tabsBox {
@@ -758,11 +795,14 @@ const handleClick = (index: number) => {
       }
     }
   }
+
   .msgBigOverflow {
-    height: calc(100vh - 710px);
+    height: calc(100vh - 610px);
     overflow-y: scroll;
     padding-bottom: 100px;
+
     .noticeTopBoxBigMsg {
+      transform: translateZ(0);
       overflow: hidden;
       display: flex;
       align-items: center;
