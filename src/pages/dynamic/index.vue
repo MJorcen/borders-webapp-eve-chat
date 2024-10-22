@@ -279,6 +279,7 @@ const handleScroll = () => {
 };
 
 onActivated(() => {
+  state.showPopup = false;
   document.body.style.overflow = "auto";
   window.addEventListener("scroll", handleScroll);
   const scrollY = localStorage.getItem("dynaMicScroll") || 0;
@@ -289,6 +290,7 @@ onActivated(() => {
 });
 
 onDeactivated(() => {
+  state.showPopup = false;
   localStorage.setItem("dynaMicScroll", scrollY.value);
   window.removeEventListener("scroll", handleScroll);
 });
@@ -318,6 +320,7 @@ const state = reactive<any>({
 
 onMounted(() => {
   getList();
+  state.showPopup = false;
 });
 
 const {
@@ -346,11 +349,12 @@ const onSelect = (val: any) => {
     });
     if (blockSuccess.value) {
       showToast("Success");
-      state.showPopup = false;
+      // state.showPopup = false;
     } else {
       showToast(blockMsg.value);
     }
   }
+  state.showPopup = true;
 };
 
 const handlePost = (type: number) => {

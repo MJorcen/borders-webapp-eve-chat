@@ -10,6 +10,17 @@
       size="30"
       @click.stop="router.go(-1)"
     />
+    <!-- <img
+      class="sandian"
+      @click.stop="state.showPopup = true"
+      src="./assets/sandian.png"
+    /> -->
+    <van-icon
+      @click.stop="state.showPopup = true"
+      class="sandian"
+      name="weapp-nav"
+      size="30"
+    />
     <div class="swiperBox">
       <van-swipe
         ref="swipeRef"
@@ -220,6 +231,14 @@
       </div>
     </div>
   </div>
+  <van-action-sheet
+    @select="onSelect"
+    v-model:show="state.showPopup"
+    :actions="state.actions"
+    cancel-text="cancel"
+    close-on-click-action
+    @cancel="state.showPopup = false"
+  />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
@@ -231,6 +250,7 @@ import {
   userreceiveStats,
   postuser,
   userunfollow,
+  userblock,
 } from "@/api/allApi";
 import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
@@ -239,6 +259,7 @@ import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 
 onMounted(() => {
+  state.showPopup = false;
   getUserDetail();
   getReciveGifs();
   document.body.style.overflow = "auto";
@@ -249,7 +270,47 @@ onMounted(() => {
 
 const state = reactive({
   showRechargePopup: false,
+  showPopup: false,
+  actions: [
+    {
+      name: "Report",
+    },
+    {
+      name: "Block",
+    },
+  ],
 });
+const {
+  fetchData: blockFetch,
+  msg: blockMsg,
+  success: blockSuccess,
+} = userblock();
+const onSelect = (val: any) => {
+  if (val.name === "Report") {
+    router.push({
+      name: "BlockAndReport",
+      query: {
+        type: "Report",
+        id: route.query.id,
+      },
+    });
+  } else {
+    showLoadingToast({
+      duration: 0,
+      message: "Please wait...",
+      forbidClick: true,
+    });
+    blockFetch({
+      toUserId: route.query.id,
+    });
+    if (blockSuccess.value) {
+      showToast("Success");
+    } else {
+      showToast(blockMsg.value);
+    }
+  }
+  state.showPopup = true;
+};
 
 const swipeRef = ref(null);
 
@@ -406,6 +467,12 @@ const onChange = (index: number) => {
     position: absolute;
     top: 20px;
     left: 18px;
+    z-index: 20;
+  }
+  .sandian {
+    position: absolute;
+    top: 20px;
+    right: 18px;
     z-index: 20;
   }
   .swiperBox {

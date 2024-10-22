@@ -298,7 +298,7 @@
               v-if="
                 it.type === 'audio' ||
                 it.text.includes('audio') ||
-                it.text.includes('"ext":"aac"')
+                JSON?.parse?.(JSON.stringify(it.text))?.ext === 'aac'
               "
               :class="
                 it.to !== roomUserId ? 'audioBoxUserLeft' : 'audioBoxUserRight'

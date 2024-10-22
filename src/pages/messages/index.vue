@@ -38,10 +38,7 @@
       <!-- 系统消息 -->
       <div class="noticeTopBoxBig" v-if="active === 0">
         <div class="noticeTopBox" @click="router.push('/notification')">
-          <img
-            src="./assets/_Avatar／Notifications@2x.png"
-            class="noticeTopImg"
-          />
+          <img src="./assets/noticeNew.png" class="noticeTopImg" />
           <div class="noticeTopBoxRight">
             <div class="noticeTopBoxRightTop">
               <div class="noticeTopBoxRightTopLeft">Notifications</div>
@@ -492,6 +489,13 @@ const handleClear = () => {
 };
 
 const handleChatRoom = (item: any) => {
+  router.push({
+    name: "ChatRoom",
+    query: {
+      user: JSON.stringify(item),
+      type: "formMsgList",
+    },
+  });
   // 假如存在自定义字段进去会话前要清0未读数;
   if (item?.localCustom) {
     nim.getLocalSession({
@@ -521,13 +525,6 @@ const handleChatRoom = (item: any) => {
   }
 
   nim.resetSessionUnread(item.id);
-  router.push({
-    name: "ChatRoom",
-    query: {
-      user: JSON.stringify(item),
-      type: "formMsgList",
-    },
-  });
 };
 
 const handleClick = (index: number) => {
