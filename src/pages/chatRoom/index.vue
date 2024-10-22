@@ -1125,7 +1125,12 @@ const getCountryImg = (item: any) => {
   }
 };
 
-const { fetchData: giftFetch, success: giftSuccess, msg: giftMsg } = giftsend();
+const {
+  fetchData: giftFetch,
+  data: sendGiftData,
+  success: giftSuccess,
+  msg: giftMsg,
+} = giftsend();
 
 const giftPopupRef = ref<any>();
 
@@ -1138,7 +1143,8 @@ const handleGive = async (item: any) => {
   });
   // debugger
   if (giftSuccess.value) {
-    SvgaDialogRef.value.state.svgaUrl = item.icon;
+    SvgaDialogRef.value.state.svgaUrl =
+      sendGiftData?.value?.gift?.animateResource;
     // showToast("Success");
     SvgaDialogRef.value.state.showModal = true;
     // svgaUrl.value = item.icon;

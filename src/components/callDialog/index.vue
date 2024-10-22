@@ -238,6 +238,7 @@
     @handleGive="handleGive"
   ></GiftPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
 </template>
 
 <script setup lang="ts">
@@ -263,6 +264,7 @@ import { useZego } from "@/hook/useZego";
 import evenBus from "@/common/evenBus";
 import { giftsend } from "@/api/allApi";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import SvgaDialog from "@/components/svgaDialog/index.vue";
 
 interface Prop {
   modelValue: boolean;
@@ -595,9 +597,16 @@ zg.on("IMRecvCustomCommand", async (roomID, fromUser, command) => {
   state.msgList.push(translateData.value.text);
 });
 
-const { fetchData: giftFetch, success: giftSuccess, msg: giftMsg } = giftsend();
+const {
+  fetchData: giftFetch,
+  data: sendGiftData,
+  success: giftSuccess,
+  msg: giftMsg,
+} = giftsend();
 
 const giftPopupRef = ref<any>();
+
+const SvgaDialogRef = ref<any>();
 
 const handleGive = async (item: any) => {
   const userId =
@@ -612,13 +621,17 @@ const handleGive = async (item: any) => {
   });
   if (giftSuccess.value) {
     showToast("Success");
-    // SvgaDialogRef.value.state.showModal = true;
-    // svgaUrl.value = item.icon;
-    // SvgaDialogRef.value.state.svgaUrl = item.icon;
+    SvgaDialogRef.value.state.svgaUrl =
+      sendGiftData?.value?.gift?.animateResource;
+    SvgaDialogRef.value.state.showModal = true;
 
     showGiftPopup.value = false;
     giftPopupRef.value.wollectFetch();
     // handleSendMsg(item);
+    state.msgList.push({
+      ...item,
+      type: "gift",
+    });
   } else {
     state.showRechargePopup = true;
     showToast(giftMsg.value);

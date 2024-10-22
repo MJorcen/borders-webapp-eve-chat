@@ -40,8 +40,7 @@ const props = withDefaults(defineProps(), {
 const state = reactive({
   showModal: false,
   showClose: true,
-  svgaUrl:
-    "https://img.duome.live/alpha/img/240902/05662582e2690d4d219c4d6e80ca00b2.png-small",
+  svgaUrl: "",
 });
 
 const player = ref(null);
@@ -59,7 +58,7 @@ watch(
   { immediate: true, deep: true }
 );
 
-const handlePlay = () => {
+const handlePlay = async () => {
   // 获取id的dom元素
   player.value = new SVGA.Player("#demoCanvas");
   parser.value = new SVGA.Parser();
@@ -76,7 +75,6 @@ const handlePlay = () => {
     },
     function (error) {
       console.log(error, "错误");
-      // alert(error);
       state.showModal = false;
     }
   );
@@ -122,7 +120,7 @@ defineExpose({
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 27;
+  z-index: 60;
 }
 
 .top {
