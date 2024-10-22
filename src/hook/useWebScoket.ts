@@ -57,7 +57,7 @@ const useWebSocketHeartbeat = () => {
         }
         // }
 
-        // startHeartbeat();
+        startHeartbeat();
         reconnectDelay = INITIAL_RECONNECT_DELAY; // 重置重连延迟时间
         clearTimeout(reconnectTimer); // 取消重连定时器
       });
@@ -97,7 +97,7 @@ const useWebSocketHeartbeat = () => {
         isConnect.value = false;
         stopHeartbeat();
         console.log(`output->`, ws.value);
-        connectWebSocket(true);
+        // connectWebSocket(true);
         // attemptReconnect();
       });
 
@@ -168,6 +168,8 @@ const useWebSocketHeartbeat = () => {
     stopHeartbeat();
     clearTimeout(reconnectTimer);
   };
+
+
 
   // onMounted(connectWebSocket);
   // onUnmounted(disconnectWebSocket);
