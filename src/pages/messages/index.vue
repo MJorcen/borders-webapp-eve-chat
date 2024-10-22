@@ -360,15 +360,19 @@ const tabsList: any = reactive([
 const { fetchData: noticeFetch, data: noticeData } = notiflist();
 
 onMounted(async () => {
-  await getList();
-  await noticeFetch({
-    tab: 3,
-  });
+  // await getList();
+  // await noticeFetch({
+  //   tab: 3,
+  // });
   // await getMsgList(hooksState.messageList);
   document.body.style.overflow = "auto";
 });
 
-onActivated(() => {
+onActivated(async () => {
+  await getList();
+  await noticeFetch({
+    tab: 3,
+  });
   // showLoadingToast({
   //   duration: 0,
   //   message: "Loading...",

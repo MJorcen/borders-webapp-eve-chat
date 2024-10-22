@@ -196,7 +196,7 @@
     </div>
     <div class="bottomBox">
       <img
-        src="./assets/按钮@2x.png"
+        src="./assets/chatroom.png"
         class="bottomBoxLeftImg"
         @click.stop="
           () => {
