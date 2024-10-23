@@ -454,11 +454,16 @@
             accept="image/gif, image/jpeg, image/jpg, image/png, image/svg"
           />
         </div>
-        <img
+        <!-- <img
           class="toolsImg"
           src="./assets/ic_video_fill@2x.png"
           @click.stop="handleGo(data)"
-        />
+        /> -->
+        <div class="toolsImg" @click.stop="handleGo(data)">
+          <SvgaShow
+            :url="'https://fs.duome.live/app/animation/call_animation_color.svga'"
+          ></SvgaShow>
+        </div>
         <img
           class="toolsImg"
           src="./assets/ic_gift@2x.png"
@@ -538,6 +543,7 @@ import { giftsend, datatranslate, userunfollow } from "@/api/allApi";
 import { handleGo } from "@/common/fetchCommon";
 import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 const preFix = import.meta.env.VITE_APP_ACCOUNT_PREFIX;
 

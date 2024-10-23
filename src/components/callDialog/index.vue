@@ -139,7 +139,7 @@
 
             <img
               class="camera"
-              @click="handleChangeCamera"
+              @click.stop="handleChangeCamera"
               src="./assets/ic_changecamera@2x.png"
               alt=""
             />
@@ -348,11 +348,11 @@ watch(
   (newValue) => {
     startTime.value = 0;
     currentTime.value = 0;
+    state.cammera = 0;
+    state.msgList = [];
     stopTimer();
     if (newValue) {
       startTimer();
-      state.cammera = 0;
-      state.msgList = [];
       toggleBodyScroll(newValue);
     }
   },

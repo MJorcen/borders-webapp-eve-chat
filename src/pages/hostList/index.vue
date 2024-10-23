@@ -59,7 +59,7 @@
                 :src="item?.user?.avatar"
                 lazy-load
               ></van-image>
-              <img
+              <!-- <img
                 class="caozuo"
                 src="./assets/caozuo.png"
                 v-if="item.user.inCall === 0 && item.user.active === 1"
@@ -72,7 +72,24 @@
                     });
                   }
                 "
-              />
+              /> -->
+              <div
+                v-if="item.user.inCall === 0 && item.user.active === 1"
+                class="caozuo"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        state.showRechargePopup = true;
+                      }
+                    });
+                  }
+                "
+              >
+                <SvgaShow
+                  :url="'https://fs.duome.live/app/animation/call_animation.svga'"
+                ></SvgaShow>
+              </div>
               <img
                 v-else
                 class="caozuo"
@@ -263,6 +280,7 @@ import FirstChargeVipPopup from "@/components/firstChargeVipPopup/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import Cookies from "js-cookie";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 const active = ref(0);
 

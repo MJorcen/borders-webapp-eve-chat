@@ -204,6 +204,7 @@
               name: 'ChatRoom',
               query: { user: JSON.stringify(data?.user) },
             });
+            handleCash();
           }
         "
       />
@@ -219,7 +220,10 @@
           }
         "
       >
-        <img src="./assets/ic_call_video@2x.png" class="bottomBoxRightImg" />
+        <SvgaShow
+          :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+        ></SvgaShow>
+        <!-- <img src="./assets/ic_call_video@2x.png" class="bottomBoxRightImg" /> -->
         <img src="./assets/coin_300@2x.png" class="bottomBoxRightImgGold" />
         <div class="nums">
           {{
@@ -257,6 +261,7 @@ import { showImagePreview, showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
 import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 onMounted(() => {
   state.showPopup = false;
@@ -439,6 +444,15 @@ const getCountryImg = (item: any) => {
   }
 };
 
+const handleCash = () => {
+  const currentObj = {
+    userId: data?.value?.user?.id,
+    time: new Date().getTime(),
+  };
+  localStorage.setItem("currentChatRoomObj", JSON.stringify(currentObj));
+  localStorage.setItem("topNotification", JSON.stringify(currentObj));
+};
+
 const handleCopy = async (str: string) => {
   const textarea = document.createElement("textarea");
   textarea.value = str;
@@ -463,6 +477,7 @@ const onChange = (index: number) => {
 .bigBox {
   min-height: 100%;
   position: relative;
+  overflow-x: hidden;
   .backBtn {
     position: absolute;
     top: 20px;
