@@ -15,6 +15,7 @@
             () => {
               nim.resetSessionUnread(`p2p-${preFix}${data?.user?.id}`);
               router.go(-1);
+              handleSetCash();
             }
           "
         />
@@ -1154,6 +1155,11 @@ const handleGive = async (item: any) => {
   } else {
     showToast(giftMsg.value);
   }
+};
+
+const handleSetCash = () => {
+  // localStorage.setItem("currentChatRoomObj", "");
+  localStorage.setItem("topNotification", "");
 };
 </script>
 <style lang="scss" scoped>
