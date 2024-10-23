@@ -87,7 +87,8 @@
                 "
               >
                 <SvgaShow
-                  :url="'https://fs.duome.live/app/animation/call_animation.svga'"
+                  :divId="`demo${item?.user?.id}${index}`"
+                  :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
                 ></SvgaShow>
               </div>
               <img
@@ -180,7 +181,7 @@
                 :src="item?.avatar"
                 lazy-load
               ></van-image>
-              <img
+              <!-- <img
                 class="caozuo"
                 src="./assets/caozuo.png"
                 v-if="item?.inCall === 0 && item?.active === 1"
@@ -193,7 +194,25 @@
                     });
                   }
                 "
-              />
+              /> -->
+              <div
+                v-if="item.user.inCall === 0 && item.user.active === 1"
+                class="caozuo"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        state.showRechargePopup = true;
+                      }
+                    });
+                  }
+                "
+              >
+                <SvgaShow
+                  :divId="`demo${item?.user?.id}${index}`"
+                  :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+                ></SvgaShow>
+              </div>
               <img
                 v-else
                 class="caozuo"
@@ -510,6 +529,8 @@ const onLoad = () => {
         position: absolute;
         right: 18px;
         bottom: 16px;
+        border-radius: 50%;
+        background-color: #ff6046;
       }
       .bottmBox1 {
         position: absolute;
