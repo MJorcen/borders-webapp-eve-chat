@@ -527,8 +527,12 @@ const handleChatRoom = (item: any) => {
       },
     });
   }
-
-  nim.resetSessionUnread(item.id);
+  const topNotificationObj = {
+    userId: removeSubstrings(item.lastMsg.from),
+    time: new Date().getTime(),
+  };
+  localStorage.setItem("topNotification", JSON.stringify(topNotificationObj));
+  // nim.resetSessionUnread(item.id);
 };
 
 const handleClick = (index: number) => {
@@ -558,7 +562,7 @@ const handleClick = (index: number) => {
     padding-right: 32px;
     position: sticky;
     top: 0;
-    z-index: 30;
+    z-index: 18;
     background-color: #ffffff;
     .tabsBoxLeft {
       display: flex;

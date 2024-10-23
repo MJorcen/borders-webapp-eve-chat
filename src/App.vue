@@ -38,7 +38,10 @@
       ></CallFreeDialog>
     </div>
   </div>
-
+  <TopNotification
+    v-model="state.showNotification"
+    :wsData="state.notificationData"
+  ></TopNotification>
   <audio style="display: none" controls loop muted ref="audioRef">
     <source src="./assets/call.mp3" />
   </audio>
@@ -59,6 +62,7 @@ import { generateRandomString } from "./common/utils";
 // import { useImHook } from "@/hook/useIm";
 // import screenfull from "screenfull";
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
+import TopNotification from "@/components/topNotification/index.vue";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -70,6 +74,8 @@ const state = reactive({
   showFreeDialog: false,
   callFreeWsData: {},
   showCallFreeDetail: false,
+  notificationData: {},
+  showNotification: false,
 });
 
 const audioRef = ref<any>(null);
@@ -77,6 +83,30 @@ const audioRef = ref<any>(null);
 const showCallDialog = ref(false);
 
 const callDialogRef = ref<any>(null);
+
+evenBus.on("updateTopNotification", (data: any) => {
+
+  let localCustomObj: any = {};
+  try {
+    localCustomObj = JSON?.parse(data?.localCustom);
+  } catch (e) {}
+
+  if (data?.localCustom && localCustomObj?.unread === 0) return;
+  if (!data?.localCustom && data?.unread === 0) return;
+
+  const noticeData = data;
+  nim.getUser({
+    account: data?.lastMsg?.from,
+
+    done: (error: any, user: any) => {
+      noticeData.avatar = user.avatar;
+      noticeData.nick = user?.nick;
+      state.notificationData = noticeData;
+
+      state.showNotification = true;
+    },
+  });
+});
 
 evenBus.on("inviteCall", async (data: any) => {
   // 被呼叫时

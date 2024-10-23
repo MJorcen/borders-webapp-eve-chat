@@ -438,7 +438,7 @@ const onLoad = () => {
     padding-left: 32px;
     position: sticky;
     top: 0;
-    z-index: 29;
+    z-index: 19;
     background-color: #ffffff;
     .tabs {
       font-family: "SF Pro Display", sans-serif;

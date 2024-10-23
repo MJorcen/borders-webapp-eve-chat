@@ -129,6 +129,7 @@ export const useImHook = () => {
     console.log("会话更新了", session);
     evenBus.emit("updateSession", newData);
     evenBus.emit("updateSessionChatRoom", newData);
+    evenBus.emit("updateTopNotification", session);
   }
 
   // function onUpdateUser(user: any) {
