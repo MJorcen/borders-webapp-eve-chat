@@ -81,7 +81,7 @@
         <div
           class="noticeTopBoxBigMsg"
           v-for="(item, index) in state.messageList"
-          :key="item.id"
+          :key="item?.id"
           @click.stop="handleChatRoom(item)"
         >
           <div class="noticeTopBox">
@@ -90,17 +90,17 @@
               fit="cover"
               lazy-load
               radius="50"
-              :src="item.avatar"
+              :src="item?.avatar"
               class="noticeTopImg"
             >
-              <template v-slot:loading>
+              <!-- <template v-slot:loading>
                 <van-loading type="spinner" size="20" />
-              </template>
+              </template> -->
             </van-image>
             <div class="noticeTopBoxRight">
               <van-skeleton title :row="4" :loading="loadingSkeleton">
                 <div class="noticeTopBoxRightTop">
-                  <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
+                  <div class="noticeTopBoxRightTopLeft">{{ item?.nick }}</div>
                   <div
                     class="noticeTopBoxRightTopRight"
                     v-if="
@@ -122,7 +122,7 @@
                   <div
                     class="noticeTopBoxRightBottomFlexFont"
                     v-if="
-                      (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
+                      (!item?.localCustom && !item?.localCustom?.cusstomMsg) ||
                       item?.localCustom?.cusstomMsg === ''
                     "
                   >
@@ -131,10 +131,10 @@
                         ? "[Picture]"
                         : item?.lastMsg?.type === "audio"
                         ? "[Audio]"
-                        : item.lastMsg?.type === "custom" &&
+                        : item?.lastMsg?.type === "custom" &&
                           JSON.parse(item?.lastMsg?.content)?.type === 2
                         ? "[Video Call]"
-                        : item.lastMsg?.type === "custom" &&
+                        : item?.lastMsg?.type === "custom" &&
                           JSON.parse(item?.lastMsg?.content)?.type === 1
                         ? "[Gift]"
                         : item?.lastMsg?.text
@@ -150,17 +150,17 @@
                   <div
                     class="nums"
                     v-if="
-                      (item.unread <= 99 && item.unread > 0) ||
+                      (item?.unread <= 99 && item?.unread > 0) ||
                       item?.localCustom?.unread > 0
                     "
                   >
                     {{
                       !item?.localCustom && !item?.localCustom?.unread
-                        ? item.unread
+                        ? item?.unread
                         : item?.localCustom?.unread
                     }}
                   </div>
-                  <div class="numsPlus" v-if="item.unread >= 99">99+</div>
+                  <div class="numsPlus" v-if="item?.unread >= 99">99+</div>
                 </div>
               </van-skeleton>
             </div>
@@ -338,19 +338,72 @@ const getLocalSessions = () => {
 
 const loadingSkeleton = ref(true);
 
-evenBus.on("updateonSessions", (data: any) => {
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-    closeToast();
-  });
-});
+// evenBus.on("updateonSessions", (data: any) => {
+//   getLocalSessions().then((sessions: any) => {
+//     getMsgList(sessions);
+//     closeToast();
+//   });
+// });
 
 evenBus.on("updateSession", (data: any) => {
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-    closeToast();
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  //   closeToast();
+  // });
+  getNewMsg(data);
 });
+
+const getNewMsg = async (session: any) => {
+  loadingSkeleton.value = false;
+  state.messageList = [...state.messageList, session];
+  const account =
+    session.to ===
+    `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
+      ? session.lastMsg.from
+      : session.to;
+  await nim.getUser({
+    account,
+    done: (error: any, user: any) => {
+      // if (error) {
+      state.messageList = state.messageList.map((item: any) => {
+        if (item?.id === session?.id) {
+          item = {
+            ...session,
+            avatar: user?.avatar,
+            nick: user?.nick,
+          };
+          if (user?.custom) {
+            item.custom = JSON?.parse(user?.custom || "{}");
+          }
+          if (session?.localCustom) {
+            try {
+              item.localCustom = JSON.parse(session.localCustom || "{}");
+            } catch (err) {
+              console.warn(err);
+            }
+          }
+          return item;
+        }
+        return item;
+      });
+      // }
+    },
+  });
+
+  state.messageList = state.messageList.reduce((acc: any, current: any) => {
+    const x = acc.find((item: any) => item?.id === current?.id);
+
+    if (!x) {
+      acc.push(current);
+    }
+    return acc;
+  }, []);
+  state.messageList = state.messageList.sort((a, b) => {
+    const timeA = getCompareTime(a);
+    const timeB = getCompareTime(b);
+    return timeB - timeA;
+  });
+};
 
 const tabsList: any = reactive([
   { title: "Messages", active: true },
@@ -365,7 +418,11 @@ onMounted(async () => {
   //   tab: 3,
   // });
   // await getMsgList(hooksState.messageList);
+
   document.body.style.overflow = "auto";
+  getLocalSessions().then((sessions: any) => {
+    getMsgList(sessions);
+  });
 });
 
 onActivated(async () => {
@@ -378,9 +435,9 @@ onActivated(async () => {
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
   document.body.style.overflow = "auto";
   closeToast();
 });
