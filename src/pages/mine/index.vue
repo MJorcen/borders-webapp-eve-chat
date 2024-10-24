@@ -112,6 +112,16 @@
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
     </div>
+
+    <div class="settingBox" v-if="environmentVariable === 'development'">
+      <div class="itemBox" @click="handleClearStoranage">
+        <div class="flex items-center">
+          <img :src="img3" class="iconImg" />
+          <div class="itemBoxLeft">{{ "清缓存" }}</div>
+        </div>
+        <van-icon name="arrow" color="#cccccc" size="20" />
+      </div>
+    </div>
   </div>
   <!-- <audio width="100%" height="100%" controls class="audioClass" ref="audioRef">
     <source
@@ -154,6 +164,8 @@ onMounted(() => {
   getUserDetail();
 });
 
+const environmentVariable = import.meta.env.VITE_NODE_ENV;
+
 const state = reactive({
   showVipPopup: false,
   href: "",
@@ -162,9 +174,6 @@ const state = reactive({
 // onActivated(() => {
 //   getUserDetail();
 // });
-console.log(
-  `https://img.duome.live/audio/230826/047a2f3954fb213f0a652624f75c7d57.aac`
-);
 
 const { setUser }: any = useUserDetailStore();
 
@@ -215,10 +224,6 @@ const settingList = reactive<any>([
     icon: img2,
     route: "/feedBack",
   },
-  // {
-  //   name: "Settings",
-  //   icon: img3,
-  // },
 ]);
 
 const regions = [
@@ -254,6 +259,10 @@ const getCountryImg = (item: any) => {
   } else {
     return defaultImg;
   }
+};
+
+const handleClearStoranage = () => {
+  localStorage.clear();
 };
 </script>
 <style lang="scss" scoped>

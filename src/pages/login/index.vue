@@ -219,7 +219,7 @@ const handleLogin = async () => {
     model: "MI 10",
     userAgent: "cs",
     androidId: "123456",
-    installReferrer: JSON.stringify(state.urlData),
+    referrer: JSON.stringify(state.urlData),
     // ...state.urlData,
   });
   localStorage.setItem("link_id", state.linkId);
@@ -228,7 +228,7 @@ const handleLogin = async () => {
     model: "MI 10",
     userAgent: "cs",
     androidId: "123456",
-    installReferrer: JSON.stringify(state.urlData),
+    referrer: JSON.stringify(state.urlData),
 
     // ...res,
   });

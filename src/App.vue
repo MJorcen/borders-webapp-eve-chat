@@ -85,7 +85,6 @@ const showCallDialog = ref(false);
 const callDialogRef = ref<any>(null);
 
 evenBus.on("updateTopNotification", (data: any) => {
-
   let localCustomObj: any = {};
   try {
     localCustomObj = JSON?.parse(data?.localCustom);

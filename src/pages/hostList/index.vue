@@ -196,7 +196,7 @@
                 "
               /> -->
               <div
-                v-if="item.user.inCall === 0 && item.user.active === 1"
+                v-if="item?.inCall === 0 && item?.active === 1"
                 class="caozuo"
                 @click.stop="
                   () => {

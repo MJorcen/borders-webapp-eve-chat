@@ -493,6 +493,7 @@ const handleClear = () => {
 };
 
 const handleChatRoom = (item: any) => {
+  if (loadingSkeleton.value) return;
   router.push({
     name: "ChatRoom",
     query: {

@@ -309,21 +309,23 @@
                   if (it?.file) {
                     it.file.isRead = true;
                     it.file.isPlay = true;
+                  } else {
+                    it.isPlay = true;
                   }
                   handlePlay(e, it?.file?.mp3Url || JSON.parse(it?.text)?.url);
-                  if (it?.file) {
-                    handlePlayOver(it?.file);
-                  }
+                  // if (it?.file) {
+                  handlePlayOver(it);
+                  // }
                 }
               "
             >
               <img
-                v-if="it.to !== roomUserId && !it.file?.isPlay"
+                v-if="it.to !== roomUserId && !it.file?.isPlay && !it.isPlay"
                 src="./assets/ic_voice.png"
                 class="w-[24px] h-[24px] mr-[10px]"
               />
               <img
-                v-if="it.to !== roomUserId && it.file?.isPlay"
+                v-if="it.to !== roomUserId && (it.file?.isPlay || it.isPlay)"
                 src="./assets/saying.gif"
                 class="w-[24px] h-[24px] mr-[10px]"
               />
@@ -335,7 +337,7 @@
               <div class="audioNums">
                 {{
                   Math.floor(
-                    it.file?.dur || JSON.parse(it?.text)?.dur / 1000
+                    it.file?.dur / 1000 || JSON.parse(it?.text)?.dur / 1000
                   ) || 2
                 }}"
               </div>
@@ -366,7 +368,7 @@
               />
             </div>
             <!-- 小圆点 -->
-            <div
+            <!-- <div
               v-if="
                 it.to !== roomUserId &&
                 it.type === 'audio' &&
@@ -374,7 +376,7 @@
                 it.file.isNewAudioMsg
               "
               class="yuan"
-            ></div>
+            ></div> -->
             <!-- 小圆点 -->
 
             <!-- 右边的头像 -->
@@ -683,11 +685,11 @@ const getUserData = async () => {
 
 // 防止浏览器刷新
 evenBus.on("onConnect", () => {
-  showLoadingToast({
-    message: "Please wait...",
-    forbidClick: true,
-    duration: 0,
-  });
+  // showLoadingToast({
+  //   message: "Please wait...",
+  //   forbidClick: true,
+  //   duration: 0,
+  // });
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
     getChatMsgList(res || []);
   });
@@ -893,13 +895,14 @@ evenBus.on("onMsg", (msg: any) => {
 });
 
 const getNowMsgList = (msg: any) => {
-  showLoadingToast({
-    message: "Please wait...",
-    forbidClick: true,
-    duration: 0,
-  });
+  // showLoadingToast({
+  //   message: "Please wait...",
+  //   forbidClick: true,
+  //   duration: 0,
+  // });
   const time = extractDate(msg.time);
   let newMsg = msg;
+
   if (msg.type === "audio") {
     newMsg.file.isRead = false;
     newMsg.file.isNewAudioMsg = true;
@@ -1045,9 +1048,15 @@ const handlePlay = (e: any, url: string) => {
 };
 
 const handlePlayOver = (item: any) => {
-  setTimeout(() => {
-    item.isPlay = false;
-  }, item.dur);
+  if (item?.file) {
+    setTimeout(() => {
+      item.file.isPlay = false;
+    }, item.file.dur);
+  } else {
+    setTimeout(() => {
+      item.isPlay = false;
+    }, JSON.parse(item.text)?.dur);
+  }
 };
 
 const {

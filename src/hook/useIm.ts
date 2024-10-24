@@ -1,5 +1,5 @@
 import SDK from "@yxim/nim-web-sdk";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import evenBus from "@/common/evenBus";
 import { closeToast, showLoadingToast } from "vant";
 import useWebSocketHeartbeat from "./useWebScoket";
@@ -35,7 +35,7 @@ export const useImHook = () => {
 
   const nim: any = SDK.NIM.getInstance({
     appKey: import.meta.env.VITE_APP_IM_APPKEY,
-    debug: true,
+    debug: import.meta.env.VITE_NODE_ENV === "prod" ? false : true,
     db: true,
     dbLog: true,
     account: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
@@ -130,6 +130,7 @@ export const useImHook = () => {
     evenBus.emit("updateSession", newData);
     evenBus.emit("updateSessionChatRoom", newData);
     evenBus.emit("updateTopNotification", session);
+    closeToast();
   }
 
   // function onUpdateUser(user: any) {
@@ -146,9 +147,8 @@ export const useImHook = () => {
     // } else {
     //   connectWebSocket();
     // }
-    connectWebSocket(true);
-
     evenBus.emit("setFunc", nim);
+    connectWebSocket(true);
   }
 
   // 获取单聊消息
@@ -172,8 +172,8 @@ export const useImHook = () => {
             // closeToast();
           } else {
             msgHistoryArr = obj.msgs || [];
-            resolve(msgHistoryArr);
             closeToast();
+            resolve(msgHistoryArr);
           }
         },
       });
