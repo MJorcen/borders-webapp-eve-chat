@@ -1,80 +1,91 @@
 <template>
-  <van-nav-bar left-text="" title="Visitor" fixed :border="false">
-    <template #left>
-      <van-icon @click="router.back()"name="arrow-left" size="18" color="#000000" />
-    </template>
-  </van-nav-bar>
-  <div class="w-[100%] h-[50px]"></div>
-  <van-pull-refresh
-    v-model="loading"
-    @refresh="
-      () => {
-        state.offset = 0;
-        state.list = [];
-        getList();
-      }
-    "
-  >
-    <template #pulling>
-      <span>Loading...</span>
-    </template>
-    <template #loosing>
-      <span>Loading...</span>
-    </template>
-    <template #loading>
-      <span>Loading...</span>
-    </template>
-    <van-list
-      v-model:loading="loading"
-      :finished="state.finished"
-      finished-text="Noting More"
-      loading-text="Loading..."
-      @load="getList()"
+  <div class="bigBox">
+    <van-nav-bar left-text="" title="Visitor" fixed :border="false">
+      <template #left>
+        <van-icon
+          @click="router.back()"
+          name="arrow-left"
+          size="18"
+          color="#000000"
+        />
+      </template>
+    </van-nav-bar>
+    <div class="w-[100%] h-[50px]"></div>
+    <van-pull-refresh
+      v-model="loading"
+      @refresh="
+        () => {
+          state.offset = 0;
+          state.list = [];
+          getList();
+        }
+      "
     >
-      <div class="callBigBox" v-for="(item, index) in state.list" :key="index">
+      <template #pulling>
+        <span>Loading...</span>
+      </template>
+      <template #loosing>
+        <span>Loading...</span>
+      </template>
+      <template #loading>
+        <span>Loading...</span>
+      </template>
+      <van-list
+        v-model:loading="loading"
+        :finished="state.finished"
+        finished-text="Noting More"
+        loading-text="Loading..."
+        @load="getList()"
+      >
         <div
-          class="callBoxItem"
-          @click="
-            () => {
-              router.push({
-                name: 'AnchorDetail',
-                query: { id: item?.user.id },
-              });
-            }
-          "
+          class="callBigBox"
+          v-for="(item, index) in state.list"
+          :key="index"
         >
-          <div class="callBoxItemLeft">
-            <img :src="item.user.avatar" class="callBoxItemLeftImg" />
-            <div class="callContent">
-              <div class="callContentTop">{{ item.user.nickname }}</div>
-              <div class="callContentBottom">ID:{{ item.user.id }}</div>
+          <div
+            class="callBoxItem"
+            @click="
+              () => {
+                router.push({
+                  name: 'AnchorDetail',
+                  query: { id: item?.user.id },
+                });
+              }
+            "
+          >
+            <div class="callBoxItemLeft">
+              <img :src="item.user.avatar" class="callBoxItemLeftImg" />
+              <div class="callContent">
+                <div class="callContentTop">{{ item.user.nickname }}</div>
+                <div class="callContentBottom">ID:{{ item.user.id }}</div>
+              </div>
+            </div>
+            <div class="callBoxItemRight">
+              <div class="callBoxItemRightOne" style="margin-bottom: 8px">
+                {{ item.count }} Visit
+              </div>
+              <div class="callBoxItemRightOne">{{ item.updatedAt }}</div>
             </div>
           </div>
-          <div class="callBoxItemRight">
-            <div class="callBoxItemRightOne" style="margin-bottom: 8px">
-              {{ item.count }} Visit
+        </div>
+      </van-list>
+      <Empty v-if="!state.list.length"> </Empty>
+    </van-pull-refresh>
+    <Dialog ref="DialogRef">
+      <template #modalContent>
+        <div class="dialogContent">
+          <img src="./assets/Frame@2x.png" class="w-[120px] h-[120px]" />
+          <div class="dialogFont">Subescribe to Vip and view all visitors</div>
+          <div class="dialogBtnBig">
+            <div class="dialogBtn" @click="state.showVipPopup = true">
+              Get VIP
             </div>
-            <div class="callBoxItemRightOne">{{ item.updatedAt }}</div>
           </div>
         </div>
-      </div>
-    </van-list>
-    <Empty v-if="!state.list.length"> </Empty>
-  </van-pull-refresh>
-  <Dialog ref="DialogRef">
-    <template #modalContent>
-      <div class="dialogContent">
-        <img src="./assets/Frame@2x.png" class="w-[120px] h-[120px]" />
-        <div class="dialogFont">Subescribe to Vip and view all visitors</div>
-        <div class="dialogBtnBig">
-          <div class="dialogBtn" @click="state.showVipPopup = true">
-            Get VIP
-          </div>
-        </div>
-      </div>
-    </template>
-  </Dialog>
-  <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
+      </template>
+    </Dialog>
+    <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
+  </div>
 </template>
 
 <script setup lang="ts">

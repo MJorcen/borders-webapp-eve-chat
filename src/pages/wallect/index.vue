@@ -70,49 +70,49 @@
         </div>
       </div>
     </div>
-  </div>
-  <van-popup v-model:show="state.showPopup" position="bottom" round>
-    <div class="popupBox">
-      <div class="popupBoxTop">
-        <img src="./assets/coin_20@2x.png" class="rightImg" />
-        <div class="myWalletFont">{{ state.selectMoney }}</div>
-      </div>
-      <div class="itemBig">
-        <div
-          class="itemBox"
-          @click="handleSelect(item)"
-          v-for="(item, index) in state.channelData"
-          :key="index"
-        >
-          <div class="itemBoxLeft">
-            <img
-              src="./assets/ic_select@2x.png"
-              v-if="item.selected"
-              class="choseBoxImg"
-            />
-            <img
-              src="./assets/ic_select@2x (1).png"
-              v-else
-              class="choseBoxImg"
-            />
-            <img :src="item.channel.icon" class="activeSelectImg" alt="" />
-            <div class="activeSelectText">{{ item.channel.displayName }}</div>
-            <div class="activeSelectText">
-              {{ item.channel.discountText }}
+    <van-popup v-model:show="state.showPopup" position="bottom" round>
+      <div class="popupBox">
+        <div class="popupBoxTop">
+          <img src="./assets/coin_20@2x.png" class="rightImg" />
+          <div class="myWalletFont">{{ state.selectMoney }}</div>
+        </div>
+        <div class="itemBig">
+          <div
+            class="itemBox"
+            @click="handleSelect(item)"
+            v-for="(item, index) in state.channelData"
+            :key="index"
+          >
+            <div class="itemBoxLeft">
+              <img
+                src="./assets/ic_select@2x.png"
+                v-if="item.selected"
+                class="choseBoxImg"
+              />
+              <img
+                src="./assets/ic_select@2x (1).png"
+                v-else
+                class="choseBoxImg"
+              />
+              <img :src="item.channel.icon" class="activeSelectImg" alt="" />
+              <div class="activeSelectText">{{ item.channel.displayName }}</div>
+              <div class="activeSelectText">
+                {{ item.channel.discountText }}
+              </div>
+            </div>
+            <div class="itemBoxRight">
+              {{ item.price.symbol }}{{ item.price.money }}
             </div>
           </div>
-          <div class="itemBoxRight">
-            {{ item.price.symbol }}{{ item.price.money }}
-          </div>
+        </div>
+        <div class="btnBig" v-if="state.showLink">
+          <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
+            <div class="btnBox">Submit</div>
+          </a>
         </div>
       </div>
-      <div class="btnBig" v-if="state.showLink">
-        <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
-          <div class="btnBox">Submit</div>
-        </a>
-      </div>
-    </div>
-  </van-popup>
+    </van-popup>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,65 +1,67 @@
 <template>
-  <van-nav-bar title="Edit Profile" left-text="" fixed :border="false">
-    <template #left>
-      <van-icon
-        @click="router.go(-1)"
-        name="arrow-left"
-        size="18"
-        color="#000000"
-      />
-    </template>
-    <template #right>
-      <div class="rightBtn" @click="handleSave">Save</div>
-    </template>
-  </van-nav-bar>
-  <div class="container">
-    <div class="containerTop">
-      <div class="containerTopLeft">Profile Photo</div>
-      <van-uploader :after-read="afterRead">
-        <img
-          v-if="data?.user?.avatar === ''"
-          src="./assets/Component 4@2x.png"
-          class="containerTopRight"
-          alt=""
-        />
-        <img v-else :src="state.form.avatar" class="containerTopRight" />
-      </van-uploader>
-    </div>
-    <div class="containerTop2">
-      <div class="containerTop2Left">Nickname</div>
-      <div class="containerTop2Right">
-        <input v-model="state.form.nickname" class="inputClass" />
+  <div class="bigBox">
+    <van-nav-bar title="Edit Profile" left-text="" fixed :border="false">
+      <template #left>
         <van-icon
-          v-if="state.form.nickname !== ''"
-          name="cross"
+          @click="router.go(-1)"
+          name="arrow-left"
           size="18"
-          color="#ebebeb"
-          class="iconClass"
-          @click="state.form.nickname = ''"
+          color="#000000"
+        />
+      </template>
+      <template #right>
+        <div class="rightBtn" @click="handleSave">Save</div>
+      </template>
+    </van-nav-bar>
+    <div class="container">
+      <div class="containerTop">
+        <div class="containerTopLeft">Profile Photo</div>
+        <van-uploader :after-read="afterRead">
+          <img
+            v-if="data?.user?.avatar === ''"
+            src="./assets/Component 4@2x.png"
+            class="containerTopRight"
+            alt=""
+          />
+          <img v-else :src="state.form.avatar" class="containerTopRight" />
+        </van-uploader>
+      </div>
+      <div class="containerTop2">
+        <div class="containerTop2Left">Nickname</div>
+        <div class="containerTop2Right">
+          <input v-model="state.form.nickname" class="inputClass" />
+          <van-icon
+            v-if="state.form.nickname !== ''"
+            name="cross"
+            size="18"
+            color="#ebebeb"
+            class="iconClass"
+            @click="state.form.nickname = ''"
+          />
+        </div>
+      </div>
+      <div class="containerTop2">
+        <div class="containerTop2Left">Gender</div>
+        <div class="containerTop2Right">Male</div>
+      </div>
+      <div class="containerTop3">
+        <div class="containerTop3Ttile">Bio</div>
+        <textarea
+          class="textarea"
+          v-model="state.form.bio"
+          maxlength="200"
+        ></textarea>
+      </div>
+      <div class="uploadBox">
+        <div class="uploadBoxTitle">Photo</div>
+        <van-uploader
+          @delete="handleDelete"
+          accept="image/*"
+          class="upload"
+          v-model="state.fileList"
+          :after-read="afterReadPhoto"
         />
       </div>
-    </div>
-    <div class="containerTop2">
-      <div class="containerTop2Left">Gender</div>
-      <div class="containerTop2Right">Male</div>
-    </div>
-    <div class="containerTop3">
-      <div class="containerTop3Ttile">Bio</div>
-      <textarea
-        class="textarea"
-        v-model="state.form.bio"
-        maxlength="200"
-      ></textarea>
-    </div>
-    <div class="uploadBox">
-      <div class="uploadBoxTitle">Photo</div>
-      <van-uploader
-        @delete="handleDelete"
-        accept="image/*"
-        class="upload"
-        v-model="state.fileList"
-        :after-read="afterReadPhoto"
-      />
     </div>
   </div>
 </template>

@@ -1,9 +1,11 @@
 <template>
   <div class="appBox">
-    <router-view v-slot="{ Component }">
-      <keep-alive :include="['HostList', 'Messages', 'Dynamic', 'MatchHome']">
-        <component :is="Component"> </component>
-      </keep-alive>
+    <router-view v-slot="{ Component, route }">
+      <transition :name="route.meta.transition">
+        <keep-alive :include="['HostList', 'Messages', 'Dynamic', 'MatchHome']">
+          <component :is="Component" :key="route.path"> </component>
+        </keep-alive>
+      </transition>
     </router-view>
     <div class="dialogBox">
       <CallDialog
@@ -63,6 +65,7 @@ import { generateRandomString } from "./common/utils";
 // import screenfull from "screenfull";
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
 import TopNotification from "@/components/topNotification/index.vue";
+import { useRouter } from "vue-router";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -363,10 +366,72 @@ const handleVisibilityChange = async () => {
     await connectWebSocket(true);
   }
 };
+
+const router = useRouter();
+
+let position = 0;
+
+router.beforeEach((to) => {
+  // if (to?.name === "AnchorDetail") return;
+
+  // 判断是前进还是返回
+  const isBack = position > window.history.state.position;
+  to.meta.transition = isBack ? "slide-right" : "slide-left";
+});
+
+router.afterEach((to) => {
+  // 跳转后清空
+  position = window.history.state?.position || 0;
+});
 </script>
 <style lang="scss" scoped>
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 300ms ease, opacity 400ms step-end;
+  backface-visibility: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+.slide-left-enter-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  background-color: #fff;
+}
+
+.slide-right-leave-active {
+  z-index: 99;
+}
+
+.slide-left-enter-active {
+  background-color: #fff;
+}
+
+.slide-left-enter-from {
+  transform: translateX(80vw);
+}
+
+.slide-right-enter-from {
+  transform: translateX(-10vw);
+}
+
+.slide-right-leave-from {
+  transform: translateX(40vw);
+}
+
+.slide-right-leave-active {
+  transform: translateX(100vw);
+}
 .appBox {
   position: relative;
+  /* slide */
+
   .dialogBox {
     position: absolute;
     top: 0;
@@ -375,3 +440,77 @@ const handleVisibilityChange = async () => {
   }
 }
 </style>
+
+<!-- <template>
+  <router-view v-slot="{ Component, route }">
+    <transition :name="route.meta.transition">
+      <keep-alive :include="['HostList', 'Messages', 'Dynamic', 'MatchHome']">
+        <component :is="Component" :key="route.path"> </component>
+      </keep-alive>
+    </transition>
+  </router-view>
+</template>
+
+<script setup lang="ts">
+import { nextTick, onMounted, onUnmounted, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+let position = 0;
+
+router.beforeEach((to) => {
+  // 判断是前进还是返回
+  const isBack = position > window.history.state.position;
+  to.meta.transition = "slide-right";
+  console.log(`output->`, to.meta.transition);
+  // debugger;
+});
+
+router.afterEach(() => {
+  // 跳转后清空
+  position = window.history.state?.position || 0;
+});
+</script>
+<style lang="scss" scoped>
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 300ms ease, opacity 400ms step-end;
+  backface-visibility: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+.slide-left-enter-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.slide-right-leave-active {
+  z-index: 1;
+}
+
+.slide-left-enter-active {
+  background-color: #fff;
+}
+
+.slide-left-enter-from {
+  transform: translateX(80vw);
+}
+
+.slide-right-enter-from {
+  transform: translateX(-10vw);
+}
+
+.slide-right-leave-from {
+  transform: translateX(40vw);
+}
+
+.slide-right-leave-active {
+  transform: translateX(100vw);
+}
+</style> -->
