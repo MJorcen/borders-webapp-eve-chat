@@ -1,15 +1,15 @@
 <template>
-  <van-nav-bar title="Block List" left-text="" fixed :border="false">
-    <template #left>
-      <van-icon
-        @click="router.go(-1)"
-        name="arrow-left"
-        size="18"
-        color="#000000"
-      />
-    </template>
-  </van-nav-bar>
   <div class="bigBox">
+    <van-nav-bar title="Block List" left-text="" fixed :border="false">
+      <template #left>
+        <van-icon
+          @click="router.go(-1)"
+          name="arrow-left"
+          size="18"
+          color="#000000"
+        />
+      </template>
+    </van-nav-bar>
     <van-pull-refresh
       v-model="loading"
       @refresh="

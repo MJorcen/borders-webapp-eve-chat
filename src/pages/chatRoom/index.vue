@@ -473,38 +473,38 @@
         />
       </div>
     </div>
-  </div>
-  <audio
-    style="display: none"
-    width="100%"
-    height="100%"
-    controls
-    class="audioClass"
-    ref="audioRef"
-  >
-    <source type="audio/aac" />
-    <source type="audio/mp3" />
-    <source type="audio/mp4" />
+    <audio
+      style="display: none"
+      width="100%"
+      height="100%"
+      controls
+      class="audioClass"
+      ref="audioRef"
+    >
+      <source type="audio/aac" />
+      <source type="audio/mp3" />
+      <source type="audio/mp4" />
 
-    <!-- <source type="audio/mpeg,mp3,mp4"/> -->
-  </audio>
-  <Dialog ref="DialogRef">
-    <template v-slot:modalContent>
-      <div class="redBox" v-if="!isInside">
-        <img class="redSource" src="./assets/redSource.png" />
-      </div>
-      <div class="whiteBox" v-else>
-        <img class="whiteSource" src="./assets/whiteSource.png" />
-      </div>
-    </template>
-  </Dialog>
-  <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
-  <giftPopup
-    ref="giftPopupRef"
-    v-model="showGiftPopup"
-    @handleGive="handleGive"
-  ></giftPopup>
-  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+      <!-- <source type="audio/mpeg,mp3,mp4"/> -->
+    </audio>
+    <Dialog ref="DialogRef">
+      <template v-slot:modalContent>
+        <div class="redBox" v-if="!isInside">
+          <img class="redSource" src="./assets/redSource.png" />
+        </div>
+        <div class="whiteBox" v-else>
+          <img class="whiteSource" src="./assets/whiteSource.png" />
+        </div>
+      </template>
+    </Dialog>
+    <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
+    <giftPopup
+      ref="giftPopupRef"
+      v-model="showGiftPopup"
+      @handleGive="handleGive"
+    ></giftPopup>
+    <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  </div>
 </template>
 
 <script setup lang="ts">

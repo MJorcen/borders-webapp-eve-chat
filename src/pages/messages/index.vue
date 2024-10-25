@@ -386,22 +386,21 @@ const getNewMsg = async (session: any) => {
         }
         return item;
       });
+      state.messageList = state.messageList.reduce((acc: any, current: any) => {
+        const x = acc.find((item: any) => item?.id === current?.id);
+
+        if (!x) {
+          acc.push(current);
+        }
+        return acc;
+      }, []);
+      state.messageList = state.messageList.sort((a, b) => {
+        const timeA = getCompareTime(a);
+        const timeB = getCompareTime(b);
+        return timeB - timeA;
+      });
       // }
     },
-  });
-
-  state.messageList = state.messageList.reduce((acc: any, current: any) => {
-    const x = acc.find((item: any) => item?.id === current?.id);
-
-    if (!x) {
-      acc.push(current);
-    }
-    return acc;
-  }, []);
-  state.messageList = state.messageList.sort((a, b) => {
-    const timeA = getCompareTime(a);
-    const timeB = getCompareTime(b);
-    return timeB - timeA;
   });
 };
 
