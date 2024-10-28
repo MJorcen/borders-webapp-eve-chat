@@ -80,7 +80,7 @@
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        state.showRechargePopup = true;
+                        state.showVipPopup = true;
                       }
                     });
                   }
@@ -202,7 +202,7 @@
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        state.showRechargePopup = true;
+                        state.showVipPopup = true;
                       }
                     });
                   }
@@ -300,6 +300,7 @@ import VipPopup from "@/components/vipPopup/index.vue";
 import Cookies from "js-cookie";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
 
 const active = ref(0);
 
@@ -337,6 +338,8 @@ const handleScroll = () => {
   scrollY.value = window.pageYOffset;
 };
 
+const { setVipConfigData } = useVipConfigStore();
+
 onActivated(async () => {
   document.body.style.overflow = "auto";
   window.addEventListener("scroll", handleScroll);
@@ -348,6 +351,7 @@ onActivated(async () => {
   await configFetch();
   await configFetchTwo();
   await webConfigFetch();
+  setVipConfigData(configDataTwo.value)
   const localVersion = localStorage.getItem("version");
   if (localVersion !== webConfigData.value.version) {
     localStorage.setItem("version", webConfigData.value.version);

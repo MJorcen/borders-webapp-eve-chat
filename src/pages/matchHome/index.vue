@@ -54,6 +54,7 @@
     <source src="./assets/match.mp3" />
   </audio>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <Tabbar></Tabbar>
 </template>
 
@@ -61,18 +62,23 @@
 import { ref, reactive, onMounted, nextTick, onActivated } from "vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import { useRoute } from "vue-router";
-import { matchprice, matchstart, matchstop } from "@/api/allApi";
+import { matchprice, matchstart, matchstop, vipconfig } from "@/api/allApi";
 import { showToast } from "vant";
 import evenBus from "@/common/evenBus";
 import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
 
 const route = useRoute();
 
 const state = reactive({
   showBottomFixedBox: false,
   showRechargePopup: false,
+  showVipPopup: false,
 });
+
+const { vipConfigData } = useVipConfigStore();
 
 const audioMatchRef: any = ref(null);
 
@@ -124,7 +130,8 @@ const handleMatch = async (type: number) => {
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
-      state.showRechargePopup = true;
+      // state.showRechargePopup = true;
+      state.showVipPopup = true;
       audioMatchRef.value.pause();
     }
   }
