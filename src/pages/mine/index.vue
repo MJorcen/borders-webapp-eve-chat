@@ -141,6 +141,7 @@ import { userDetail, userwallet, vipconfig, checkInvip } from "@/api/allApi";
 import { showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
+import Cookies from "js-cookie";
 
 const router = useRouter();
 
@@ -256,6 +257,7 @@ const getCountryImg = (item: any) => {
 
 const handleClearStoranage = () => {
   localStorage.clear();
+  Cookies.remove("deviceId");
 };
 </script>
 <style lang="scss" scoped>

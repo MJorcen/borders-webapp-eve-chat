@@ -80,7 +80,11 @@
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        state.showVipPopup = true;
+                        if (userDetail?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
                       }
                     });
                   }
@@ -202,7 +206,11 @@
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        state.showVipPopup = true;
+                        if (userDetail?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
                       }
                     });
                   }
@@ -304,6 +312,9 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import { useUserDetailStore } from "@/stores/userDetail";
+
+const { userDetail }: any = useUserDetailStore();
 
 const active = ref(0);
 
@@ -319,7 +330,7 @@ const state = reactive<any>({
   followList: [],
   showVipPopup: false,
   showRechargePopup: false,
-  showDownLoadPopup: true,
+  showDownLoadPopup: false,
 });
 
 const tabsList: any = reactive([
@@ -360,12 +371,12 @@ onActivated(async () => {
     webConfigFetch(),
     wollectFetch(),
   ]);
-  setVipConfigData(configDataTwo.value)
+  setVipConfigData(configDataTwo.value);
 
   const localVersion = localStorage.getItem("version");
   if (localVersion !== webConfigData.value.version) {
     localStorage.setItem("version", webConfigData.value.version);
-    window.location.reload();
+    // window.location.reload();
     // return true;
   }
   const canVipCheckIn = Cookies.get("canVipCheckIn");

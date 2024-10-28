@@ -49,7 +49,7 @@
   </audio>
 </template>
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 import CallDialog from "@/components/callDialog/index.vue";
 import evenBus from "@/common/evenBus";
 import { useZego } from "@/hook/useZego";
@@ -60,9 +60,6 @@ import CallFreeDetail from "@/components/CallFreeDetail/index.vue";
 import Cookies from "js-cookie";
 import { userDetail } from "@/api/allApi";
 import { generateRandomString } from "./common/utils";
-// import { generateRandomString } from "./common/utils";
-// import { useImHook } from "@/hook/useIm";
-// import screenfull from "screenfull";
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
 import TopNotification from "@/components/topNotification/index.vue";
 import { useRouter } from "vue-router";

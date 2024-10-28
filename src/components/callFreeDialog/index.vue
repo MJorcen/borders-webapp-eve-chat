@@ -54,7 +54,7 @@
 
             <img
               class="camera"
-              @click="state.showRechargePopup = true"
+              @click="state.showVipPopup = true"
               src="./assets/ic_changecamera@2x.png"
               alt=""
             />
@@ -115,7 +115,7 @@
           class="giftBox"
           src="./assets/ic_calling_gift@2x.png"
           alt=""
-          @click="state.showRechargePopup = true"
+          @click="state.showVipPopup = true"
         />
         <div class="reciveBottomBox">
           <img
@@ -123,28 +123,28 @@
             v-if="state.showAudio"
             src="./assets/ic_calling_mic@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
           <img
             class="maiKai"
             v-else
             src="./assets/ic_mic-off@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
           <img
             class="videoKai"
             v-if="state.showVideo"
             src="./assets/ic_camera_open@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
           <img
             class="videoKai"
             v-if="!state.showVideo"
             src="./assets/ic_camera_close@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
 
           <div class="sendBox">
@@ -153,18 +153,18 @@
               class="inputBox"
               type="text"
               placeholder="Say somethig..."
-              @click="state.showRechargePopup = true"
+              @click="state.showVipPopup = true"
             />
             <img
               src="./assets/ic_send_2@2x.png"
               class="sendImg"
               alt=""
-              @click="state.showRechargePopup = true"
+              @click="state.showVipPopup = true"
             />
           </div>
           <img
             class="goldIcon"
-            @click="() => (state.showRechargePopup = true)"
+            @click="() => (state.showVipPopup = true)"
             src="./assets/ic_calling_coin@2x.png"
             alt=""
           />
@@ -207,6 +207,7 @@
     </div>
   </transition>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
@@ -227,6 +228,13 @@ import GiftPopup from "@/components/giftPopup/index.vue";
 import { useZego } from "@/hook/useZego";
 import evenBus from "@/common/evenBus";
 import { generateRandomString } from "@/common/utils";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
 
 interface Prop {
   modelValue: boolean;
@@ -252,6 +260,7 @@ const state = reactive({
   showRechargePopup: false,
   insetData: {},
   isPick: false,
+  showVipPopup: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -367,7 +376,11 @@ const handleCallPickUp = async () => {
     // localStorage.setItem("isFreeCalling", "true");
   } else {
     if (code.value === 402) {
-      state.showRechargePopup = true;
+      if (userDetail?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
     }
     emit("handleCallPickUp");
     showToast(pickUpMsg.value);

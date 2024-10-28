@@ -95,6 +95,7 @@
           <div class="bottomBoxConnectFont" v-else>
             Invite you to video call…
           </div>
+
           <!-- 挂断 -->
           <div
             class="bottomBoxConnectGua"
@@ -239,6 +240,7 @@
   ></GiftPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
@@ -265,6 +267,13 @@ import evenBus from "@/common/evenBus";
 import { giftsend } from "@/api/allApi";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaDialog from "@/components/svgaDialog/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
 
 interface Prop {
   modelValue: boolean;
@@ -294,6 +303,7 @@ const state: any = reactive({
   callData: {}, // 主动呼叫传进来的数据
   cammera: 0, // 0:前置摄像头 1:后置摄像头
   showRechargePopup: false,
+  showVipPopup: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -342,6 +352,8 @@ const startTime = ref(0);
 const currentTime = ref(0);
 const timerId = ref(null);
 
+let user = {};
+
 watch(
   () => props.modelValue,
 
@@ -352,14 +364,19 @@ watch(
     state.msgList = [];
     stopTimer();
     if (newValue) {
-      startTimer();
+      try {
+        const info = localStorage.getItem("userInfo");
+        user = JSON.parse(info as string);
+      } catch (e) {
+        console.log("error::", e);
+      }
       toggleBodyScroll(newValue);
     }
   },
   { immediate: true }
 );
 
-const { user }: any = useUserStore();
+// const { user }: any = useUserStore();
 
 const showGiftPopup = ref(false);
 
@@ -411,6 +428,7 @@ const {
   msg: callpickUpMsg,
   success: callpickUpSuccess,
   data: callpickUpData,
+  code,
 } = callpickUp();
 
 const handleCallPickUp = async () => {
@@ -434,6 +452,13 @@ const handleCallPickUp = async () => {
     handleLoginRoom(roomID, token, userID, userName);
     closeToast();
   } else {
+    if (code.value === 402) {
+      if (userDetail?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+    }
     showToast(callpickUpMsg.value);
   }
 };
@@ -465,6 +490,7 @@ const handleLoginRoom = async (
       state.isReactive = true;
       // let localStream: any;
       roomUpdate();
+      startTimer();
 
       try {
         localStream.value = await zg.createZegoStream();
@@ -527,6 +553,7 @@ evenBus.on("byeCall", () => {
 // 主动拨打逻辑
 evenBus.on("activeCall", async (data: any) => {
   await emit("update:wsData", data);
+  state.isReactive = false;
   emit("update:modelValue", true);
 
   const userID = `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
@@ -633,7 +660,8 @@ const handleGive = async (item: any) => {
       type: "gift",
     });
   } else {
-    state.showRechargePopup = true;
+    // state.showRechargePopup = true;
+    state.showVipPopup = true;
     showToast(giftMsg.value);
   }
 };

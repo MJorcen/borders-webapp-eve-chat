@@ -242,7 +242,11 @@
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        state.showRechargePopup = true;
+                        if (userDetail?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
                       }
                     });
                   }
@@ -273,6 +277,7 @@
     </template>
   </van-floating-bubble> -->
   <Tabbar></Tabbar>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
 
@@ -300,6 +305,12 @@ import { handleGo } from "@/common/fetchCommon";
 import { formatSecondsToTime, removeSubstrings } from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
 
 const state = reactive<any>({
   messageList: [],
@@ -307,6 +318,7 @@ const state = reactive<any>({
   offset: 0,
   finished: true,
   showRechargePopup: false,
+  showVipPopup: false,
 });
 
 const offsetPover = ref({

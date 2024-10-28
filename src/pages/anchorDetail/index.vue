@@ -214,7 +214,11 @@
           () => {
             handleGo(data).then((res) => {
               if (!res) {
-                state.showVipPopup = true;
+                if (user?.user?.vipLevel === 0) {
+                  state.showVipPopup = true;
+                } else {
+                  state.showRechargePopup = true;
+                }
               }
             });
           }

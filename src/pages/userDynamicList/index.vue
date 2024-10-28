@@ -88,7 +88,11 @@
               collapse-text="close"
             />
           </div>
-          <div class="transBox" @click="handleTranslate(item)">
+          <div
+            class="transBox"
+            @click="handleTranslate(item)"
+            v-if="item.post.content !== ''"
+          >
             <img class="transImg" src="./assets/icon_translate@2x.png" />
             <div class="transFont">See translation</div>
           </div>
@@ -156,7 +160,11 @@
                 () => {
                   handleGo(item).then((res) => {
                     if (!res) {
-                      state.showRechargePopup = true;
+                      if (userDetail?.user?.vipLevel === 0) {
+                        state.showVipPopup = true;
+                      } else {
+                        state.showRechargePopup = true;
+                      }
                     }
                   });
                 }
@@ -169,7 +177,11 @@
                 () => {
                   handleGo(item).then((res) => {
                     if (!res) {
-                      state.showRechargePopup = true;
+                      if (userDetail?.user?.vipLevel === 0) {
+                        state.showVipPopup = true;
+                      } else {
+                        state.showRechargePopup = true;
+                      }
                     }
                   });
                 }
@@ -193,6 +205,7 @@
     @cancel="state.showPopup = false"
   />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script lang="ts" setup>
@@ -209,6 +222,13 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
 
 const state = reactive<any>({
   showPopover: false,

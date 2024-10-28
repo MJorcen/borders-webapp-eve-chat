@@ -84,7 +84,7 @@
               collapse-text="close"
             />
           </div>
-          <div class="transBox">
+          <div class="transBox" v-if="item.post.content !== ''">
             <img
               @click="handleTranslate(item)"
               class="transImg"
@@ -178,7 +178,11 @@
                 () => {
                   handleGo(item).then((res) => {
                     if (!res) {
-                      state.showVipPopup = true;
+                      if (userDetails?.user?.vipLevel === 0) {
+                        state.showVipPopup = true;
+                      } else {
+                        state.showRechargePopup = true;
+                      }
                     }
                   });
                 }
@@ -191,7 +195,11 @@
                 () => {
                   handleGo(item).then((res) => {
                     if (!res) {
-                      state.showVipPopup = true;
+                      if (userDetails?.user?.vipLevel === 0) {
+                        state.showVipPopup = true;
+                      } else {
+                        state.showRechargePopup = true;
+                      }
                     }
                   });
                 }
@@ -274,6 +282,9 @@ import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import { useUserDetailStore } from "@/stores/userDetail";
+
+const { userDetail: userDetails }: any = useUserDetailStore();
 
 const scrollY = ref<any>(window.pageYOffset);
 

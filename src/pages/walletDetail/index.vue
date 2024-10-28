@@ -106,7 +106,7 @@ const getList = async () => {
 </script>
 <style lang="scss" scoped>
 .bigBox {
-  padding-top: 80px;
+  padding-top: 100px;
   .callBigBox {
     //   height: 168px;
     background: #ffffff;

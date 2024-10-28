@@ -467,7 +467,11 @@
             () => {
               handleGo(data).then((res) => {
                 if (!res) {
-                  state.showVipPopup = true;
+                  if (userDetail?.user?.vipLevel === 0) {
+                    state.showVipPopup = true;
+                  } else {
+                    state.showRechargePopup = true;
+                  }
                 }
               });
             }
@@ -868,7 +872,12 @@ function sendMsgDone(error: any, msg: any) {
     showToast(error);
   } else {
     if (msg.callbackExt) {
-      state.showVipPopup = true;
+      // state.showVipPopup = true;
+      if (userDetail?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
     }
 
     if (state.messageList.length) {

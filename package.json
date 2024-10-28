@@ -8,6 +8,7 @@
     "prod": "vite --mode prod --host",
     "build:test": "vite build --mode test",
     "build:prod": "vite build --mode prod",
+    "build:testprod": "vite build --mode testprod",
     "preview": "vite preview"
   },
   "dependencies": {

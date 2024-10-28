@@ -130,8 +130,13 @@ const handleMatch = async (type: number) => {
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
-      // state.showRechargePopup = true;
-      state.showVipPopup = true;
+
+      if (userDetail?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+
       audioMatchRef.value.pause();
     }
   }
