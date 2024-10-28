@@ -57,7 +57,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import CallDetail from "@/components/callDetail/index.vue";
 import CallFreeDialog from "@/components/callFreeDialog/index.vue";
 import CallFreeDetail from "@/components/CallFreeDetail/index.vue";
-
+import Cookies from "js-cookie";
 import { userDetail } from "@/api/allApi";
 import { generateRandomString } from "./common/utils";
 // import { generateRandomString } from "./common/utils";
@@ -362,6 +362,7 @@ const handleVisibilityChange = async () => {
   console.log(`我重新进来了`, document.visibilityState);
   if (document.visibilityState === "hidden") {
     window.removeEventListener("visibilitychange", () => {});
+    Cookies.remove("showDownLoadPopups");
   } else {
     await connectWebSocket(true);
   }

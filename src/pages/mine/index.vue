@@ -124,7 +124,6 @@
     </div>
   </div>
 
-  <a v-if="environmentVariable === 'development'" :href="state.href">跳转</a>
   <div class="w-[100%] h-[100px]"></div>
 
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
