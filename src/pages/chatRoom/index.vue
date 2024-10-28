@@ -461,7 +461,18 @@
           src="./assets/ic_video_fill@2x.png"
           @click.stop="handleGo(data)"
         /> -->
-        <div class="toolsImg" @click.stop="handleGo(data)">
+        <div
+          class="toolsImg"
+          @click.stop="
+            () => {
+              handleGo(data).then((res) => {
+                if (!res) {
+                  state.showVipPopup = true;
+                }
+              });
+            }
+          "
+        >
           <SvgaShow
             :url="'https://fs.duome.live/app/animation/call_animation_color.svga'"
           ></SvgaShow>
@@ -504,6 +515,7 @@
       @handleGive="handleGive"
     ></giftPopup>
     <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+    <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   </div>
 </template>
 
@@ -546,6 +558,10 @@ import { handleGo } from "@/common/fetchCommon";
 import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+
+const { vipConfigData } = useVipConfigStore();
 
 const preFix = import.meta.env.VITE_APP_ACCOUNT_PREFIX;
 
@@ -580,6 +596,7 @@ const state = reactive<any>({
   messageList: [],
   isInput: true,
   showRechargePopup: false,
+  showVipPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
@@ -851,7 +868,7 @@ function sendMsgDone(error: any, msg: any) {
     showToast(error);
   } else {
     if (msg.callbackExt) {
-      state.showRechargePopup = true;
+      state.showVipPopup = true;
     }
 
     if (state.messageList.length) {

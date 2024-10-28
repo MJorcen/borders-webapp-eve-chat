@@ -214,7 +214,7 @@
           () => {
             handleGo(data).then((res) => {
               if (!res) {
-                state.showRechargePopup = true;
+                state.showVipPopup = true;
               }
             });
           }
@@ -244,6 +244,7 @@
     @cancel="state.showPopup = false"
   />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
@@ -262,6 +263,10 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+
+const { vipConfigData } = useVipConfigStore();
 
 onMounted(() => {
   state.showPopup = false;
@@ -284,6 +289,7 @@ const state = reactive({
       name: "Block",
     },
   ],
+  showVipPopup: false,
 });
 const {
   fetchData: blockFetch,

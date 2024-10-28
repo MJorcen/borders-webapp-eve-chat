@@ -10,3 +10,4 @@ export default pinia;
 export * from "./keepAlive";
 export * from "./user";
 export * from "./userDetail";
+export * from "./vipConfig";

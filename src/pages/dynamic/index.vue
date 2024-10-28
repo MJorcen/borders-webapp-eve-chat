@@ -178,7 +178,7 @@
                 () => {
                   handleGo(item).then((res) => {
                     if (!res) {
-                      state.showRechargePopup = true;
+                      state.showVipPopup = true;
                     }
                   });
                 }
@@ -191,7 +191,7 @@
                 () => {
                   handleGo(item).then((res) => {
                     if (!res) {
-                      state.showRechargePopup = true;
+                      state.showVipPopup = true;
                     }
                   });
                 }
@@ -254,6 +254,7 @@
   </van-floating-bubble>
   <Tabbar></Tabbar>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script lang="ts" setup name="Dynamic">
@@ -271,8 +272,12 @@ import {
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
 
 const scrollY = ref<any>(window.pageYOffset);
+
+const { vipConfigData } = useVipConfigStore();
 
 const handleScroll = () => {
   scrollY.value = window.pageYOffset;
@@ -316,6 +321,7 @@ const state = reactive<any>({
   ],
   blockAndReportId: "",
   showRechargePopup: false,
+  showVipPopup: false,
 });
 
 onMounted(() => {
