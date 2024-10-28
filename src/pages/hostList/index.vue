@@ -276,6 +276,7 @@
   ></FirstChargeVipPopup>
   <VipPopup :vipConfg="configDataTwo" v-model="state.showVipPopup"></VipPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <DownLoadPopup v-model="state.showDownLoadPopup"></DownLoadPopup>
 
   <Tabbar></Tabbar>
 </template>
@@ -290,6 +291,7 @@ import {
   userconfig,
   vipconfig,
   webconfig,
+  userwallet,
 } from "@/api/allApi";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
@@ -299,6 +301,7 @@ import FirstChargeVipPopup from "@/components/firstChargeVipPopup/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import Cookies from "js-cookie";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 
@@ -316,6 +319,7 @@ const state = reactive<any>({
   followList: [],
   showVipPopup: false,
   showRechargePopup: false,
+  showDownLoadPopup: true,
 });
 
 const tabsList: any = reactive([
@@ -331,6 +335,8 @@ const { fetchData: configFetch, data: configData } = userconfig();
 const { fetchData: configFetchTwo, data: configDataTwo } = vipconfig();
 
 const { fetchData: webConfigFetch, data: webConfigData } = webconfig();
+
+const { fetchData: wollectFetch, data: walletData } = userwallet();
 
 const scrollY = ref<any>(window.pageYOffset);
 
@@ -348,10 +354,14 @@ onActivated(async () => {
     top: scrollY,
     behavior: "instant",
   });
-  await configFetch();
-  await configFetchTwo();
-  await webConfigFetch();
+  await Promise.all([
+    configFetch(),
+    configFetchTwo(),
+    webConfigFetch(),
+    wollectFetch(),
+  ]);
   setVipConfigData(configDataTwo.value)
+
   const localVersion = localStorage.getItem("version");
   if (localVersion !== webConfigData.value.version) {
     localStorage.setItem("version", webConfigData.value.version);
@@ -369,6 +379,16 @@ onActivated(async () => {
   if (configData.value.showFirstVipPrompt && !showFirstVipPrompt) {
     showChargePopup.value = true;
     Cookies.set("showFirstVipPrompt", true, { expires: 1 });
+  }
+
+  const showDownLoadPopups = Cookies.get("showDownLoadPopups");
+  if (
+    walletData.value.wallet?.gold < 750 &&
+    !showDownLoadPopups &&
+    configData.value?.hasPayment
+  ) {
+    state.showDownLoadPopup = true;
+    Cookies.set("showDownLoadPopups", true, { expires: 1 });
   }
 });
 
