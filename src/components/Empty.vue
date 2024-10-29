@@ -1,6 +1,6 @@
 <template>
   <div class="bigBox">
-    <img class="bigImg" src="../assets/empty.png" />
+    <img class="bigImg" src="../assets/Group1000004748@2x.webp" />
     <div class="bigText">No Data</div>
   </div>
 </template>
@@ -16,14 +16,14 @@ import { ref, reactive } from "vue";
   flex-direction: column;
   align-items: center;
   .bigImg {
-    width: 300px;
-    height: 300px;
+    width: 527px;
+    height: 269px;
   }
   .bigText {
     font-family: "SF Pro Text", sans-serif;
     font-weight: 400;
     font-size: 28px;
-    color: #8c8c8c;
+    color: #fff;
   }
 }
 </style>

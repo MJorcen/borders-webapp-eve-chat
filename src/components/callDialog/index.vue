@@ -14,7 +14,7 @@
           class="hostImg"
           fit="cover"
         />
-        <div class="topbox" v-if="state.isReactive">
+        <div class="topbox">
           <div class="topLeft">
             <div class="flex items-center">
               <van-image
@@ -52,32 +52,26 @@
                   />
                 </div>
                 <div class="nameBoxBottom">
-                  <img src="./assets/coin_300@2x.png" class="goldIcon" alt="" />
+                  <img
+                    src="./assets/image110@2x.webp"
+                    class="goldIcon"
+                    alt=""
+                  />
                   <div class="goldNum">
                     {{ props?.wsData?.call?.goldPrice }}/min
                   </div>
-                  <!-- <div
-                    class="goldNum"
-                    v-if="props?.wsData?.fromUser?.id === user?.user?.id"
-                  >
-                    {{ props?.wsData?.fromUser?.videoCallPrice }}/min
-                  </div>
-                  <div class="goldNum" v-else>
-                    {{ props?.wsData?.toUser?.videoCallPrice }}/min
-                  </div> -->
                 </div>
               </div>
             </div>
-
-            <!-- <div class="followBtn">Follow</div> -->
           </div>
 
-          <img
-            src="./assets/ic_calling_quit@2x.png"
+          <div
             class="closeImg"
-            alt=""
+            v-if="user?.user?.id !== props?.wsData?.fromUser?.id"
             @click="handleClosePopup"
-          />
+          >
+            <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+          </div>
         </div>
         <div class="timerDisplay" v-if="state.isReactive">
           <!-- <span>{{ hours }}:</span> -->
@@ -110,23 +104,11 @@
           <!-- 挂断 -->
           <!-- 邀请接听 -->
           <div class="bottomBoxInvite" v-else>
-            <img
-              src="./assets/ic_phone-hangup@2x.png"
-              alt=""
-              class="bottomBoxInviteGua"
-              @click.stop="handleCallHangUp"
-            />
-            <div class="bottomBoxInviteRecive">
-              <img
-                src="./assets/ic_phone-answer_l@2x.png"
-                alt=""
-                class="bottomBoxInviteReciveImg"
-                @click="handleCallPickUp"
-              />
-              <!-- <div class="bottomBoxInviteReciveBox">
-                <div class="isFreeFont">Free</div>
-                <div class="isFreeFontNums">X2</div>
-              </div> -->
+            <div class="inviteBox" @click="handleCallPickUp">
+              <SvgaShow
+                :divId="`demo${props?.wsData?.fromUser?.id}`"
+                :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+              ></SvgaShow>
             </div>
           </div>
           <!-- 邀请接听 -->
@@ -224,7 +206,7 @@
           <img
             class="goldIcon"
             @click="() => (state.showRechargePopup = true)"
-            src="./assets/ic_calling_coin@2x.png"
+            src="./assets/gold@2x.webp"
             alt=""
           />
         </div>
@@ -265,6 +247,7 @@ import evenBus from "@/common/evenBus";
 import { giftsend } from "@/api/allApi";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaDialog from "@/components/svgaDialog/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 interface Prop {
   modelValue: boolean;
@@ -734,13 +717,13 @@ defineExpose({
     justify-content: space-between;
     align-items: center;
     padding-right: 24px;
-    background: linear-gradient(
-      270deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.1) 100%
-    );
-    border-radius: 200px 200px 200px 200px;
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    // background: linear-gradient(
+    //   270deg,
+    //   rgba(0, 0, 0, 0.5) 0%,
+    //   rgba(0, 0, 0, 0.1) 100%
+    // );
+    // border-radius: 200px 200px 200px 200px;
+    // border: 2px solid rgba(255, 255, 255, 0.35);
     display: flex;
     align-items: center;
     .imgClass {
@@ -796,6 +779,16 @@ defineExpose({
   .closeImg {
     width: 96px;
     height: 96px;
+    border-radius: 50%;
+    background: #504f56;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .closeImgNei {
+      width: 52px;
+      height: 52px;
+    }
   }
 }
 .timerDisplay {
@@ -836,8 +829,18 @@ defineExpose({
     padding-right: 60px;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    .inviteBox {
+      width: 180px;
+      height: 180px;
+      background: #f9577e;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .bottomBoxInviteGua {
       width: 120px;
       height: 120px;
@@ -934,8 +937,8 @@ defineExpose({
     }
   }
   .goldIcon {
-    width: 88px;
-    height: 88px;
+    width: 68px;
+    height: 68px;
   }
 }
 

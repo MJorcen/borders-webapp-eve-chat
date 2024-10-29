@@ -1,12 +1,18 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="Block List" left-text="" fixed :border="false">
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #ffffff"
+      title="Block List"
+      left-text=""
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           @click="router.go(-1)"
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#fff"
         />
       </template>
     </van-nav-bar>
@@ -56,9 +62,14 @@
                 <div class="callContentTime">ID:{{ item.id }}</div>
               </div>
             </div>
-            <div @click="handleUnBlock(item.id)" class="callBoxItemRight">
+            <!-- <div @click="handleUnBlock(item.id)" class="callBoxItemRight">
               Unblock
-            </div>
+            </div> -->
+            <img
+              @click="handleUnBlock(item.id)"
+              src="./assets/removeBlock.webp"
+              style="width: 35px; height: 35px; cursor: pointer"
+            />
           </div>
         </div>
         <Empty v-if="!state.list.length"> </Empty>
@@ -125,11 +136,17 @@ const handleUnBlock = async (id: number) => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .bigBox {
   padding-top: 80px;
   .callBigBox {
     height: 168px;
-    background: #ffffff;
+    background: #241213;
     display: flex;
     align-items: center;
     padding-left: 32px;
@@ -139,7 +156,7 @@ const handleUnBlock = async (id: number) => {
       justify-content: space-between;
       align-items: center;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
       .callBoxItemLeft {
         display: flex;
@@ -155,27 +172,27 @@ const handleUnBlock = async (id: number) => {
           .callContentTop {
             width: 260px;
             height: 42px;
-            font-weight: bold;
-            font-size: 36px;
-            color: #1a1a1a;
-            font-family: "SF Pro Display", sans-serif;
+            font-family: "Inter", sans-serif;
+            font-weight: normal;
+            font-size: 28px;
+            color: #fff;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
             margin-bottom: 8px;
           }
           .callContentTime {
-            font-family: "SF Pro Display", sans-serif;
+            font-family: "Inter", sans-serif;
             font-weight: 400;
-            font-size: 28px;
-            color: #8c8c8c;
+            font-size: 24px;
+            color: #eb6300;
             margin-bottom: 8px;
           }
           .callContentBottom {
-            font-family: "SF Pro Display", sans-serif;
+            font-family: "Inter", sans-serif;
             font-weight: 400;
-            font-size: 28px;
-            color: #8c8c8c;
+            font-size: 24px;
+            color: #eb6300;
           }
         }
       }

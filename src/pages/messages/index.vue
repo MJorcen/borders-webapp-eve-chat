@@ -10,11 +10,12 @@
             @click="handleClick(index)"
           >
             {{ item.title }}
+            <div class="line" v-if="item.active"></div>
           </div>
         </div>
         <img
           @click="handleClear"
-          src="./assets/Frame@2x.png"
+          src="./assets/clear123.webp"
           class="deleteImg"
         />
       </div>
@@ -236,8 +237,8 @@
                 @click="handleGo(item)"
                 class="callBoxItemRight"
               /> -->
-              <img
-                :src="videoImg"
+              <div
+                class="caozuo"
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
@@ -247,8 +248,12 @@
                     });
                   }
                 "
-                class="callBoxItemRight"
-              />
+              >
+                <SvgaShow
+                  :divId="`demo${item?.user?.id}${index}`"
+                  :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+                ></SvgaShow>
+              </div>
             </div>
           </div>
         </div>
@@ -300,6 +305,7 @@ import { handleGo } from "@/common/fetchCommon";
 import { formatSecondsToTime, removeSubstrings } from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 const state = reactive<any>({
   messageList: [],
@@ -609,6 +615,7 @@ const handleClick = (index: number) => {
 }
 .bigBoxs {
   // padding-bottom: 100px;
+  background-color: #241213;
   .tabsBox {
     display: flex;
     align-items: center;
@@ -620,29 +627,36 @@ const handleClick = (index: number) => {
     position: sticky;
     top: 0;
     z-index: 18;
-    background-color: #ffffff;
+    background-color: #241213;
     .tabsBoxLeft {
       display: flex;
       align-items: center;
       .tabs {
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: bold;
-        font-size: 40px;
-        color: #aaaaaa;
+        font-size: 36px;
+        color: #c7c4cc;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
       }
       .activeTabs {
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: bold;
-        font-size: 40px;
-        color: #ff4d42;
+        font-size: 44px;
+        color: #eb6300;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        .line {
+          width: 100%;
+          min-height: 4px;
+          background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+          border-radius: 4px 4px 4px 4px;
+          margin-top: 8px;
+        }
       }
       .activeTabs:nth-child(2) {
         margin-left: 40px;
@@ -720,7 +734,7 @@ const handleClick = (index: number) => {
       align-items: center;
       justify-content: space-between;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
 
       .noticeTopImg {
@@ -742,13 +756,13 @@ const handleClick = (index: number) => {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
             font-size: 36px;
-            color: #1a1a1a;
+            color: #fff;
           }
           .noticeTopBoxRightTopRight {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 28px;
-            color: #8c8c8c;
+            color: #91a3bd;
           }
         }
         .noticeTopBoxRightBottom {
@@ -757,7 +771,7 @@ const handleClick = (index: number) => {
           font-family: "SF Pro Display", sans-serif;
           font-weight: 400;
           font-size: 28px;
-          color: #404040;
+          color: #91a3bd;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -813,7 +827,7 @@ const handleClick = (index: number) => {
       align-items: center;
       justify-content: space-between;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
       .eyesLeft {
         display: flex;
@@ -828,14 +842,14 @@ const handleClick = (index: number) => {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
             font-size: 34px;
-            color: #1a1a1a;
+            color: #fff;
             margin-bottom: 18px;
           }
           .eyesFontTwo {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 30px;
-            color: #8c8c8c;
+            color: #91a3bd;
           }
         }
       }
@@ -876,7 +890,7 @@ const handleClick = (index: number) => {
         align-items: center;
         justify-content: space-between;
         height: 168px;
-        border-bottom: 2px solid #f5f5f5;
+        border-bottom: 2px dashed #566b88;
         width: 100%;
 
         .noticeTopImg {
@@ -895,10 +909,10 @@ const handleClick = (index: number) => {
             margin-bottom: 18px;
             width: 100%;
             .noticeTopBoxRightTopLeft {
-              font-family: "SF Pro Display", sans-serif;
-              font-weight: bold;
-              font-size: 36px;
-              color: #1a1a1a;
+              font-family: "Inter", sans-serif;
+              font-weight: normal;
+              font-size: 28px;
+              color: #fff;
               width: 200px;
               // height: 60px;
               white-space: nowrap;
@@ -930,10 +944,10 @@ const handleClick = (index: number) => {
             .noticeTopBoxRightBottomFlexFont {
               width: 504px;
               height: 34px;
-              font-family: "SF Pro Display", sans-serif;
+              font-family: "Inter", sans-serif;
               font-weight: 400;
               font-size: 28px;
-              color: #404040;
+              color: #91a3bd;
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
@@ -974,7 +988,7 @@ const handleClick = (index: number) => {
         align-items: center;
         justify-content: space-between;
         height: 168px;
-        border-bottom: 2px solid #f5f5f5;
+        border-bottom: 2px dashed #566b88;
         width: 100%;
         .eyesLeft {
           display: flex;
@@ -1021,7 +1035,7 @@ const handleClick = (index: number) => {
   }
   .callBigBox {
     height: 168px;
-    background: #ffffff;
+    background-color: #241213;
     display: flex;
     align-items: center;
     padding-left: 32px;
@@ -1031,7 +1045,7 @@ const handleClick = (index: number) => {
       justify-content: space-between;
       align-items: center;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
       .callBoxItemLeft {
         display: flex;
@@ -1049,7 +1063,7 @@ const handleClick = (index: number) => {
             height: 42px;
             font-weight: bold;
             font-size: 36px;
-            color: #1a1a1a;
+            color: #fff;
             font-family: "SF Pro Display", sans-serif;
             overflow: hidden;
             white-space: nowrap;
@@ -1067,9 +1081,16 @@ const handleClick = (index: number) => {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 28px;
-            color: #8c8c8c;
+            color: #91a3bd;
           }
         }
+      }
+      .caozuo {
+        width: 88px;
+        height: 88px;
+
+        border-radius: 50%;
+        background-color: #f9577e;
       }
       .callBoxItemRight {
         width: 80px;

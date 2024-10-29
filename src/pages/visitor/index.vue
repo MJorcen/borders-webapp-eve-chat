@@ -1,12 +1,18 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar left-text="" title="Visitor" fixed :border="false">
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #ffffff"
+      left-text=""
+      title="Visitor"
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           @click="router.back()"
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
         />
       </template>
     </van-nav-bar>
@@ -73,6 +79,13 @@
     </van-pull-refresh>
     <Dialog ref="DialogRef">
       <template #modalContent>
+        <van-icon
+          @click="router.back()"
+          class="backIcon"
+          name="arrow-left"
+          size="28"
+          color="#ffffff"
+        />
         <div class="dialogContent">
           <img src="./assets/Frame@2x.png" class="w-[120px] h-[120px]" />
           <div class="dialogFont">Subescribe to Vip and view all visitors</div>
@@ -135,9 +148,15 @@ const getList = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .callBigBox {
   height: 168px;
-  background: #ffffff;
+  // background: #ffffff;
   display: flex;
   align-items: center;
   padding-left: 32px;
@@ -147,7 +166,7 @@ const getList = async () => {
     justify-content: space-between;
     align-items: center;
     height: 168px;
-    border-bottom: 2px solid #f5f5f5;
+    border-bottom: 2px dashed #566b88;
     width: 100%;
     .callBoxItemLeft {
       display: flex;
@@ -163,10 +182,10 @@ const getList = async () => {
         .callContentTop {
           width: 260px;
           height: 42px;
-          font-weight: bold;
-          font-size: 36px;
-          color: #1a1a1a;
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Inter", sans-serif;
+          font-weight: normal;
+          font-size: 28px;
+          color: #fff;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -180,10 +199,10 @@ const getList = async () => {
           margin-bottom: 8px;
         }
         .callContentBottom {
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Inter", sans-serif;
           font-weight: 400;
-          font-size: 28px;
-          color: #8c8c8c;
+          font-size: 24px;
+          color: #eb6300;
         }
       }
     }
@@ -198,6 +217,13 @@ const getList = async () => {
     }
   }
 }
+.backIcon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  z-index: 100;
+}
 .dialogContent {
   width: 100%;
   height: 100vh;
@@ -206,6 +232,7 @@ const getList = async () => {
   align-items: center;
   flex-direction: column;
   position: relative;
+
   .dialogFont {
     position: absolute;
     bottom: 214px;
@@ -213,8 +240,7 @@ const getList = async () => {
     text-align: center;
     font-weight: 600;
     font-size: 32px;
-    color: #1a1a1a;
-    color: #1a1a1a;
+    color: #fff;
   }
   .dialogBtnBig {
     width: 100vw;
@@ -224,7 +250,7 @@ const getList = async () => {
     bottom: 88px;
     .dialogBtn {
       height: 100px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
       border-radius: 16px 16px 16px 16px;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;

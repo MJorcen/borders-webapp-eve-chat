@@ -1,11 +1,17 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="Detail" left-text="" fixed :border="false">
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
+      title="Detail"
+      left-text=""
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
           @click="
             () => {
               router.go(-1);
@@ -52,7 +58,7 @@
                 <div class="callBoxItemRightOne">
                   {{ item.createdAt }}
                 </div>
-                <div class="callBoxItemRightOne" style="color: #fe5243">
+                <div class="callBoxItemRightOne" style="color: #eb6300">
                   {{ item.amount }}
                 </div>
               </div>
@@ -105,11 +111,17 @@ const getList = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .bigBox {
-  padding-top: 80px;
+  padding-top: 120px;
   .callBigBox {
     //   height: 168px;
-    background: #ffffff;
+    // background: #ffffff;
     display: flex;
     align-items: center;
     padding-left: 32px;
@@ -119,7 +131,7 @@ const getList = async () => {
       justify-content: space-between;
       align-items: center;
       // height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
       padding-bottom: 10px;
       margin-bottom: 20px;
@@ -138,7 +150,7 @@ const getList = async () => {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
             font-size: 36px;
-            color: #1a1a1a;
+            color: #fff;
             margin-bottom: 8px;
           }
           .callContentBottom {
@@ -148,7 +160,7 @@ const getList = async () => {
               font-family: "SF Pro Display", sans-serif;
               font-weight: 400;
               font-size: 28px;
-              color: #404040;
+              color: #566b88;
               // width: 300px;
             }
             //   .callContentBottomTwo {
@@ -172,7 +184,7 @@ const getList = async () => {
           font-family: "SF Pro Display", sans-serif;
           font-weight: 400;
           font-size: 28px;
-          color: #8c8c8c;
+          color: #566b88;
           margin-bottom: 9px;
           text-align: right;
         }

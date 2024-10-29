@@ -1,24 +1,40 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar
-      :title="data?.user?.nickname"
-      left-text=""
-      fixed
-      :border="false"
-    >
+    <van-nav-bar title="" left-text="" fixed>
       <template #left>
-        <van-icon
-          name="arrow-left"
-          size="18"
-          color="#000000"
-          @click="
-            () => {
-              nim.resetSessionUnread(`p2p-${preFix}${data?.user?.id}`);
-              router.go(-1);
-              handleSetCash();
-            }
-          "
-        />
+        <div class="topLeftBox">
+          <van-icon
+            name="arrow-left"
+            size="18"
+            color="#eb6300"
+            @click="
+              () => {
+                nim.resetSessionUnread(`p2p-${preFix}${data?.user?.id}`);
+                router.go(-1);
+                handleSetCash();
+              }
+            "
+          />
+          <van-image
+            round
+            fit="cover"
+            radius="50"
+            lazy-load
+            :src="data?.user?.avatar"
+            alt=""
+            class="hostImg"
+          ></van-image>
+          <div class="hostName">
+            {{ data?.user?.nickname }}
+          </div>
+          <div
+            class="onlineBox"
+            v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
+          >
+            <div class="onlineYuan"></div>
+            <div class="onlineYuanFont">Online</div>
+          </div>
+        </div>
       </template>
       <template #right>
         <div class="flex items-center">
@@ -143,7 +159,7 @@
                 @click="handleTranslate(it)"
               >
                 <img
-                  src="./assets/icon_translate@2x.png"
+                  src="./assets/Slice130@2x.webp"
                   class="w-[20px] h-[20px] mr-[8px]"
                 />
                 <div>See translation</div>
@@ -1181,6 +1197,45 @@ const handleSetCash = () => {
 .bigBox {
   padding-bottom: 100px;
 }
+.topLeftBox {
+  display: flex;
+  align-items: center;
+  .hostImg {
+    width: 64px;
+    height: 64px;
+    margin-left: 18px;
+    margin-right: 12px;
+  }
+  .hostName {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #554c5f;
+  }
+  .onlineBox {
+    width: 104px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #24e672;
+    margin-left: 12px;
+    .onlineYuan {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin-right: 4px;
+    }
+    .onlineYuanFont {
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffffff;
+    }
+  }
+}
 .rightBtn {
   width: 116px;
   height: 48px;
@@ -1210,14 +1265,14 @@ const handleSetCash = () => {
 .chatBox {
   background: rgba(0, 0, 0, 0.1);
 
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   padding: 32px;
   min-height: 100vh;
   overflow-y: scroll;
   .hostBox {
-    margin-top: 120px;
+    margin-top: 100px;
     padding: 32px;
-    background-color: #fff;
+    background-color: #f6f9fe;
     border-radius: 32px 32px 32px 32px;
     // margin-bottom: 32px;
     .hostBoxTop {
@@ -1328,8 +1383,8 @@ const handleSetCash = () => {
       .audioBoxUserLeft {
         max-width: 494px;
         min-width: 120px;
-        background: #ffffff;
-        border-radius: 0px 32px 32px 32px;
+        background: #f6f9fe;
+        border-radius: 30px 30px 30px 30px;
         display: flex;
         align-items: center;
         padding-right: 20px;
@@ -1361,14 +1416,14 @@ const handleSetCash = () => {
         max-width: 494px;
         // min-width: auto; /* 自动最小宽度 */
         // max-width: none; /* 不设置最大宽度 */
-        background: #ffffff;
-        border-radius: 0px 32px 32px 32px;
+        background: #f6f9fe;
+        border-radius: 30px 30px 30px 30px;
         padding: 24px;
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: 400;
         font-size: 28px;
-        color: #1a1a1a;
-        line-height: 33px;
+        color: #112437;
+        line-height: 40px;
         // margin-bottom: 32px;
 
         margin-bottom: 62px;
@@ -1380,10 +1435,10 @@ const handleSetCash = () => {
           bottom: -60px;
           width: 230px;
           left: -10px;
-          color: #ff4d42;
-          font-family: "SF Pro Display", sans-serif;
-          font-weight: 400;
+          font-family: 'Inter', sans-serif;
+          font-weight: 500;
           font-size: 24px;
+          color: #ffcaa3;
         }
       }
       .yuan {
@@ -1475,11 +1530,11 @@ const handleSetCash = () => {
       .audioBoxUserRight {
         max-width: 494px;
         min-width: 120px;
-        background: #ff4d42;
-        border-radius: 32px 32px 0px 32px;
+        background: #eb6300;
+        border-radius: 30px 30px 30px 30px;
         display: flex;
         align-items: center;
-        padding-left: 20px;
+        padding: 10px;
         .audioNums {
           font-family: "SF Pro Display", sans-serif;
           font-weight: 400;
@@ -1512,14 +1567,15 @@ const handleSetCash = () => {
       }
       .userRightBoxContent {
         max-width: 494px;
-        background: #ff4d42;
         padding: 24px;
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 400;
-        font-size: 28px;
         color: #fff;
         line-height: 33px;
-        border-radius: 32px 32px 0px 32px;
+        background: #eb6300;
+        border-radius: 30px 30px 30px 30px;
+        font-family: "Jost", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #ffffff;
         // margin-bottom: 32px;
       }
       .noSendSuccessImg {
