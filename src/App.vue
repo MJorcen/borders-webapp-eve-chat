@@ -400,7 +400,7 @@ router.afterEach((to) => {
   top: 0;
   left: 0;
   z-index: 99;
-  background-color: #fff;
+  background-color: #241213;
 }
 
 .slide-right-leave-active {
@@ -408,7 +408,7 @@ router.afterEach((to) => {
 }
 
 .slide-left-enter-active {
-  background-color: #fff;
+  background-color: #241213;
 }
 
 .slide-left-enter-from {

@@ -1,6 +1,6 @@
 <template>
   <div class="bigBox">
-    <van-tabbar v-model="props.tabsCurrent">
+    <van-tabbar v-model="props.tabsCurrent" :border="false">
       <van-tabbar-item
         v-for="(item, index) in tabsList"
         :key="index"
@@ -15,7 +15,7 @@
       >
         <template #icon>
           <img
-            class="imgClass"
+            :class="index === 1 ? 'imgClassXin' : 'imgClass'"
             :src="item.active ? item.activeImg : item.img"
           />
         </template>
@@ -35,16 +35,16 @@ import {
   computed,
 } from "vue";
 import { useRouter } from "vue-router";
-import img1 from "../../assets/home.png";
-import img2 from "../../assets/homeActive.png";
-import imgMatchActive from "../../assets/matchActive.png";
-import imgMatch from "../../assets/match.png";
-import img3 from "../../assets/gc.png";
-import img4 from "../../assets/gcActive.png";
-import img5 from "../../assets/icon@2x (4).png";
-import img6 from "../../assets/icon@2x (3).png";
-import img7 from "../../assets/icon@2x (2).png";
-import img8 from "../../assets/icon@2x (1).png";
+import img1 from "../../assets/img1.webp";
+import img2 from "../../assets/img2.webp";
+import imgMatchActive from "../../assets/imgMatchActive.webp";
+import imgMatch from "../../assets/imgMatch.webp";
+import img3 from "../../assets/img3.webp";
+import img4 from "../../assets/img4.webp";
+import img5 from "../../assets/img5.webp";
+import img6 from "../../assets/img6.webp";
+import img7 from "../../assets/img7.webp";
+import img8 from "../../assets/img8.webp";
 import evenBus from "@/common/evenBus";
 import { useImHook } from "@/hook/useIm";
 
@@ -298,9 +298,18 @@ const handleChange = (it: any, index: number) => {
 <style lang="scss" scoped>
 .van-tabbar {
   height: 100px !important;
+  background: #241213 !important;
+  // border: 4px solid #241213 !important;
+}
+.van-tabbar-item--active {
+  background: #241213 !important;
 }
 .imgClass {
-  width: 72px;
-  height: 72px;
+  width: 50px;
+  height: 50px;
+}
+.imgClassXin{
+  width: 60px;
+  height: 50px;
 }
 </style>

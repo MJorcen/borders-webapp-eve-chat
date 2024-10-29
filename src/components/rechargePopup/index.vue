@@ -37,7 +37,7 @@
         </div>
         <div class="flex items-center justify-between">
           <div class="coinBoxItemLeft">
-            <img src="./assets/coin_20@2x.png" class="coinBoxItemLeftImg" />
+            <img src="./assets/gold@2x.webp" class="coinBoxItemLeftImg" />
             <div class="coinBoxItemLeftNums">{{ item.goldResult }}</div>
             <div class="coinBoxItemLeftNumsOff" v-if="item.type === 2">
               {{ item.discountInfo }}
@@ -54,7 +54,7 @@
   <van-popup v-model:show="state.showPopup" position="bottom" round>
     <div class="popupBox">
       <div class="popupBoxTop">
-        <img src="./assets/coin_20@2x.png" class="rightImg" />
+        <img src="./assets/gold@2x.webp" class="rightImg" />
         <div class="myWalletFont">{{ state.selectMoney }}</div>
       </div>
       <div class="itemBig">

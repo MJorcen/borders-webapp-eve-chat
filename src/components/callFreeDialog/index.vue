@@ -86,12 +86,9 @@
         >
           您的浏览器不支持视频标签。
         </video>
-        <img
-          src="./assets/ic_calling_quit@2x.png"
-          class="closeImgMq"
-          alt=""
-          @click="handleCallHangUp"
-        />
+        <div class="closeImgMq" @click="handleCallHangUp">
+          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+        </div>
         <div class="timerDisplay">
           <!-- <span>{{ hours }}:</span> -->
           <span>{{ minutes }}:</span>
@@ -165,7 +162,7 @@
           <img
             class="goldIcon"
             @click="() => (state.showVipPopup = true)"
-            src="./assets/ic_calling_coin@2x.png"
+            src="./assets/gold@2x.webp"
             alt=""
           />
         </div>
@@ -179,7 +176,7 @@
         />
         <div class="bottomBoxConnect">
           <div class="bottomBoxInvite">
-            <img
+            <!-- <img
               src="./assets/ic_phone-hangup@2x.png"
               alt=""
               class="bottomBoxInviteGua"
@@ -192,6 +189,20 @@
                 class="bottomBoxInviteReciveImg"
                 @click="handleCallPickUp"
               />
+              <div class="posBox" v-if="props?.wsData?.call?.freeCount > 0">
+                <div class="posBoxOne">
+                  Free
+                  <div class="posBoxOneImgBox">
+                    {{ props?.wsData?.call?.freeCount }}
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <div class="inviteBox" @click="handleCallPickUp">
+              <SvgaShow
+                :divId="`demo${props?.wsData?.fromUser?.id}`"
+                :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+              ></SvgaShow>
               <div class="posBox" v-if="props?.wsData?.call?.freeCount > 0">
                 <div class="posBoxOne">
                   Free
@@ -235,6 +246,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 const { userDetail }: any = useUserDetailStore();
 
 const { vipConfigData } = useVipConfigStore();
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 interface Prop {
   modelValue: boolean;
@@ -601,13 +613,25 @@ const getCountryImg = (item: any) => {
     height: 100vh;
     object-fit: cover;
   }
+
   .closeImgMq {
     width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #504f56;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 130px;
     right: 20px;
     height: 96px;
     z-index: 20;
+    .closeImgNei {
+      width: 52px;
+      height: 52px;
+    }
   }
   .topLeft {
     position: absolute;
@@ -618,13 +642,13 @@ const getCountryImg = (item: any) => {
     display: flex;
     align-items: center;
     padding-right: 24px;
-    background: linear-gradient(
-      270deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.1) 100%
-    );
-    border-radius: 200px 200px 200px 200px;
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    // background: linear-gradient(
+    //   270deg,
+    //   rgba(0, 0, 0, 0.5) 0%,
+    //   rgba(0, 0, 0, 0.1) 100%
+    // );
+    // border-radius: 200px 200px 200px 200px;
+    // border: 2px solid rgba(255, 255, 255, 0.35);
     display: flex;
     align-items: center;
     .imgClass {
@@ -793,8 +817,8 @@ const getCountryImg = (item: any) => {
       }
     }
     .goldIcon {
-      width: 88px;
-      height: 88px;
+      width: 68px;
+      height: 68px;
     }
   }
 }
@@ -843,23 +867,28 @@ const getCountryImg = (item: any) => {
       padding-right: 60px;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
       align-items: center;
-      .bottomBoxInviteGua {
-        width: 120px;
-        height: 120px;
-      }
-      .bottomBoxInviteRecive {
+      justify-content: center;
+      .inviteBox {
+        width: 180px;
+        height: 180px;
+        background: #f9577e;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
         .posBox {
           position: absolute;
           top: -85px;
-          right: 20px;
+          // right: 20px;
           background-image: url("./assets/Group 7636@2x.png");
           background-repeat: no-repeat;
           width: 226px;
           height: 100px;
           background-size: 100% 100%;
+          z-index: 2;
           // display: flex;
           // align-items: center;
           // justify-content: center;
@@ -898,35 +927,40 @@ const getCountryImg = (item: any) => {
             }
           }
         }
-        .bottomBoxInviteReciveImg {
-          width: 440px;
-          height: 120px;
+      }
+      .bottomBoxInviteGua {
+        width: 120px;
+        height: 120px;
+      }
+
+      .bottomBoxInviteReciveImg {
+        width: 440px;
+        height: 120px;
+      }
+      .bottomBoxInviteReciveBox {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        right: -5px;
+        top: -40px;
+        .isFreeFont {
+          width: 166px;
+          height: 58px;
+          background: linear-gradient(270deg, #f58921 0%, #fee590 100%);
+          border-radius: 20px 20px 20px 20px;
+          font-family: "SF Pro Text", sans-serif;
+          font-weight: 600;
+          font-size: 32px;
+          color: #1a1a1a;
+          line-height: 58px;
+          text-align: center;
+          margin-right: 16px;
         }
-        .bottomBoxInviteReciveBox {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          right: -5px;
-          top: -40px;
-          .isFreeFont {
-            width: 166px;
-            height: 58px;
-            background: linear-gradient(270deg, #f58921 0%, #fee590 100%);
-            border-radius: 20px 20px 20px 20px;
-            font-family: "SF Pro Text", sans-serif;
-            font-weight: 600;
-            font-size: 32px;
-            color: #1a1a1a;
-            line-height: 58px;
-            text-align: center;
-            margin-right: 16px;
-          }
-          .isFreeFontNums {
-            font-family: "SF Pro Text", sans-serif;
-            font-weight: bold;
-            font-size: 32px;
-            color: #ffffff;
-          }
+        .isFreeFontNums {
+          font-family: "SF Pro Text", sans-serif;
+          font-weight: bold;
+          font-size: 32px;
+          color: #ffffff;
         }
       }
     }

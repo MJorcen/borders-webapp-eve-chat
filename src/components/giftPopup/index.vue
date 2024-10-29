@@ -18,7 +18,7 @@
               <van-image :src="item.icon" alt="" class="giftImg" lazy-load />
               <div class="giftBottom">
                 <img
-                  src="./assets/coin_300@2x.png"
+                  src="./assets/gold@2x.webp"
                   alt=""
                   class="giftGoldImg"
                 />
@@ -31,7 +31,7 @@
       <div class="giftBottomBox">
         <div class="giftBottomBoxLeft">
           <img
-            src="./assets/coin_300@2x.png"
+            src="./assets/gold@2x.webp"
             alt=""
             class="giftBottomBoxLeftImg"
           />

@@ -8,6 +8,7 @@
         @click="handleClick(index)"
       >
         {{ item.title }}
+        <div class="line" v-if="item.active"></div>
       </div>
     </div>
     <div v-if="active === 0">
@@ -54,25 +55,11 @@
             >
               <van-image
                 fit="cover"
-                radius="12"
+                radius="8"
                 class="itemImg"
                 :src="item?.user?.avatar"
                 lazy-load
               ></van-image>
-              <!-- <img
-                class="caozuo"
-                src="./assets/caozuo.png"
-                v-if="item.user.inCall === 0 && item.user.active === 1"
-                @click.stop="
-                  () => {
-                    handleGo(item).then((res) => {
-                      if (!res) {
-                        state.showRechargePopup = true;
-                      }
-                    });
-                  }
-                "
-              /> -->
               <div
                 v-if="item.user.inCall === 0 && item.user.active === 1"
                 class="caozuo"
@@ -98,7 +85,7 @@
               <img
                 v-else
                 class="caozuo"
-                src="./assets/op2.png"
+                src="./assets/Group1000004606@2x.webp"
                 @click.stop="
                   () => {
                     router.push({
@@ -109,14 +96,6 @@
                 "
               />
 
-              <div class="bottmBox1">
-                <div class="bottmBox1LeftBox">
-                  <img class="sex" src="./assets/sex.png" />
-                  <div class="age">{{ item?.user?.age }}</div>
-                </div>
-                <!-- 国徽 -->
-                <img class="contry" :src="getCountryImg(item.user)" alt="" />
-              </div>
               <div class="bottmBox2">
                 <div class="yuan" v-if="item.user.onDuty"></div>
                 <div class="yuan2" v-else></div>
@@ -127,7 +106,13 @@
                   onLine
                 </div>
                 <div class="online" v-else>offline</div>
-                <div class="name">{{ item.user.nickname }}</div>
+              </div>
+              <div class="hostName">{{ item.user.nickname }}</div>
+              <div class="bottmBox3">
+                <img class="contry" :src="getCountryImg(item.user)" alt="" />
+                <div class="contryName">
+                  {{ item?.user?.region }}·{{ item?.user?.age }}
+                </div>
               </div>
             </div>
           </div>
@@ -137,7 +122,6 @@
     </div>
     <div v-else>
       <van-pull-refresh
-        style="min-height: 700px"
         v-model="loadingTwo"
         @refresh="
           () => {
@@ -224,7 +208,7 @@
               <img
                 v-else
                 class="caozuo"
-                src="./assets/op2.png"
+                src="./assets/Group1000004606@2x.webp"
                 @click.stop="
                   () => {
                     router.push({
@@ -235,19 +219,21 @@
                 "
               />
 
-              <div class="bottmBox1">
-                <div class="bottmBox1LeftBox">
-                  <img class="sex" src="./assets/sex.png" />
-                  <div class="age">{{ item?.age }}</div>
-                </div>
-                <!-- 国徽 -->
-                <img class="contry" :src="getCountryImg(item)" alt="" />
-              </div>
               <div class="bottmBox2">
-                <div class="yuan" v-if="item?.onDuty"></div>
+                <div class="yuan" v-if="item.onDuty"></div>
                 <div class="yuan2" v-else></div>
-
-                <div class="name">{{ item?.nickname }}</div>
+                <div
+                  class="online"
+                  v-if="item.inCall === 0 && item.active === 1"
+                >
+                  onLine
+                </div>
+                <div class="online" v-else>offline</div>
+              </div>
+              <div class="hostName">{{ item.nickname }}</div>
+              <div class="bottmBox3">
+                <img class="contry" :src="getCountryImg(item)" alt="" />
+                <div class="contryName">{{ item?.region }}·{{ item?.age }}</div>
               </div>
             </div>
           </div>
@@ -500,7 +486,7 @@ const onLoad = () => {
 <style lang="scss" scoped>
 .bigBox {
   min-height: 100%;
-  background-color: #fff;
+  background-color: #2c1a1a;
   .tabsBox {
     display: flex;
     // justify-content: center;
@@ -511,11 +497,11 @@ const onLoad = () => {
     position: sticky;
     top: 0;
     z-index: 19;
-    background-color: #ffffff;
+    background-color: #2c1a1a;
     .tabs {
-      font-family: "SF Pro Display", sans-serif;
+      font-family: "Inter", sans-serif;
       font-weight: bold;
-      font-size: 40px;
+      font-size: 36px;
       color: #aaaaaa;
       display: flex;
       justify-content: center;
@@ -523,14 +509,21 @@ const onLoad = () => {
       flex-direction: column;
     }
     .activeTabs {
-      font-family: "SF Pro Display", sans-serif;
+      font-family: "Inter", sans-serif;
       font-weight: bold;
-      font-size: 40px;
-      color: #ff4d42;
+      font-size: 44px;
+      color: #eb6300;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      .line {
+        width: 100%;
+        min-height: 4px;
+        background: #eb6300;
+        border-radius: 4px 4px 4px 4px;
+        margin-top: 14px;
+      }
     }
     .activeTabs:nth-child(2) {
       margin-left: 40px;
@@ -550,13 +543,13 @@ const onLoad = () => {
     .itemBox {
       width: 332px;
       height: 498px;
-      border-radius: 32px 32px 32px 32px;
+      border-radius: 10px 10px 10px 10px;
       position: relative;
       .itemImg {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 32px 32px 32px 32px;
+        border-radius: 10px 10px 10px 10px;
       }
       .caozuo {
         width: 88px;
@@ -565,14 +558,14 @@ const onLoad = () => {
         right: 18px;
         bottom: 16px;
         border-radius: 50%;
-        background-color: #ff6046;
+        background-color: #f9577e;
       }
       .bottmBox1 {
         position: absolute;
         display: flex;
         align-items: center;
-        left: 16px;
-        bottom: 62px;
+        left: 24px;
+        bottom: 14px;
         .bottmBox1LeftBox {
           display: flex;
           align-items: center;
@@ -604,8 +597,13 @@ const onLoad = () => {
         position: absolute;
         display: flex;
         align-items: center;
-        left: 16px;
-        bottom: 20px;
+        left: 20px;
+        top: 20px;
+        // width: 104px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 28px 28px 28px 28px;
+        padding: 10px;
         .yuan {
           width: 16px;
           height: 16px;
@@ -618,7 +616,7 @@ const onLoad = () => {
           height: 16px;
           margin-right: 8px;
           border-radius: 50%;
-          background-color: #ffb443;
+          background-color: #c7c4cc;
         }
         .online {
           font-family: "SF Pro Display", sans-serif;
@@ -636,6 +634,33 @@ const onLoad = () => {
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
+        }
+      }
+      .hostName {
+        position: absolute;
+        bottom: 50px;
+        left: 24px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #ffffff;
+      }
+      .bottmBox3 {
+        position: absolute;
+        bottom: 14px;
+        left: 24px;
+        display: flex;
+        align-items: center;
+        .contry {
+          width: 20px;
+          height: 20px;
+          margin-right: 6px;
+        }
+        .contryName {
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 22px;
+          color: #ffffff;
         }
       }
     }

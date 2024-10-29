@@ -1,11 +1,17 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="Daily sign in" left-text="" fixed :border="false">
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
+      title="Daily sign in"
+      left-text=""
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#fff"
           @click="
             () => {
               router.go(-1);
@@ -19,7 +25,7 @@
     </van-nav-bar>
     <div class="topBgBox">
       <div class="topImg">
-        <div class="signFont">Sign in</div>
+        <!-- <div class="signFont">Sign in</div> -->
         <div class="signRule">Rewards can only be claimed on the same day</div>
       </div>
       <div class="numsBig">
@@ -31,14 +37,10 @@
           <div class="itemTop">
             <img
               v-if="item.type === 1"
-              src="./assets/coin_24@2x.png"
+              src="./assets/gold@2x.webp"
               class="itemImg"
             />
-            <img
-              v-else
-              src="./assets/qiandaojiangli@2x.png"
-              class="itemImgTwo"
-            />
+            <img v-else src="./assets/Slice182@2x.webp" class="itemImgTwo" />
             <div class="nums">x{{ item.amount }}</div>
           </div>
           <div class="day">Day{{ index + 1 }}</div>
@@ -48,45 +50,35 @@
     <div class="btnBig">
       <div class="btn" @click="handleSign">Sign in</div>
     </div>
-    <div class="btnBig" style="margin-top: 20px">
-      <div class="bottomBox">
-        <div class="bottomTitle">Cumulative sign-in rewards</div>
-        <div class="bottomTitle">
-          days of check-in:{{ state.signDays.length }}
-        </div>
-        <div class="timeBox">
-          <div class="time"></div>
-          <div class="vipTime">
-            {{ data?.startDate }}{{ "&nbsp;" }}{{ "~" }}{{ "&nbsp;"
-            }}{{ data?.endDate }}
-          </div>
-          <div class="time2"></div>
-        </div>
-
-        <div class="bottmFlex">
-          <div
-            :class="item.active ? 'bottomItemBoxActive' : 'bottomItem'"
-            v-for="(item, index) in state.monSignList"
-            :key="index"
-          >
-            <div class="bottomItemTitle">{{ item.day }} Days</div>
-            <img
-              v-if="item.type === 1"
-              src="./assets/coin_24@2x.png"
-              class="bottomItemImg"
-            />
-            <img
-              v-else
-              src="./assets/qiandaojiangli@2x.png"
-              class="bottomItemImg2"
-            />
-            <div class="nums">x{{ item.amount }}</div>
-          </div>
+    <div class="btnBigTwo" style="margin-top: 20px">
+      <div class="bottomTopBox">
+        <img src="./assets/image411@2x.webp" class="gouImg" />
+        <div class="bottomTopBoxFont">Cumulative sign-in rewards</div>
+      </div>
+      <div class="bottomTopBoxFontTwo">days of check-in：1</div>
+      <div class="bottomTopBoxFontTwo" style="font-size: 12px">
+        ({{ data?.startDate }}{{ "&nbsp;" }}{{ "~" }}{{ "&nbsp;"
+        }}{{ data?.endDate }})
+      </div>
+      <div class="bottmFlex">
+        <div
+          :class="item.active ? 'bottomItemBoxActive' : 'bottomItem'"
+          v-for="(item, index) in state.monSignList"
+          :key="index"
+        >
+          <div class="bottomItemTitle">{{ item.day }} Days</div>
+          <img
+            v-if="item.type === 1"
+            src="./assets/gold@2x.webp"
+            class="bottomItemImg"
+          />
+          <img v-else src="./assets/Slice182@2x.webp" class="bottomItemImg2" />
+          <div class="nums">x{{ item.amount }}</div>
         </div>
       </div>
     </div>
+    <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
   </div>
-  <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
@@ -157,34 +149,41 @@ const handleSign = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .bigBox {
   .rightBtn {
     width: 120px;
     height: 50px;
-    background: #ff7e7d;
-    border-radius: 24px 24px 24px 24px;
-    font-family: "SF Pro Display", sans-serif;
-    font-weight: bold;
+    background: #eb6300;
+    border-radius: 90px 90px 90px 90px;
+    font-family: "ABeeZee", sans-serif;
+    font-weight: 400;
     font-size: 28px;
-    color: #fff;
+    color: #ffffff;
     line-height: 50px;
     text-align: center;
   }
   .topBgBox {
     padding-top: 100px;
-    background-image: url("./assets/bg.png");
+    // background-image: url("./assets/bg.png");
     background-size: 100% 100%;
     height: 750px;
     background-repeat: no-repeat;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 26px;
+    padding-right: 26px;
     .topImg {
       height: 152px;
-      background-image: url("./assets/Union@2x.png");
+      // background-image: url("./assets/Union@2x.png");
       background-size: 100% 100%;
       background-repeat: no-repeat;
-      padding-left: 22px;
+      padding-left: 36px;
       padding-top: 23px;
+      padding-right: 80px;
       .signFont {
         font-family: "SF Pro Display", sans-serif;
         font-weight: bold;
@@ -193,10 +192,11 @@ const handleSign = async () => {
         margin-bottom: 22px;
       }
       .signRule {
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 500;
-        font-size: 28px;
-        color: #8c8c8c;
+        font-family: "ABeeZee", sans-serif;
+        font-weight: 400;
+        font-size: 40px;
+        color: #ffffff;
+        line-height: 44px;
       }
     }
     .numsBig {
@@ -208,6 +208,9 @@ const handleSign = async () => {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      padding-top: 10px;
+      padding-bottom: 40px;
+
       .itemBox {
         width: 104px;
         height: 144px;
@@ -297,126 +300,112 @@ const handleSign = async () => {
       height: 100px;
       background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 16px 16px 16px 16px;
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: 500;
-      font-size: 40px;
-      color: #ffffff;
+      font-family: "Inter", sans-serif;
+      font-weight: normal;
+      font-size: 32px;
+      color: #fefefe;
       line-height: 100px;
       text-align: center;
     }
-    .bottomBox {
-      height: 392px;
-      background: linear-gradient(180deg, #fff3dc 0%, #fff8f1 100%);
-      border-radius: 24px 24px 24px 24px;
-      padding-top: 40px;
-      .bottomTitle {
-        text-align: center;
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: bold;
-        font-size: 32px;
-        color: #404040;
+  }
+  .btnBigTwo {
+    margin-left: 26px;
+    margin-right: 26px;
+    background: #ffffff;
+    border-radius: 4px 4px 4px 4px;
+    .bottomTopBox {
+      display: flex;
+      align-items: center;
+      .gouImg {
+        width: 70px;
+        height: 70px;
       }
-      .timeBox {
-        margin-top: 32px;
+      .bottomTopBoxFont {
+        font-family: "ABeeZee", sans-serif;
+        font-weight: 400;
+        font-size: 40px;
+        color: #eb6300;
+      }
+    }
+    .bottomTopBoxFontTwo {
+      font-family: "ABeeZee", sans-serif;
+      font-weight: 400;
+      font-size: 36px;
+      color: #eb6300;
+      padding-left: 90px;
+    }
+    .bottmFlex {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-bottom: 20px;
+      .bottomItem {
+        width: 128px;
+        height: 144px;
+        background: #f4f4f4;
+        border-radius: 4px 4px 4px 4px;
+        padding: 12px;
         display: flex;
         align-items: center;
-        padding-left: 32px;
-        padding-right: 32px;
-        .time {
-          width: 118px;
-          height: 2px;
-          border-radius: 0px 0px 0px 0px;
-          opacity: 0.3;
-          background-color: #ffd5b6;
-          margin-right: 36px;
-        }
-        .time2 {
-          width: 118px;
-          height: 2px;
-          border-radius: 0px 0px 0px 0px;
-          opacity: 0.3;
-          background-color: #ffd5b6;
-          margin-left: 36px;
-        }
-        .vipTime {
+        flex-direction: column;
+        justify-content: center;
+        .bottomItemTitle {
           font-family: "SF Pro Display", sans-serif;
-          font-weight: 500;
+          font-weight: bold;
           font-size: 24px;
-          color: #ffc096;
+          color: #ff8947;
+        }
+        .bottomItemImg {
+          width: 68px;
+          height: 68px;
+          // margin-left: 28px;
+          margin-bottom: 8px;
+        }
+        .bottomItemImg2 {
+          width: 60px;
+          height: 30px;
+          margin-bottom: 16px;
+        }
+        .nums {
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: 400;
+          font-size: 20px;
+          color: #ff8947;
         }
       }
-      .bottmFlex {
-        margin-top: 32px;
+      .bottomItemBoxActive {
+        width: 128px;
+        height: 144px;
+        background: linear-gradient(180deg, #ff834e 0%, #febd02 100%);
+        border-radius: 8px 8px 8px 8px;
+        padding: 12px;
         display: flex;
         align-items: center;
-        justify-content: space-around;
-        .bottomItem {
-          width: 128px;
-          height: 144px;
-          background: #ffffff;
-          border-radius: 8px 8px 8px 8px;
-          padding: 12px;
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          justify-content: center;
-          .bottomItemTitle {
-            font-family: "SF Pro Display", sans-serif;
-            font-weight: bold;
-            font-size: 24px;
-            color: #ff8947;
-          }
-          .bottomItemImg {
-            width: 68px;
-            height: 68px;
-            // margin-left: 28px;
-            margin-bottom: 8px;
-          }
-          .bottomItemImg2 {
-            width: 60px;
-            height: 30px;
-            margin-bottom: 16px;
-          }
-          .nums {
-            font-family: "SF Pro Display", sans-serif;
-            font-weight: 400;
-            font-size: 20px;
-            color: #ff8947;
-          }
+        flex-direction: column;
+        justify-content: center;
+        .bottomItemTitle {
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: bold;
+          font-size: 24px;
+          color: #fff;
         }
-        .bottomItemBoxActive {
-          width: 128px;
-          height: 144px;
-          background: linear-gradient(180deg, #ff834e 0%, #febd02 100%);
-          border-radius: 8px 8px 8px 8px;
-          padding: 12px;
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          justify-content: center;
-          .bottomItemTitle {
-            font-family: "SF Pro Display", sans-serif;
-            font-weight: bold;
-            font-size: 24px;
-            color: #fff;
-          }
-          .bottomItemImg {
-            width: 68px;
-            height: 68px;
-            // margin-left: 28px;
-            margin-bottom: 8px;
-          }
-          .bottomItemImg2 {
-            width: 60px;
-            height: 30px;
-            margin-bottom: 16px;
-          }
-          .nums {
-            font-family: "SF Pro Display", sans-serif;
-            font-weight: 400;
-            font-size: 20px;
-            color: #fff;
-          }
+        .bottomItemImg {
+          width: 68px;
+          height: 68px;
+          // margin-left: 28px;
+          margin-bottom: 8px;
+        }
+        .bottomItemImg2 {
+          width: 60px;
+          height: 30px;
+          margin-bottom: 16px;
+        }
+        .nums {
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: 400;
+          font-size: 20px;
+          color: #fff;
         }
       }
     }

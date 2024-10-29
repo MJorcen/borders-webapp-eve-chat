@@ -1,11 +1,16 @@
 <template>
   <div class="feedBack">
-    <van-nav-bar title="" left-text="FeedBack" fixed :border="false">
+    <van-nav-bar
+      title="FeedBack"
+      fixed
+      :border="false"
+      style="background-color: #2c1a1a; color: #ffffff"
+    >
       <template #left>
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
           @click="
             () => {
               router.go(-1);
@@ -18,6 +23,7 @@
     <div class="textBig">
       <div class="textBox">
         <textarea
+          style="min-height: 120px;"
           class="textarea"
           v-model="state.text"
           maxlength="200"
@@ -28,7 +34,11 @@
     <div class="titleOne"><span class="text-[#EA1C00]">* </span>Email</div>
     <div class="textBig">
       <div class="textBox2">
-        <input v-model="state.email" class="textarea" />
+        <input
+          v-model="state.email"
+          class="textarea"
+          style="background: none"
+        />
       </div>
     </div>
     <div class="titleOne" style="padding-top: 0px">Upload picture</div>
@@ -151,14 +161,21 @@ const handleSubmit = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #ffffff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .feedBack {
   padding-top: 50px;
+
   .titleOne {
     padding-top: 50px;
-    font-family: "SF Pro Display", sans-serif;
-    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
     font-size: 32px;
-    color: #1a1a1a;
+    color: #ffffff;
     padding-left: 32px;
     margin-bottom: 20px;
   }
@@ -167,14 +184,15 @@ const handleSubmit = async () => {
     padding-right: 32px;
     margin-bottom: 40px;
     .textBox {
-      min-height: 320px;
-      border-bottom: 1px solid #f3f3f3;
+      // min-height: 320px;
+      border-bottom: 2px dashed #566b88;
       position: relative;
       .textarea {
         font-family: "SF Pro Display", sans-serif;
         font-weight: 500;
         font-size: 26px;
-        color: #1a1a1a;
+        color: #fff;
+        background: none;
       }
       .textRight {
         font-family: "SF Pro Display", sans-serif;
@@ -187,7 +205,12 @@ const handleSubmit = async () => {
       }
     }
     .textBox2 {
-      border-bottom: 1px solid #f3f3f3;
+      border-bottom: 2px dashed #566b88;
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 26px;
+      color: #fff;
+      background: none;
     }
   }
   .uploadBox {
@@ -201,7 +224,7 @@ const handleSubmit = async () => {
     padding-right: 32px;
     .possBigBtn {
       height: 100px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
       border-radius: 16px 16px 16px 16px;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;

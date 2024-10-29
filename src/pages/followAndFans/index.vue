@@ -1,11 +1,17 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar left-text="" fixed :border="false" z-index="20">
+    <van-nav-bar
+      left-text=""
+      fixed
+      :border="false"
+      z-index="20"
+      style="background-color: #2c1a1a"
+    >
       <template #left>
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
           @click="
             () => {
               router.go(-1);
@@ -247,7 +253,7 @@ const handleClick = (index: number) => {
 }
 .callBigBox {
   height: 168px;
-  background: #ffffff;
+  // background: #ffffff;
   display: flex;
   align-items: center;
   padding-left: 32px;
@@ -257,7 +263,7 @@ const handleClick = (index: number) => {
     justify-content: space-between;
     align-items: center;
     height: 168px;
-    border-bottom: 2px solid #f5f5f5;
+    border-bottom: 2px dashed #566b88;
     width: 100%;
     .callBoxItemLeft {
       display: flex;
@@ -273,10 +279,10 @@ const handleClick = (index: number) => {
         .callContentTop {
           width: 260px;
           height: 42px;
-          font-weight: bold;
-          font-size: 36px;
-          color: #1a1a1a;
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Inter", sans-serif;
+          font-weight: normal;
+          font-size: 28px;
+          color: #fff;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -290,10 +296,10 @@ const handleClick = (index: number) => {
           margin-bottom: 8px;
         }
         .callContentBottom {
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Inter", sans-serif;
           font-weight: 400;
-          font-size: 28px;
-          color: #8c8c8c;
+          font-size: 24px;
+          color: #eb6300;
         }
       }
     }

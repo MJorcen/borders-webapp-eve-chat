@@ -1,11 +1,17 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="My Coins" left-text="" fixed :border="false">
+    <van-nav-bar
+      title="My Coins"
+      style="background-color: #2c1a1a; color: #ffffff"
+      left-text=""
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
           @click="
             () => {
               router.go(-1);
@@ -15,7 +21,7 @@
       </template>
       <template #right>
         <img
-          src="./assets/zhangdan.png"
+          src="./assets/zhangdan.webp"
           class="rightImg"
           @click="router.push('/walletDetail')"
         />
@@ -23,7 +29,7 @@
     </van-nav-bar>
     <div class="myWallet">
       <div class="myWalletFont">My Coins:</div>
-      <img src="./assets/coin_20@2x.png" class="rightImg" />
+      <img src="./assets/gold@2x.webp" class="rightImg" />
       <div class="myWalletFont">{{ walletData?.wallet?.gold }}</div>
     </div>
     <div class="coinBox">
@@ -57,7 +63,7 @@
         </div>
         <div class="flex items-center justify-between">
           <div class="coinBoxItemLeft">
-            <img src="./assets/coin_20@2x.png" class="coinBoxItemLeftImg" />
+            <img src="./assets/gold@2x.webp" class="coinBoxItemLeftImg" />
             <div class="coinBoxItemLeftNums">{{ item.goldResult }}</div>
             <div class="coinBoxItemLeftNumsOff" v-if="item.type === 2">
               {{ item.discountInfo }}
@@ -73,7 +79,7 @@
     <van-popup v-model:show="state.showPopup" position="bottom" round>
       <div class="popupBox">
         <div class="popupBoxTop">
-          <img src="./assets/coin_20@2x.png" class="rightImg" />
+          <img src="./assets/gold@2x.webp" class="rightImg" />
           <div class="myWalletFont">{{ state.selectMoney }}</div>
         </div>
         <div class="itemBig">
@@ -204,10 +210,16 @@ const handleSelect = async (item: any) => {
 const router = useRouter();
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .bigBox {
   padding-top: 100px;
   // width: 750px;
-  background: linear-gradient(180deg, #29191a 0%, #481816 100%);
+  // background: linear-gradient(180deg, #29191a 0%, #481816 100%);
   min-height: 100vh;
   .rightImg {
     width: 48px;
@@ -519,7 +531,8 @@ const router = useRouter();
         // width: 160px;
         // height: 64px;
         padding: 7px;
-        background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+        background: #EB6300;
+        // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;
         font-weight: bold;

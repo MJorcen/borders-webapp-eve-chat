@@ -1,6 +1,7 @@
 <template>
   <div class="bigBox">
     <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
       title="Fill your information"
       left-text=""
       fixed
@@ -297,6 +298,15 @@ const handleLogin = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
+.bigBox {
+  // background-color: #2c1a1a;
+}
 .contBox {
   //   height: 300px;
   display: flex;
@@ -337,15 +347,16 @@ const handleLogin = async () => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .inputClass {
       text-align: right;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 400;
       font-size: 40px;
-      color: #1a1a1a;
+      color: #fff;
       width: 100%;
+      background: none;
     }
     .inputClass::placeholder {
       font-family: "SF Pro Display", sans-serif;
@@ -372,7 +383,7 @@ const handleLogin = async () => {
   margin-left: 156px;
   margin-right: 156px;
   height: 100px;
-  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  background: #eb6300;
   border-radius: 16px 16px 16px 16px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: 500;
