@@ -1,12 +1,18 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="Edit Profile" left-text="" fixed :border="false">
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
+      title="Edit Profile"
+      left-text=""
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           @click="router.go(-1)"
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#fff"
         />
       </template>
       <template #right>
@@ -263,10 +269,17 @@ const afterReadPhoto = async (file: any) => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .rightBtn {
   width: 96px;
   height: 50px;
-  background: linear-gradient(90deg, #fa882d 0%, #ff4393 99%);
+  background: #eb6300;
+  // background: linear-gradient(90deg, #fa882d 0%, #ff4393 99%);
   border-radius: 24px 24px 24px 24px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: bold;
@@ -283,7 +296,7 @@ const afterReadPhoto = async (file: any) => {
   .containerTop {
     height: 200px;
     width: 100%;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px dashed#566B88;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -291,7 +304,7 @@ const afterReadPhoto = async (file: any) => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .containerTopRight {
       width: 160px;
@@ -301,7 +314,7 @@ const afterReadPhoto = async (file: any) => {
   .containerTop2 {
     height: 120px;
     width: 100%;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px dashed#566B88;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -309,7 +322,7 @@ const afterReadPhoto = async (file: any) => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .containerTop2Right {
       display: flex;
@@ -317,13 +330,14 @@ const afterReadPhoto = async (file: any) => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 400;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
       .inputClass {
         font-family: "SF Pro Display", sans-serif;
         font-weight: 400;
         font-size: 32px;
-        color: #1a1a1a;
+        color: #fff;
         text-align: right;
+        background: none;
       }
       .iconClass {
         margin-left: 24px;
@@ -334,18 +348,19 @@ const afterReadPhoto = async (file: any) => {
     // height: 120px;
     padding-top: 20px;
     width: 100%;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px dashed#566B88;
     .containerTop3Ttile {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .textarea {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;
       font-size: 26px;
-      color: #1a1a1a;
+      color: #fff;
+      background: none;
     }
   }
   .uploadBox {

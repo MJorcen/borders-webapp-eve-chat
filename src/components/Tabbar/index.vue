@@ -300,6 +300,7 @@ const handleChange = (it: any, index: number) => {
   height: 100px !important;
   background: #241213 !important;
   // border: 4px solid #241213 !important;
+  border-top: 2px solid #585050 !important;
 }
 .van-tabbar-item--active {
   background: #241213 !important;
@@ -308,7 +309,7 @@ const handleChange = (it: any, index: number) => {
   width: 50px;
   height: 50px;
 }
-.imgClassXin{
+.imgClassXin {
   width: 60px;
   height: 50px;
 }

@@ -174,6 +174,9 @@
           class="hostImg"
           fit="cover"
         />
+        <div class="closeImg" @click="handleCallHangUp">
+          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+        </div>
         <div class="bottomBoxConnect">
           <div class="bottomBoxInvite">
             <!-- <img
@@ -832,13 +835,25 @@ const getCountryImg = (item: any) => {
     height: 100vh;
   }
   .closeImg {
+    border-radius: 50%;
+    background: #504f56;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 96px;
     position: absolute;
     top: 20px;
     right: 20px;
     height: 96px;
     z-index: 20;
+    .closeImgNei {
+      width: 52px;
+      height: 52px;
+    }
   }
+
+
   .bottomBoxConnect {
     position: absolute;
     bottom: 120px;

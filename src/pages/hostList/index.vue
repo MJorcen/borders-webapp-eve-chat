@@ -486,7 +486,7 @@ const onLoad = () => {
 <style lang="scss" scoped>
 .bigBox {
   min-height: 100%;
-  background-color: #2c1a1a;
+  // background-color: #2c1a1a;
   .tabsBox {
     display: flex;
     // justify-content: center;

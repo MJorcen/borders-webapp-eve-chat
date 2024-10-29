@@ -18,7 +18,7 @@
         <div class="contentBox">
           <div class="name">{{ props?.wsData?.nick }}</div>
           <div class="contentBoxFlex">
-            <div class="nums">
+            <!-- <div class="nums">
               {{
                 !props?.wsData?.localCustom &&
                 !JSON?.parse?.(props?.wsData?.localCustom || "{}")?.unread
@@ -27,7 +27,7 @@
                       JSON?.parse(props?.wsData?.localCustom || "{}")?.unread
                     }]`
               }}
-            </div>
+            </div> -->
             <div
               class="text"
               v-if="
@@ -213,10 +213,12 @@ const emit = defineEmits(["update:modelValue", "update:wsData"]);
 }
 .notificationBox {
   padding: 22px 32px 32px 22px;
-  background-image: url(./assets/bg@2x.png);
-  background-size: 100% 100%;
+  // background-image: url(./assets/bg@2x.png);
+  background-color: #eb6300;
+  // background-size: 100% 100%;
   // background-size: cover;
-  background-repeat: no-repeat;
+  // background-repeat: no-repeat;
+  border-radius: 16px;
   height: 152px;
   width: 100%;
   display: flex;
@@ -237,7 +239,7 @@ const emit = defineEmits(["update:modelValue", "update:wsData"]);
         font-family: "SF Pro Display", sans-serif;
         font-weight: bold;
         font-size: 32px;
-        color: #1a1a1a;
+        color: #fff;
         margin-bottom: 10px;
       }
       .contentBoxFlex {
@@ -248,14 +250,14 @@ const emit = defineEmits(["update:modelValue", "update:wsData"]);
           font-family: "SF Pro Text", sans-serif;
           font-weight: bold;
           font-size: 28px;
-          color: #ff4d42;
+          color: #fff;
         }
         .text {
           width: 286px;
           font-family: "SF Pro Text", sans-serif;
           font-weight: 400;
           font-size: 28px;
-          color: #404040;
+          color: #fff;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;

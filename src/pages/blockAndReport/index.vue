@@ -1,44 +1,53 @@
 <template>
-  <van-nav-bar title="" left-text="" fixed :border="false">
-    <template #left>
-      <van-icon
-        name="arrow-left"
-        size="18"
-        color="#000000"
-        @click="
-          () => {
-            router.go(-1);
-          }
-        "
-      />
-    </template>
-  </van-nav-bar>
-  <div class="titleOne">
-    <span class="text-[#EA1C00]">* </span>Please fill in
-  </div>
-  <div class="textBig">
-    <div class="textBox">
-      <textarea
-        class="textarea"
-        v-model="state.text"
-        maxlength="200"
-      ></textarea>
-      <div class="textRight">{{ state.text.length }}/200</div>
+  <div>
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
+      title=""
+      left-text=""
+      fixed
+      :border="false"
+    >
+      <template #left>
+        <van-icon
+          name="arrow-left"
+          size="18"
+          color="#fff"
+          @click="
+            () => {
+              router.go(-1);
+            }
+          "
+        />
+      </template>
+    </van-nav-bar>
+    <div class="titleOne">
+      <span class="text-[#EA1C00]">* </span>Please fill in
     </div>
-  </div>
-  <div class="titleOne" style="padding-top: 0px">Upload picture</div>
-  <div class="uploadBox">
-    <van-uploader
-      @delete="handleDelete"
-      accept="image/*"
-      class="upload"
-      v-model="state.fileList"
-      multiple
-      :after-read="afterRead"
-    />
-  </div>
-  <div class="possBig">
-    <div @click="handleSubmit" class="possBigBtn">Post</div>
+    <div class="textBig">
+      <div class="textBox">
+        <textarea
+          class="textarea"
+          v-model="state.text"
+          maxlength="200"
+          style="background: none"
+        ></textarea>
+        <div class="textRight">{{ state.text.length }}/200</div>
+      </div>
+    </div>
+    <div class="titleOne" style="padding-top: 0px">Upload picture</div>
+    <div class="uploadBox">
+      <van-uploader
+        @delete="handleDelete"
+        accept="image/*"
+        class="upload"
+        v-model="state.fileList"
+        multiple
+        :after-read="afterRead"
+      />
+    </div>
+    <div class="possBig">
+      <div @click="handleSubmit" class="possBigBtn">Post</div>
+    </div>
   </div>
 </template>
 
@@ -170,7 +179,7 @@ const handleSubmit = async () => {
   font-family: "SF Pro Display", sans-serif;
   font-weight: 600;
   font-size: 32px;
-  color: #1a1a1a;
+  color: #fff;
   padding-left: 32px;
   margin-bottom: 20px;
 }
@@ -186,7 +195,7 @@ const handleSubmit = async () => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;
       font-size: 26px;
-      color: #1a1a1a;
+      color: #fff;
       min-height: 320px;
       min-width: 100%;
     }

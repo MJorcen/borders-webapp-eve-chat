@@ -1,5 +1,10 @@
 <template>
   <div class="bigBox">
+    <img
+      src="./assets/editImg.webp"
+      class="editImg"
+      @click="router.push('/editProfile')"
+    />
     <div class="topBox">
       <div class="topBoxLeft">
         <div class="avatarBox">
@@ -10,21 +15,13 @@
             class="avatarImg"
             lazy-load
           ></van-image>
-          <!-- <van-image
-            round
-            fit="cover"
-            :src="getCountryImg(data?.user)"
-            class="guoImg"
-          ></van-image> -->
           <img :src="getCountryImg(data?.user)" alt="" class="guoImg" />
         </div>
 
         <div class="topBoxLeftContent">
           <div class="topBoxLeftContentTop">
             <div class="name">{{ data?.user?.nickname }}</div>
-            <!-- <img src="./assets/ic_edit-data@2x.png" class="guoImg" /> -->
             <img src="./assets/Group4414@2x.webp" class="sex" />
-            <!-- <div class="age">{{ data?.user?.age }}</div> -->
           </div>
           <div class="topBoxLeftContentBottom">
             <div class="id">ID:{{ data?.user?.id }}</div>
@@ -305,7 +302,13 @@ const handleClearStoranage = () => {
   max-height: 100%;
   position: relative;
   background-color: #241213;
-
+  .editImg {
+    position: absolute;
+    top: 30px;
+    right: 48px;
+    width: 60px;
+    height: 60px;
+  }
   .topBox {
     display: flex;
     align-items: center;

@@ -34,6 +34,10 @@
             <div class="onlineYuan"></div>
             <div class="onlineYuanFont">Online</div>
           </div>
+          <div v-else class="offlineBox">
+            <div class="onlineYuan"></div>
+            <div class="onlineYuanFont">Online</div>
+          </div>
         </div>
       </template>
       <template #right>
@@ -520,12 +524,15 @@
     </audio>
     <Dialog ref="DialogRef">
       <template v-slot:modalContent>
-        <div class="redBox" v-if="!isInside">
-          <img class="redSource" src="./assets/redSource.png" />
+        <div class="redBig">
+          <div class="redBox" v-if="!isInside">
+            <img class="redSource" src="./assets/Group14140@2x.webp" />
+            <div class="redText">Swipe up cancel to sending</div>
+          </div>
         </div>
-        <div class="whiteBox" v-else>
+        <!-- <div class="whiteBox" v-else>
           <img class="whiteSource" src="./assets/whiteSource.png" />
-        </div>
+        </div> -->
       </template>
     </Dialog>
     <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
@@ -1261,11 +1268,36 @@ const handleSetCash = () => {
       color: #ffffff;
     }
   }
+  .offlineBox{
+    width: 104px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #898987;
+    margin-left: 12px;
+    .onlineYuan {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin-right: 4px;
+    }
+    .onlineYuanFont {
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffffff;
+    }
+  }
 }
 .rightBtn {
   width: 116px;
   height: 48px;
-  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  background: #eb6300;
+
+  // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
   border-radius: 24px 24px 24px 24px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: bold;
@@ -1278,7 +1310,8 @@ const handleSetCash = () => {
 .rightBtnUn {
   width: 150px;
   height: 48px;
-  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  background: #eb6300;
+  // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
   border-radius: 24px 24px 24px 24px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: bold;
@@ -1461,7 +1494,7 @@ const handleSetCash = () => {
           bottom: -60px;
           width: 230px;
           left: -10px;
-          font-family: 'Inter', sans-serif;
+          font-family: "Inter", sans-serif;
           font-weight: 500;
           font-size: 24px;
           color: #ffcaa3;
@@ -1707,7 +1740,8 @@ const handleSetCash = () => {
       // width: 418px;
       width: 100%;
       height: 80px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
+      // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 44px 44px 44px 44px;
       font-family: "SF Pro Text", sans-serif;
       font-weight: bold;
@@ -1764,17 +1798,33 @@ const handleSetCash = () => {
     }
   }
 }
-.redBox {
-  width: 416px;
-  height: 160px;
-  background: #ea1c00;
-  border-radius: 24px 24px 24px 24px;
+.redBig {
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+}
+.redBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  bottom: 320px;
+
   .redSource {
-    width: 256px;
-    height: 48px;
+    width: 160px;
+    height: 160px;
+    // position: absolute;
+  }
+  .redText {
+    margin-top: 30px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #ffffff;
   }
 }
 .whiteBox {
