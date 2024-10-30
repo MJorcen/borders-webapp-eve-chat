@@ -300,7 +300,7 @@ const {
       .itemBoxRight {
         width: 160px;
         height: 64px;
-        background: #EB6300;
+        background: #eb6300;
         // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;
@@ -321,7 +321,7 @@ const {
     padding-right: 32px;
     .btnBox {
       height: 100px;
-      background: #EB6300;
+      background: #eb6300;
       // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 16px 16px 16px 16px;
       font-family: "SF Pro Display", sans-serif;

@@ -313,6 +313,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+
 const { userDetail }: any = useUserDetailStore();
 
 const { vipConfigData } = useVipConfigStore();
@@ -412,12 +413,6 @@ const getNewMsg = async (session: any) => {
         }
         return acc;
       }, []);
-      state.messageList = state.messageList.sort((a, b) => {
-        const timeA = getCompareTime(a);
-        const timeB = getCompareTime(b);
-        return timeB - timeA;
-      });
-      // }
     },
   });
 };
@@ -460,19 +455,38 @@ onActivated(async () => {
   closeToast();
 });
 
+watch(
+  () => state.messageList,
+  (newVal) => {
+    if (newVal) {
+      state.messageList = state.messageList.sort((a: any, b: any) => {
+        const timeA = getCompareTime(a);
+        const timeB = getCompareTime(b);
+        return timeB - timeA;
+      });
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+
 const { user: userInfo }: any = useUserStore();
 
 function getCompareTime(item: any) {
   try {
-    const localCustom = JSON.parse(item?.localCustom);
+    // const localCustom = JSON.parse(item?.localCustom || "{}");
+    const localCustom = item?.localCustom;
     if (localCustom && localCustom.time) {
       return localCustom.time;
     }
   } catch (error) {
     // 如果解析失败，忽略错误
   }
-  return item.updateTime;
+  return item.updateTime || 0;
 }
+
 const now = Date.now();
 const getMsgList = async (data: any) => {
   state.messageList = data;
@@ -488,14 +502,7 @@ const getMsgList = async (data: any) => {
       });
     }
   }
-  state.messageList = state.messageList.sort((a, b) => {
-    const timeA = getCompareTime(a);
-    const timeB = getCompareTime(b);
-    return timeB - timeA;
-    // const diffA = Math.abs(getCompareTime(a) - now);
-    // const diffB = Math.abs(getCompareTime(b) - now);
-    // return diffA - diffB;
-  });
+
   // state.messageList = state.messageList.reverse();
   setTimeout(() => {
     loadingSkeleton.value = false;
@@ -559,6 +566,7 @@ const handleClear = () => {
     // id: idArr,
     done: deleteLocalSessionDone,
   });
+
   function deleteLocalSessionDone(error: any, obj: any) {
     console.log(error);
     console.log(obj);
@@ -570,6 +578,7 @@ const handleClear = () => {
       localStorage.removeItem("wsMsgArr");
     }
   }
+
   closeToast();
 };
 
@@ -632,9 +641,11 @@ const handleClick = (index: number) => {
 [v-cloak] {
   display: none !important;
 }
+
 .bigBoxs {
   // padding-bottom: 100px;
   background-color: #241213;
+
   .tabsBox {
     display: flex;
     align-items: center;
@@ -647,9 +658,11 @@ const handleClick = (index: number) => {
     top: 0;
     z-index: 18;
     background-color: #241213;
+
     .tabsBoxLeft {
       display: flex;
       align-items: center;
+
       .tabs {
         font-family: "Inter", sans-serif;
         font-weight: bold;
@@ -660,6 +673,7 @@ const handleClick = (index: number) => {
         align-items: center;
         flex-direction: column;
       }
+
       .activeTabs {
         font-family: "Inter", sans-serif;
         font-weight: bold;
@@ -669,6 +683,7 @@ const handleClick = (index: number) => {
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
         .line {
           width: 100%;
           min-height: 4px;
@@ -677,20 +692,24 @@ const handleClick = (index: number) => {
           margin-top: 8px;
         }
       }
+
       .activeTabs:nth-child(2) {
         margin-left: 40px;
         margin-right: 40px;
       }
+
       .tabs:nth-child(2) {
         margin-left: 40px;
         margin-right: 40px;
       }
     }
+
     .deleteImg {
       width: 48px;
       height: 48px;
     }
   }
+
   .scollTop {
     display: flex;
     align-items: center;
@@ -700,6 +719,7 @@ const handleClick = (index: number) => {
     padding-right: 28px;
     gap: 14px;
     flex-shrink: 0;
+
     .userItem {
       min-width: 101px;
       max-width: 101px;
@@ -711,12 +731,14 @@ const handleClick = (index: number) => {
       align-items: center;
       justify-content: center;
       flex-direction: column;
+
       .userItemImg {
         border-radius: 50%;
         width: 92px;
         height: 92px;
       }
     }
+
     .userItemNone {
       min-width: 101px;
       max-width: 101px;
@@ -727,12 +749,14 @@ const handleClick = (index: number) => {
       align-items: center;
       justify-content: center;
       flex-direction: column;
+
       .userItemImg {
         border-radius: 50%;
         width: 92px;
         height: 92px;
       }
     }
+
     .noticeTopImg {
       min-width: 108px;
       max-width: 108px;
@@ -741,6 +765,7 @@ const handleClick = (index: number) => {
       margin-right: 32px;
     }
   }
+
   .noticeTopBoxBig {
     overflow: hidden;
     display: flex;
@@ -748,6 +773,7 @@ const handleClick = (index: number) => {
     padding-left: 32px;
     padding-right: 32px;
     width: 100%;
+
     .noticeTopBox {
       display: flex;
       align-items: center;
@@ -763,20 +789,24 @@ const handleClick = (index: number) => {
         border-radius: 50%;
         margin-right: 32px;
       }
+
       .noticeTopBoxRight {
         width: 100%;
+
         .noticeTopBoxRightTop {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 18px;
           width: 100%;
+
           .noticeTopBoxRightTopLeft {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
             font-size: 36px;
             color: #fff;
           }
+
           .noticeTopBoxRightTopRight {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
@@ -784,6 +814,7 @@ const handleClick = (index: number) => {
             color: #91a3bd;
           }
         }
+
         .noticeTopBoxRightBottom {
           width: 556px;
           height: 34px;
@@ -795,10 +826,12 @@ const handleClick = (index: number) => {
           white-space: nowrap;
           text-overflow: ellipsis;
         }
+
         .noticeTopBoxRightBottomFlex {
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           .noticeTopBoxRightBottomFlexFont {
             width: 504px;
             height: 34px;
@@ -810,6 +843,7 @@ const handleClick = (index: number) => {
             white-space: nowrap;
             text-overflow: ellipsis;
           }
+
           .nums {
             // padding: 2px 15px 2px 15px;
             width: 40px;
@@ -824,6 +858,7 @@ const handleClick = (index: number) => {
             font-size: 24px;
             color: #ffffff;
           }
+
           .numsPlus {
             width: 64px;
             height: 32px;
@@ -841,6 +876,7 @@ const handleClick = (index: number) => {
         }
       }
     }
+
     .eyeBig {
       display: flex;
       align-items: center;
@@ -848,15 +884,19 @@ const handleClick = (index: number) => {
       height: 168px;
       border-bottom: 2px dashed #566b88;
       width: 100%;
+
       .eyesLeft {
         display: flex;
         align-items: center;
+
         .eyesImg {
           min-width: 104px;
           height: 104px;
         }
+
         .eyesFont {
           margin-left: 24px;
+
           .eyesFontOne {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
@@ -864,6 +904,7 @@ const handleClick = (index: number) => {
             color: #fff;
             margin-bottom: 18px;
           }
+
           .eyesFontTwo {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
@@ -872,12 +913,15 @@ const handleClick = (index: number) => {
           }
         }
       }
+
       .eyesRight {
         position: relative;
+
         .eyesRightImg {
           width: 158px;
           height: 88px;
         }
+
         .dian {
           position: absolute;
           top: 0;
@@ -904,6 +948,7 @@ const handleClick = (index: number) => {
       padding-left: 32px;
       padding-right: 32px;
       width: 100%;
+
       .noticeTopBox {
         display: flex;
         align-items: center;
@@ -919,14 +964,17 @@ const handleClick = (index: number) => {
           border-radius: 50%;
           margin-right: 32px;
         }
+
         .noticeTopBoxRight {
           width: 100%;
+
           .noticeTopBoxRightTop {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 18px;
             width: 100%;
+
             .noticeTopBoxRightTopLeft {
               font-family: "Inter", sans-serif;
               font-weight: normal;
@@ -938,6 +986,7 @@ const handleClick = (index: number) => {
               text-overflow: ellipsis;
               overflow: hidden;
             }
+
             .noticeTopBoxRightTopRight {
               font-family: "SF Pro Display", sans-serif;
               font-weight: 400;
@@ -945,6 +994,7 @@ const handleClick = (index: number) => {
               color: #8c8c8c;
             }
           }
+
           .noticeTopBoxRightBottom {
             width: 556px;
             height: 34px;
@@ -956,10 +1006,12 @@ const handleClick = (index: number) => {
             white-space: nowrap;
             text-overflow: ellipsis;
           }
+
           .noticeTopBoxRightBottomFlex {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .noticeTopBoxRightBottomFlexFont {
               width: 504px;
               height: 34px;
@@ -971,6 +1023,7 @@ const handleClick = (index: number) => {
               white-space: nowrap;
               text-overflow: ellipsis;
             }
+
             .nums {
               // padding: 2px 15px 2px 15px;
               width: 40px;
@@ -985,6 +1038,7 @@ const handleClick = (index: number) => {
               font-size: 24px;
               color: #ffffff;
             }
+
             .numsPlus {
               width: 64px;
               height: 32px;
@@ -1002,6 +1056,7 @@ const handleClick = (index: number) => {
           }
         }
       }
+
       .eyeBig {
         display: flex;
         align-items: center;
@@ -1009,15 +1064,19 @@ const handleClick = (index: number) => {
         height: 168px;
         border-bottom: 2px dashed #566b88;
         width: 100%;
+
         .eyesLeft {
           display: flex;
           align-items: center;
+
           .eyesImg {
             min-width: 104px;
             height: 104px;
           }
+
           .eyesFont {
             margin-left: 24px;
+
             .eyesFontOne {
               font-family: "SF Pro Display", sans-serif;
               font-weight: bold;
@@ -1025,6 +1084,7 @@ const handleClick = (index: number) => {
               color: #1a1a1a;
               margin-bottom: 18px;
             }
+
             .eyesFontTwo {
               font-family: "SF Pro Display", sans-serif;
               font-weight: 400;
@@ -1033,12 +1093,15 @@ const handleClick = (index: number) => {
             }
           }
         }
+
         .eyesRight {
           position: relative;
+
           .eyesRightImg {
             width: 158px;
             height: 88px;
           }
+
           .dian {
             position: absolute;
             top: 0;
@@ -1052,6 +1115,7 @@ const handleClick = (index: number) => {
       }
     }
   }
+
   .callBigBox {
     height: 168px;
     background-color: #241213;
@@ -1059,6 +1123,7 @@ const handleClick = (index: number) => {
     align-items: center;
     padding-left: 32px;
     padding-right: 32px;
+
     .callBoxItem {
       display: flex;
       justify-content: space-between;
@@ -1066,9 +1131,11 @@ const handleClick = (index: number) => {
       height: 168px;
       border-bottom: 2px dashed #566b88;
       width: 100%;
+
       .callBoxItemLeft {
         display: flex;
         align-items: center;
+
         .callBoxItemLeftImg {
           border-radius: 50%;
           min-width: 108px;
@@ -1076,6 +1143,7 @@ const handleClick = (index: number) => {
           height: 108px;
           margin-right: 32px;
         }
+
         .callContent {
           .callContentTop {
             width: 260px;
@@ -1089,6 +1157,7 @@ const handleClick = (index: number) => {
             text-overflow: ellipsis;
             margin-bottom: 8px;
           }
+
           .callContentTime {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
@@ -1096,6 +1165,7 @@ const handleClick = (index: number) => {
             color: #00d88a;
             margin-bottom: 8px;
           }
+
           .callContentBottom {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
@@ -1104,6 +1174,7 @@ const handleClick = (index: number) => {
           }
         }
       }
+
       .caozuo {
         width: 88px;
         height: 88px;
@@ -1111,6 +1182,7 @@ const handleClick = (index: number) => {
         border-radius: 50%;
         background-color: #f9577e;
       }
+
       .callBoxItemRight {
         width: 80px;
         height: 80px;
@@ -1118,6 +1190,7 @@ const handleClick = (index: number) => {
     }
   }
 }
+
 .freeFont {
   width: 120px;
   height: 43px;

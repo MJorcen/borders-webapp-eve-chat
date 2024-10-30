@@ -371,7 +371,9 @@ let position = 0;
 
 router.beforeEach((to) => {
   // if (to?.name === "AnchorDetail") return;
-
+  if (to.name === "ChatRoom") {
+    state.showNotification = false;
+  }
   // 判断是前进还是返回
   const isBack = position > window.history.state.position;
   to.meta.transition = isBack ? "slide-right" : "slide-left";

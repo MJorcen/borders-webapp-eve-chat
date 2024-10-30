@@ -551,7 +551,8 @@ const router = useRouter();
     padding-right: 32px;
     .btnBox {
       height: 100px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
+      //background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 16px 16px 16px 16px;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;
