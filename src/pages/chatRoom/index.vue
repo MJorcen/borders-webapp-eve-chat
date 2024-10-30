@@ -474,6 +474,7 @@
             @change="triggerFileInput"
             id="upload-files"
             accept="image/gif, image/jpeg, image/jpg, image/png, image/svg"
+            multiple
           />
         </div>
         <!-- <img
@@ -785,8 +786,12 @@ const handleFileChange = () => {
 const triggerFileInput = (event: any) => {
   const files = event.target.files;
   if (files.length > 0) {
-    const file = files[0];
-    afterRead(file);
+    // const file = files[0];
+    // afterRead(file);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      afterRead(file);
+    }
   }
 };
 
@@ -802,7 +807,8 @@ const afterRead = async (file: any) => {
     scene: "p2p",
     to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
     type: "image",
-    fileInput: "upload-files",
+    // fileInput: "upload-files",
+    blob: file,
     fastPass: `{"w":200,"h":110,"md5":${md532Str}}`,
     env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
     beginupload: function (upload: any) {
@@ -822,7 +828,7 @@ const afterRead = async (file: any) => {
     },
     beforesend: function (msg: any) {
       console.log("正在发送p2p image消息, id=" + msg.idClient);
-      getNowMsgList(msg);
+      // getNowMsgList(msg);
       // 判断是不是存在自定义消息的用户，存在则需要去清洗自定义数据
       nim.getLocalSession({
         sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
@@ -1268,7 +1274,7 @@ const handleSetCash = () => {
       color: #ffffff;
     }
   }
-  .offlineBox{
+  .offlineBox {
     width: 104px;
     height: 32px;
     display: flex;
