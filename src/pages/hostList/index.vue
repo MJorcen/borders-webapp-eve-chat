@@ -362,8 +362,7 @@ onActivated(async () => {
   const localVersion = localStorage.getItem("version");
   if (localVersion !== webConfigData.value.version) {
     localStorage.setItem("version", webConfigData.value.version);
-    // window.location.reload();
-    // return true;
+    window.location.reload();
   }
   const canVipCheckIn = Cookies.get("canVipCheckIn");
 

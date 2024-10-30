@@ -10,56 +10,64 @@
       class="sandian"
       @click.stop="state.showPopup = true"
     />
-    <div class="swiperBox">
-      <van-swipe
-        ref="swipeRef"
-        class="my-swipe"
-        :autoplay="3000"
-        :show-indicators="false"
-        @change="onChange"
-      >
-        <van-swipe-item v-for="(rowItems, rowIndex) in data?.images">
+    <van-skeleton
+      avatar
+      :avatar-size="400"
+      avatar-shape="square"
+      :loading="loading"
+    >
+      <div class="swiperBox">
+        <van-swipe
+          ref="swipeRef"
+          class="my-swipe"
+          :autoplay="3000"
+          :show-indicators="false"
+          @change="onChange"
+        >
+          <van-swipe-item v-for="(rowItems, rowIndex) in data?.images">
+            <van-image
+              fit="cover"
+              :src="rowItems?.image"
+              height="400"
+              width="100%"
+              lazy-load
+              @click.stop="
+                () => {
+                  showImagePreview([rowItems.image]);
+                }
+              "
+            >
+              <template v-slot:loading>
+                <van-loading type="spinner" size="20" />
+              </template>
+            </van-image>
+          </van-swipe-item>
+        </van-swipe>
+        <div class="ovllowBox">
           <van-image
+            v-for="(rowItems, rowIndex) in data?.images"
             fit="cover"
+            radius="5px"
             :src="rowItems?.image"
-            height="400"
-            width="100%"
-            lazy-load
-            @click.stop="
-              () => {
-                showImagePreview([rowItems.image]);
-              }
-            "
-          >
-            <template v-slot:loading>
-              <van-loading type="spinner" size="20" />
-            </template>
-          </van-image>
-        </van-swipe-item>
-      </van-swipe>
-      <div class="ovllowBox">
-        <van-image
-          v-for="(rowItems, rowIndex) in data?.images"
-          fit="cover"
-          radius="5px"
-          :src="rowItems?.image"
-          :class="swipeIndex === rowIndex ? 'ovllowImgActive' : 'ovllowImg'"
-          @click.stop="swipeRef.swipeTo(rowIndex)"
-        ></van-image>
+            :class="swipeIndex === rowIndex ? 'ovllowImgActive' : 'ovllowImg'"
+            @click.stop="swipeRef.swipeTo(rowIndex)"
+          ></van-image>
+        </div>
+
+        <img
+          class="followImg"
+          src="./assets/Group1000004619@2x.webp"
+          v-if="data?.user?.liked === 0"
+          @click.stop="handleFollow"
+        />
+        <img
+          @click.stop="handleCancelFollow"
+          class="followImg"
+          src="./assets/Group21000004619@2x.webp"
+          v-else
+        />
       </div>
-      <img
-        class="followImg"
-        src="./assets/Group1000004619@2x.webp"
-        v-if="data?.user?.liked === 0"
-        @click.stop="handleFollow"
-      />
-      <img
-        @click.stop="handleCancelFollow"
-        class="followImg"
-        src="./assets/Group21000004619@2x.webp"
-        v-else
-      />
-    </div>
+    </van-skeleton>
 
     <div class="contentBox">
       <div class="infoBox">
@@ -420,7 +428,7 @@ const handleTouchEnd = (event: any) => {
   }
 };
 
-const { fetchData, data } = userdetail();
+const { fetchData, data, loading } = userdetail();
 
 const { fetchData: reciveFetch, data: reciveData } = userreceiveStats();
 

@@ -87,38 +87,40 @@ const afterRead = async (file: any) => {
     forbidClick: true,
     duration: 0,
   });
-  const md532Str = generateRandomString();
-  const filesObg = {
-    name: file.file.name,
-    size: file.file.size,
-    md5: md532Str,
-    width: 100,
-    height: 100,
-  };
-  await uploadFetch({
-    files: JSON.stringify([filesObg]),
-    scene: route.query.type === "Report" ? "complaint" : "post",
-  });
-  if (uploadSuccess.value) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", upploadData.value.list[0].token);
-
-    xhr.onerror = (evt) => {
-      showToast("文件上传失败");
+  for (let i = 0; i < file.length; i++) {
+    const md532Str = generateRandomString();
+    const filesObg = {
+      name: file[i].file.name,
+      size: file[i].file.size,
+      md5: md532Str,
+      width: 100,
+      height: 100,
     };
-
-    xhr.send(file.file);
-
-    state.fileList = state.fileList.map((item: any) => {
-      if (item.content === file.content) {
-        item.id = upploadData.value.list[0].id;
-      }
-      return item;
+    await uploadFetch({
+      files: JSON.stringify([filesObg]),
+      scene: route.query.type === "Report" ? "complaint" : "post",
     });
-    // state.fileIds.push(upploadData.value.list[0].id);
-    showToast("Success");
-  } else {
-    showToast(uploadMsg.value);
+    if (uploadSuccess.value) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", upploadData.value.list[0].token);
+
+      xhr.onerror = (evt) => {
+        showToast("文件上传失败");
+      };
+
+      xhr.send(file[i].file);
+
+      state.fileList = state.fileList.map((item: any) => {
+        if (item.content === file[i].content) {
+          item.id = upploadData.value.list[0].id;
+        }
+        return item;
+      });
+      // state.fileIds.push(upploadData.value.list[0].id);
+      showToast("Success");
+    } else {
+      showToast(uploadMsg.value);
+    }
   }
 };
 
@@ -189,7 +191,7 @@ const handleSubmit = async () => {
   margin-bottom: 40px;
   .textBox {
     min-height: 320px;
-    border-bottom: 1px solid #f3f3f3;
+    border-bottom: 1px dashed #566b88;
     position: relative;
     .textarea {
       font-family: "SF Pro Display", sans-serif;
@@ -221,7 +223,8 @@ const handleSubmit = async () => {
   padding-right: 32px;
   .possBigBtn {
     height: 100px;
-    background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+    background: #eb6300;
+    //background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
     border-radius: 16px 16px 16px 16px;
     font-family: "SF Pro Display", sans-serif;
     font-weight: 500;

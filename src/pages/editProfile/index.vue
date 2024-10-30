@@ -65,6 +65,7 @@
           accept="image/*"
           class="upload"
           v-model="state.fileList"
+          multiple
           :after-read="afterReadPhoto"
         />
       </div>
@@ -225,46 +226,48 @@ const afterReadPhoto = async (file: any) => {
     forbidClick: true,
     duration: 0,
   });
-  const md532Str = generateRandomString();
-  const filesObg = {
-    name: file.file.name,
-    size: file.file.size,
-    md5: md532Str,
-    width: 100,
-    height: 100,
-    duration: 0,
-  };
-  await uploadFetch({
-    files: JSON.stringify([filesObg]),
-    scene: "album",
-  });
-  if (uploadSuccess.value) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", upploadData.value.list[0].token);
-
-    xhr.onerror = (evt) => {
-      showToast("文件上传失败");
+  for (let i = 0; i < file.length; i++) {
+    const md532Str = generateRandomString();
+    const filesObg = {
+      name: file[i].file.name,
+      size: file[i].file.size,
+      md5: md532Str,
+      width: 100,
+      height: 100,
+      duration: 0,
     };
-
-    xhr.send(file.file);
-    await albumFetchPost({
-      fileId: upploadData.value.list[0].id,
+    await uploadFetch({
+      files: JSON.stringify([filesObg]),
+      scene: "album",
     });
-    if (albumSuccessPost.value) {
-      state.fileList = state.fileList.map((item: any) => {
-        if (item.content === file.content) {
-          item.id = albumDataPostData.value.id;
-        }
-        return item;
-      });
-    } else {
-      showToast(albumMsgPost.value);
-    }
+    if (uploadSuccess.value) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", upploadData.value.list[0].token);
 
-    // state.fileIds.push(upploadData.value.list[0].id);
-    showToast("Success");
-  } else {
-    showToast(uploadMsg.value);
+      xhr.onerror = (evt) => {
+        showToast("文件上传失败");
+      };
+
+      xhr.send(file[i].file);
+      await albumFetchPost({
+        fileId: upploadData.value.list[0].id,
+      });
+      if (albumSuccessPost.value) {
+        state.fileList = state.fileList.map((item: any) => {
+          if (item.content === file[i].content) {
+            item.id = albumDataPostData.value.id;
+          }
+          return item;
+        });
+      } else {
+        showToast(albumMsgPost.value);
+      }
+
+      // state.fileIds.push(upploadData.value.list[0].id);
+      showToast("Success");
+    } else {
+      showToast(uploadMsg.value);
+    }
   }
 };
 </script>
