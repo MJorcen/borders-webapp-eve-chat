@@ -26,7 +26,7 @@
           <div class="topBoxLeftContentBottom">
             <div class="id">ID:{{ data?.user?.id }}</div>
             <img
-              src="./assets/ic_copy@2x.png"
+              src="./assets/copy-template1@2x.webp"
               class="copyImg"
               @click="handleCopy(data?.user?.id)"
             />
@@ -144,7 +144,7 @@
       </div>
     </div>
 
-    <div class="settingBox" v-if="environmentVariable === 'development'">
+    <div class="settingBox" v-if="environmentVariable !== 'prod'">
       <div class="itemBox" @click="handleClearStoranage">
         <div class="flex items-center">
           <img :src="img3" class="iconImg" />

@@ -4,7 +4,12 @@
     class="notification"
     :class="{ show: props.modelValue }"
   >
-    <div class="notificationBox">
+    <div
+      class="notificationBox"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+    >
       <div class="notificationBoxLeft">
         <van-image
           round
@@ -187,6 +192,29 @@ const handleRoom = () => {
 };
 
 const emit = defineEmits(["update:modelValue", "update:wsData"]);
+
+const startX = ref(0);
+const startY = ref(0);
+
+const handleTouchStart = (event: any) => {
+  startX.value = event.touches[0].clientX;
+  startY.value = event.touches[0].clientY;
+};
+
+const handleTouchMove = (event: any) => {
+  event.preventDefault();
+};
+
+const handleTouchEnd = (event: any) => {
+  const endX = event.changedTouches[0].clientX;
+  const endY = event.changedTouches[0].clientY;
+  const swipeDistanceY = startY.value - endY;
+
+  // 判断是否为左滑手势
+  if (swipeDistanceY > 50 && Math.abs(endX - startX.value) < 50) {
+    emit("update:modelValue", false);
+  }
+};
 </script>
 
 <style scoped lang="scss">

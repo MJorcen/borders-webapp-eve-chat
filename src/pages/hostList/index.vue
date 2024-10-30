@@ -103,9 +103,9 @@
                   class="online"
                   v-if="item.user.inCall === 0 && item.user.active === 1"
                 >
-                  onLine
+                  Online
                 </div>
-                <div class="online" v-else>offline</div>
+                <div class="online" v-else>Offline</div>
               </div>
               <div class="hostName">{{ item.user.nickname }}</div>
               <div class="bottmBox3">
@@ -226,9 +226,9 @@
                   class="online"
                   v-if="item.inCall === 0 && item.active === 1"
                 >
-                  onLine
+                  Online
                 </div>
-                <div class="online" v-else>offline</div>
+                <div class="online" v-else>Offline</div>
               </div>
               <div class="hostName">{{ item.nickname }}</div>
               <div class="bottmBox3">

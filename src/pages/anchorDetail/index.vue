@@ -1,7 +1,4 @@
 <template>
-  <!-- @touchstart="handleTouchStart"
-    @touchmove="handleTouchMove"
-    @touchend="handleTouchEnd" -->
   <div class="bigBox">
     <img
       @click.stop="router.go(-1)"
@@ -78,9 +75,9 @@
                 class="online"
                 v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
               >
-                onLine
+                Online
               </div>
-              <div class="onlineOff" v-else>offline</div>
+              <div class="onlineOff" v-else>Offline</div>
             </div>
             <div class="infoBoxTopLeftBottom">
               <img
@@ -402,17 +399,17 @@ const router = useRouter();
 const startX = ref(0);
 const startY = ref(0);
 
-const handleTouchStart = (event) => {
+const handleTouchStart = (event: any) => {
   startX.value = event.touches[0].clientX;
   startY.value = event.touches[0].clientY;
 };
 
-const handleTouchMove = (event) => {
+const handleTouchMove = (event: any) => {
   // 防止默认行为，避免页面滚动
   // event.preventDefault();
 };
 
-const handleTouchEnd = (event) => {
+const handleTouchEnd = (event: any) => {
   const endX = event.changedTouches[0].clientX;
   const endY = event.changedTouches[0].clientY;
   const swipeDistance = endX - startX.value;

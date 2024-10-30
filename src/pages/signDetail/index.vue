@@ -298,7 +298,8 @@ const handleSign = async () => {
     padding-right: 32px;
     .btn {
       height: 100px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #ec6101;
+      // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 16px 16px 16px 16px;
       font-family: "Inter", sans-serif;
       font-weight: normal;

@@ -47,7 +47,12 @@
         loading-text="Loading..."
         @load="getList"
       >
-        <div class="itemBox" v-for="(item, index) in state?.list" :key="index">
+        <div
+          v-if="state.list.length > 0"
+          class="itemBox"
+          v-for="(item, index) in state?.list"
+          :key="index"
+        >
           <div class="itemBoxTop">
             <div class="itemBoxTopLeft">
               <van-image
@@ -233,6 +238,7 @@
           </div>
           <div class="line"></div>
         </div>
+        <Empty v-else></Empty>
       </van-list>
     </van-pull-refresh>
   </div>
@@ -265,7 +271,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
-
+import Empty from "@/components/Empty.vue";
 const { userDetail }: any = useUserDetailStore();
 
 const { vipConfigData } = useVipConfigStore();

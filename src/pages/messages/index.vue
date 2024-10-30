@@ -281,7 +281,7 @@
       </div>
     </template>
   </van-floating-bubble> -->
-  <Tabbar></Tabbar>
+  <Tabbar ref="TabbarRef"></Tabbar>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
 </template>
@@ -357,10 +357,10 @@ const getLocalSessions = () => {
 const loadingSkeleton = ref(true);
 
 // evenBus.on("updateonSessions", (data: any) => {
-//   getLocalSessions().then((sessions: any) => {
-//     getMsgList(sessions);
-//     closeToast();
-//   });
+//   // getLocalSessions().then((sessions: any) => {
+//   //   getMsgList(sessions);
+//   //   closeToast();
+//   // });
 // });
 
 evenBus.on("updateSession", (data: any) => {
@@ -456,6 +456,7 @@ onActivated(async () => {
   //   getMsgList(sessions);
   // });
   document.body.style.overflow = "auto";
+
   closeToast();
 });
 
@@ -472,7 +473,7 @@ function getCompareTime(item: any) {
   }
   return item.updateTime;
 }
-
+const now = Date.now();
 const getMsgList = async (data: any) => {
   state.messageList = data;
   for (let i = 0; i < state.messageList.length; i++) {
@@ -491,6 +492,9 @@ const getMsgList = async (data: any) => {
     const timeA = getCompareTime(a);
     const timeB = getCompareTime(b);
     return timeB - timeA;
+    // const diffA = Math.abs(getCompareTime(a) - now);
+    // const diffB = Math.abs(getCompareTime(b) - now);
+    // return diffA - diffB;
   });
   // state.messageList = state.messageList.reverse();
   setTimeout(() => {
@@ -543,6 +547,8 @@ const getList = async () => {
   }
 };
 
+const TabbarRef = ref<any>();
+
 const handleClear = () => {
   showLoadingToast({
     duration: 0,
@@ -559,8 +565,9 @@ const handleClear = () => {
     console.log("删除本地会话" + (!error ? "成功" : "失败"));
     if (!error) {
       closeToast();
-      localStorage.setItem("badge", "0");
+      TabbarRef.value.state.badge = 0;
       state.messageList = [];
+      localStorage.removeItem("wsMsgArr");
     }
   }
   closeToast();

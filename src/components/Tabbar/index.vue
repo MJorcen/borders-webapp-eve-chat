@@ -112,20 +112,8 @@ evenBus.on("updateonSessions", (data: any) => {
 evenBus.on("updateSession", (data: any) => {
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
-    // if (state.badge > 99) {
-    //   state.badge = "99+";
-    // }
   });
-
-  // localStorage.setItem("badge", state.badge.toString());
 });
-
-// watch(
-//   () => state.badge,
-//   (newVal) => {
-//     console.log(`state.badge`, newVal);
-//   }
-// );
 
 const sumUnreadAndLocalCustomUnread = (arr: any) => {
   return arr.reduce((accumulator: any, current: any) => {
@@ -150,7 +138,6 @@ const router = useRouter();
 
 onMounted(() => {
   const currentTab = getCurrentTab();
-  // state.badge = localStorage.getItem("badge") || 0;
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
   });
@@ -192,7 +179,6 @@ onMounted(() => {
 
 onActivated(() => {
   const currentTab = getCurrentTab();
-  // state.badge = localStorage.getItem("badge") || 0;
 
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
@@ -294,6 +280,10 @@ const handleChange = (it: any, index: number) => {
   router.push({ name: it.name });
   //   emits("onChange", index);
 };
+
+defineExpose({
+  state,
+});
 </script>
 <style lang="scss" scoped>
 .van-tabbar {
