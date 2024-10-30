@@ -644,6 +644,10 @@ const onLoad = () => {
         font-weight: 400;
         font-size: 28px;
         color: #ffffff;
+        width: 200px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       .bottmBox3 {
         position: absolute;
