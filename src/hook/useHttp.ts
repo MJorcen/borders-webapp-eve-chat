@@ -4,6 +4,7 @@ import axios from "axios";
 import { showToast } from "vant";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
+import { getCurrentQueryParams } from "@/common/utils";
 
 const router = useRouter();
 
@@ -40,6 +41,8 @@ service.interceptors.request.use(
     const region = localStorage.getItem("region");
     const country = localStorage.getItem("country");
     const token = localStorage.getItem("web_token");
+    let rbLoacal = localStorage.getItem("__rb_1598101189_params") as string;
+    const rbParams = getCurrentQueryParams(rbLoacal);
 
     try {
       const info = localStorage.getItem("userInfo");
@@ -61,7 +64,15 @@ service.interceptors.request.use(
       import.meta.env.VITE_APP_EVE_PAYLOAD
     }&lang=${preferredLanguage}&locale=${
       navigatorInfo?.[0] || navigatorInfo?.[1]
-    }&region=${region}`;
+    }&region=${region}&rb=${
+      rbParams?.click_clickid
+        ? rbParams?.click_clickid
+        : rbParams?.rb
+        ? rbParams?.rb
+        : rbParams?.index
+        ? rbParams?.index
+        : ""
+    }`;
     config.headers["CF-IPCountry"] = country;
     config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     return config;

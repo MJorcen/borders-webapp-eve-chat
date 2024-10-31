@@ -143,15 +143,13 @@ export const formatSecondsToTime = (seconds: number) => {
  */
 
 export const getCurrentQueryParams = (urlParamsStr: string) => {
-  const urlParams = new URLSearchParams(urlParamsStr);
-  const queryParamsObject: any = {};
-  // 创建一个对象来存储查询参数
-  const params: any = {};
-  for (const [key, value] of urlParams.entries()) {
-    params[key] = value;
-  }
+  const urlParams = new URLSearchParams(urlParamsStr.slice(1));
+  const paramsObject: { [key: string]: string } = {};
+  urlParams.forEach((value: any, key: any) => {
+    paramsObject[key] = value;
+  });
 
-  return queryParamsObject;
+  return paramsObject;
   // const objectParams: any = {};
   // let url = decodeURI(window.location.search || window.location.hash);
   // let strs;
