@@ -41,8 +41,17 @@ service.interceptors.request.use(
     const region = localStorage.getItem("region");
     const country = localStorage.getItem("country");
     const token = localStorage.getItem("web_token");
-    let rbLoacal = localStorage.getItem("__rb_1598101189_params") as string;
-    const rbParams = getCurrentQueryParams(rbLoacal);
+
+    let rbParams: any = {};
+
+    try {
+      let rbLoacal = localStorage.getItem(
+        `__rb_${import.meta.env.VITE_ROLBEST_LINKID}_params`
+      ) as string;
+      rbParams = getCurrentQueryParams(rbLoacal);
+    } catch (e) {
+      console.log("error::", e);
+    }
 
     try {
       const info = localStorage.getItem("userInfo");

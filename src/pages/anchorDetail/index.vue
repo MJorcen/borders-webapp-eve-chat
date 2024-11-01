@@ -626,7 +626,8 @@ const onChange = (index: number) => {
     padding-top: 42px;
     padding-bottom: 200px;
     .infoBox {
-      height: 420px;
+      // height: 420px;
+      padding-bottom: 20px;
       background: #000000;
       box-shadow: 0px 8px 50px 0px rgba(33, 37, 41, 0.08);
       border-radius: 50px 50px 50px 50px;

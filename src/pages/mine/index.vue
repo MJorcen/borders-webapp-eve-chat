@@ -143,9 +143,9 @@
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
     </div>
-
+    <!-- v-if="environmentVariable !== 'prod'" -->
     <div class="settingBox" v-if="environmentVariable !== 'prod'">
-      <div class="itemBox" @click="handleClearStoranage">
+      <div class="itemBox" @click="(event) => handleClearStoranage(event)">
         <div class="flex items-center">
           <img :src="img3" class="iconImg" />
           <div class="itemBoxLeft">{{ "清缓存" }}</div>
@@ -154,13 +154,13 @@
       </div>
     </div>
   </div>
-
-  <!-- <a
-    style="color: #fff"
+  <!-- v-if="environmentVariable === 'development'" -->
+  <a
     v-if="environmentVariable === 'development'"
+    style="color: #fff"
     :href="state.href"
     >跳转</a
-  > -->
+  >
   <div class="w-[100%] h-[100px]"></div>
 
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
@@ -174,7 +174,13 @@ import Tabbar from "@/components/Tabbar/index.vue";
 import img1 from "./assets/blocklist.webp";
 import img2 from "./assets/Group1000004827@2x.webp";
 import img3 from "./assets//blocklist.webp";
-import { userDetail, userwallet, vipconfig, checkInvip } from "@/api/allApi";
+import {
+  userDetail,
+  userwallet,
+  vipconfig,
+  checkInvip,
+  webdownload,
+} from "@/api/allApi";
 import { showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
@@ -185,6 +191,8 @@ const router = useRouter();
 const { fetchData, data } = userDetail();
 const { fetchData: wollectFetch, data: walletData } = userwallet();
 const { fetchData: configFetch, data: configData } = vipconfig();
+const { fetchData: downConfig, data: downData } = webdownload();
+
 const {
   fetchData: signFetch,
   msg: signMsg,
@@ -212,8 +220,13 @@ const getUserDetail = async () => {
   await fetchData();
   await wollectFetch();
   await configFetch();
+  // await downConfig({
+  //   userId: data.value.user.id,
+  // });
   setUser(data.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&uid=${data?.value?.user?.id}`;
+  // const encodeURIStr = encodeURIComponent(downData.value);
+  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
+  // alert(state.href);
 };
 
 const handleSign = async () => {
@@ -292,7 +305,11 @@ const getCountryImg = (item: any) => {
   }
 };
 
-const handleClearStoranage = () => {
+const handleClearStoranage = (e) => {
+  // e.preventDefault();
+  // window.location.href = state.href;
+  // window.open(state.href);
+
   localStorage.clear();
   Cookies.remove("deviceId");
 };

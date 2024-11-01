@@ -177,7 +177,7 @@ const handleLogin = async () => {
   //根据缓存获取广告参数
 
   const link_id: any = JSON.parse(
-    localStorage.getItem("__rb_1598101189_link_id")
+    localStorage.getItem(`__rb_${import.meta.env.VITE_ROLBEST_LINKID}_link_id`)
   );
   state.linkId = link_id;
   // state.linkId = "L2410143112486100044585990";
