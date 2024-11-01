@@ -182,6 +182,14 @@ const routes: any = [
     },
     component: async () => await import("@/pages/matchHome/index.vue"),
   },
+  {
+    path: "/gameCat",
+    name: "GameCat",
+    meta: {
+      title: "",
+    },
+    component: async () => await import("@/pages/gameCat/index.vue"),
+  },
 ];
 
 export default routes;
