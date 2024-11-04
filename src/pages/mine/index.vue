@@ -290,11 +290,11 @@ const regions = [
 
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/ic_contry_${item?.region?.toLowerCase()}.webp`,
     import.meta.url
   );
   const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
+    `/public/ic_contry_ind.webp`,
     import.meta.url
   );
 

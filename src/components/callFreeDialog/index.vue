@@ -174,7 +174,10 @@
           class="hostImg"
           fit="cover"
         />
-        <div class="closeImg" @click="handleCallHangUp">
+        <!-- <div class="closeImg" @click="handleCallHangUp">
+          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+        </div> -->
+        <div class="closeImgMq" @click="handleCallHangUp">
           <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
         </div>
         <div class="bottomBoxConnect">
@@ -565,11 +568,11 @@ const regions = [
 
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/ic_contry_${item?.region?.toLowerCase()}.webp`,
     import.meta.url
   );
   const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
+    `/public/ic_contry_ind.webp`,
     import.meta.url
   );
 
@@ -834,16 +837,17 @@ const getCountryImg = (item: any) => {
     width: 100%;
     height: 100vh;
   }
-  .closeImg {
+  .closeImgMq {
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
     background: #504f56;
     opacity: 0.6;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 96px;
     position: absolute;
-    top: 20px;
+    top: 130px;
     right: 20px;
     height: 96px;
     z-index: 20;
@@ -852,7 +856,6 @@ const getCountryImg = (item: any) => {
       height: 52px;
     }
   }
-
 
   .bottomBoxConnect {
     position: absolute;
