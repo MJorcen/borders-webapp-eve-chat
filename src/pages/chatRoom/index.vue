@@ -36,7 +36,7 @@
           </div>
           <div v-else class="offlineBox">
             <div class="onlineYuan"></div>
-            <div class="onlineYuanFont">Online</div>
+            <div class="onlineYuanFont">Offline</div>
           </div>
         </div>
       </template>
