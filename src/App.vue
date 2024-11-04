@@ -108,8 +108,10 @@ evenBus.on("updateTopNotification", (data: any) => {
 });
 
 evenBus.on("inviteCall", async (data: any) => {
+  const isPlaying = localStorage.getItem("isPlayingGame");
   // 被呼叫时
   if (data[0].body.type === "call/dial") {
+    if (isPlaying) return;
     // 判断是否已在通话中
     const isCall = localStorage.getItem("isCall");
     if (isCall === "true") {
@@ -126,6 +128,8 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   // 主动呼叫时
   if (data[0].body.type === "call/pickUp") {
+    if (isPlaying) return;
+
     // callDialogRef.value.state.isReactive = false;
     // showCallDialog.value = true;
     evenBus.emit("activeCall", { ...data[0].body.data, type: "call/dial" });
@@ -138,6 +142,8 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   // 免费通话
   if (data[0].body.type === "freeCall/dial") {
+    if (isPlaying) return;
+
     // alert("免费通话");
     const isFreeCalling = localStorage.getItem("isFreeCalling");
     if (isFreeCalling === "true") {
@@ -147,7 +153,7 @@ evenBus.on("inviteCall", async (data: any) => {
     state.showFreeDialog = true;
     audioRef.value.muted = false;
   }
-
+  // 挂断通话
   if (data[0].body.type === "call/hangUp") {
     const { zg } = useZego();
     zg.logoutRoom(data[0].body.data.call.id);

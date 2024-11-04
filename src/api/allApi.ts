@@ -441,11 +441,18 @@ export const webconfig = () => {
   });
 };
 
-
 // 获取download地址
 export const webdownload = () => {
   return useRequest({
     url: "/user/token/jwt/getPwaReferer",
+    method: "get",
+  });
+};
+
+// 获取游戏token
+export const gametoken = () => {
+  return useRequest({
+    url: "/user/token/jwt/games",
     method: "get",
   });
 };

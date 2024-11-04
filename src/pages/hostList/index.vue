@@ -271,7 +271,7 @@
   <VipPopup :vipConfg="configDataTwo" v-model="state.showVipPopup"></VipPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <DownLoadPopup v-model="state.showDownLoadPopup"></DownLoadPopup>
-
+  <FloatIconGame></FloatIconGame>
   <Tabbar></Tabbar>
 </template>
 
@@ -299,7 +299,7 @@ import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import { useUserDetailStore } from "@/stores/userDetail";
-
+import FloatIconGame from "@/components/floatIconGame/index.vue";
 const { userDetail }: any = useUserDetailStore();
 
 const active = ref(0);
@@ -359,7 +359,7 @@ onActivated(async () => {
   ]);
   setVipConfigData(configDataTwo.value);
 
-  const localVersion = localStorage.getItem("version");
+  const localVersion = localStorage.getItem("version") || "1.0.0";
   if (localVersion !== webConfigData.value.version) {
     localStorage.setItem("version", webConfigData.value.version);
     window.location.reload();
@@ -424,11 +424,11 @@ const regions = [
 
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region.toLowerCase()}.webp`,
+    `/public/ic_contry_${item?.region.toLowerCase()}.webp`,
     import.meta.url
   );
   const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
+    `/public/ic_contry_ind.webp`,
     import.meta.url
   );
 
