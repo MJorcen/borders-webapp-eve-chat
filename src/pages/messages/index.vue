@@ -138,6 +138,10 @@
                         : item?.lastMsg?.type === "custom" &&
                           JSON.parse(item?.lastMsg?.content)?.type === 1
                         ? "[Gift]"
+                        : item?.lastMsg?.type === "geo"
+                        ? "[Map]"
+                        : item?.lastMsg?.text?.includes("locationLat")
+                        ? "[Map]"
                         : item?.lastMsg?.text
                     }}
                   </div>
@@ -145,6 +149,10 @@
                     {{
                       item?.localCustom?.cusstomMsg?.includes?.("ext")
                         ? "[Picture]"
+                        : item?.localCustom?.cusstomMsg?.includes?.(
+                            "locationLat"
+                          )
+                        ? "[Map]"
                         : item?.localCustom?.cusstomMsg
                     }}
                   </div>

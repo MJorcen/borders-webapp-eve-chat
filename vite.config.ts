@@ -106,7 +106,7 @@ export default defineConfig(({ command, mode }) => {
 
     server: {
       port: 3000,
-      // // 生成https方便本地调试，需要配置本地证书
+      // 生成https方便本地调试，需要配置本地证书
       https: {
         key: fs.readFileSync("./localhost-key.pem"),
         cert: fs.readFileSync("./localhost.pem"),
@@ -118,8 +118,9 @@ export default defineConfig(({ command, mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ""), // 重写路径，去除请求前缀
         },
         "/qqq": {
-          target: "https://img.duome.live", // 后端API的实际地址
+          target: "https://maps.googleapis.com/maps/api", // 后端API的实际地址
           changeOrigin: true, // 是否改变源，开启后会对主机头进行修改， 默认false
+          secure: true, // 禁用 SSL 证书验证
           rewrite: (path) => path.replace(/^\/qqq/, ""), // 重写路径，去除请求前缀
         },
       },

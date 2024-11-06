@@ -153,7 +153,8 @@
                 it.type === 'text' &&
                 !it.text.includes('md5') &&
                 !it.text.includes('anchorUserId') &&
-                !it.text.includes('ext')
+                !it.text.includes('ext') &&
+                !it.text.includes('locationLat')
               "
             >
               {{ it.text }}
@@ -172,6 +173,27 @@
 
             <!-- </div> -->
             <!-- 文字 -->
+            <!-- 位置 -->
+            <div
+              v-if="it?.text?.includes('locationLat') || it?.geo"
+              :class="
+                it.to !== roomUserId
+                  ? 'userLeftBoxContentDis'
+                  : 'userRightBoxContentDis'
+              "
+            >
+              <div v-if="it.to !== roomUserId">
+                {{ JSON.parse(it?.text)?.name }}
+              </div>
+              <div class="locationBox" v-if="it.to !== roomUserId">
+                {{ JSON.parse(it?.text)?.vicinity }}
+              </div>
+              <GoogleMap
+                :position="getDistance(it)"
+                v-if="it?.type === 'geo' || it?.text?.includes('locationLat')"
+              ></GoogleMap>
+            </div>
+            <!-- 位置 -->
 
             <!-- 礼物 -->
             <div
@@ -412,6 +434,7 @@
           </div>
         </div>
       </div>
+
       <div class="w-[100%] h-[100px]"></div>
     </div>
     <div class="bottomBox">
@@ -477,11 +500,6 @@
             multiple
           />
         </div>
-        <!-- <img
-          class="toolsImg"
-          src="./assets/ic_video_fill@2x.png"
-          @click.stop="handleGo(data)"
-        /> -->
         <div
           class="toolsImg"
           @click.stop="
@@ -502,6 +520,12 @@
             :url="'https://fs.duome.live/app/animation/call_animation_color.svga'"
           ></SvgaShow>
         </div>
+        <img
+          class="disImg"
+          src="./assets/dis3.webp"
+          @click.stop="handleSendDistance"
+        />
+
         <img
           class="toolsImg"
           src="./assets/ic_gift@2x.png"
@@ -588,6 +612,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import GoogleMap from "@/components/googleMap/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -705,7 +730,7 @@ watch(
       // }
     });
   },
-  { deep: true }
+  { immediate: true, deep: true }
 );
 
 const { fetchData, data, loading } = userget();
@@ -724,33 +749,36 @@ const getUserData = async () => {
     duration: 0,
   });
   getRoomMsg(data.value.user.cuteId).then((res) => {
-    getChatMsgList(res || []);
+    getChatMsgList(res || [], "首次获取进来");
   });
 };
 
 // 防止浏览器刷新
-evenBus.on("onConnect", () => {
+evenBus.on("setFunc", () => {
   // showLoadingToast({
   //   message: "Please wait...",
   //   forbidClick: true,
   //   duration: 0,
   // });
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
-    getChatMsgList(res || []);
+    getChatMsgList(res || [], "shuaxin");
   });
 });
 
 // 监听到消息更新后更新页面数据
 evenBus.on("updateSessionChatRoom", () => {
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
-    getChatMsgList(res || []);
+    getChatMsgList(res || [], "监听到消息更新");
   });
 });
 
-const getChatMsgList = (msgList: any) => {
-  state.messageList = msgList;
+const getChatMsgList = (msgList: any, from: string) => {
+  console.log(`从哪个监听获取到的消息`, from);
+  // state.messageList = msgList;
 
-  state.messageList = groupMessagesByDay(state.messageList);
+  // state.messageList = groupMessagesByDay(state.messageList);
+  state.messageList = groupMessagesByDay(msgList);
+
   console.log(state.messageList, "最终获取的数据");
   closeToast();
 };
@@ -908,13 +936,24 @@ function sendMsgDone(error: any, msg: any) {
         state.showRechargePopup = true;
       }
     }
+    // if (state.messageList.length) {
+    //   getNowMsgList(msg);
+    // } else {
+    //   state.messageList.push(msg);
+    //   state.messageList = groupMessagesByDay([...state.messageList]);
+    // }
 
-    if (state.messageList.length) {
-      getNowMsgList(msg);
-    } else {
-      state.messageList.push(msg);
-      state.messageList = groupMessagesByDay([...state.messageList]);
-    }
+    // 加定时器是为了拿callbackExt的抄送字段
+    const timer = setInterval(() => {
+      getRoomMsg(data.value.user.cuteId).then((res) => {
+        getChatMsgList(res || [], "send");
+      });
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(timer);
+    }, 1000);
+
     nim.getLocalSession({
       sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
         data?.value?.user?.id
@@ -946,7 +985,10 @@ function sendMsgDone(error: any, msg: any) {
 
 // 收到消息后推送到数组里
 evenBus.on("onMsg", (msg: any) => {
-  getNowMsgList(msg);
+  getRoomMsg(data.value.user.cuteId).then((res) => {
+    getChatMsgList(res || [], "收到消息");
+  });
+  // getNowMsgList(msg);
 });
 
 const getNowMsgList = (msg: any) => {
@@ -1158,6 +1200,62 @@ const handleCancelFollow = async () => {
     getUserData();
   } else {
     showToast(UnFollowMsg.value);
+  }
+};
+
+// 发送定位消息，只发送到本地，不发到服务器
+const handleSendDistance = () => {
+  showLoadingToast({
+    duration: 0,
+    message: "Please wait...",
+    forbidClick: true,
+  });
+  navigator.geolocation.getCurrentPosition(function (position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    console.log("Latitude is :", latitude);
+    console.log("Longitude is :", longitude);
+
+    nim.sendGeo({
+      scene: "p2p",
+      to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
+      isLocal: true,
+      env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
+      geo: {
+        lng: longitude,
+        lat: latitude,
+        title: "distance",
+      },
+      done: () => {
+        nim?.getLocalMsgs({
+          scene: "p2p",
+          limit: 500,
+          // to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userId}`,
+          sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+            data.value.user.id
+          }`,
+          done: (error: any, obj: any) => {
+            if (error) {
+            } else {
+              getChatMsgList(obj.msgs || [], "发定位");
+              closeToast();
+            }
+          },
+        });
+      },
+    });
+  });
+};
+
+const getDistance = (it: any) => {
+  if (it?.geo) {
+    const position = {
+      lat: it.geo.lat,
+      lng: it.geo.lng,
+    };
+    return position;
+  } else {
+    return JSON.parse(it.text).position;
   }
 };
 
@@ -1506,6 +1604,27 @@ const handleSetCash = () => {
           color: #ffcaa3;
         }
       }
+      .userLeftBoxContentDis {
+        position: relative;
+        // min-width: 100px;
+        max-width: 494px;
+        // min-width: auto; /* 自动最小宽度 */
+        // max-width: none; /* 不设置最大宽度 */
+        background: #f6f9fe;
+        border-radius: 30px 30px 30px 30px;
+        padding: 24px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #112437;
+        line-height: 40px;
+        .locationBox {
+          color: grey;
+          font-size: 24px;
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+        }
+      }
       .yuan {
         margin-top: 30px;
         width: 16px;
@@ -1631,6 +1750,19 @@ const handleSetCash = () => {
         margin-right: 16px;
       }
       .userRightBoxContent {
+        max-width: 494px;
+        padding: 24px;
+        color: #fff;
+        line-height: 33px;
+        background: #eb6300;
+        border-radius: 30px 30px 30px 30px;
+        font-family: "Jost", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #ffffff;
+        // margin-bottom: 32px;
+      }
+      .userRightBoxContentDis {
         max-width: 494px;
         padding: 24px;
         color: #fff;
@@ -1801,6 +1933,11 @@ const handleSetCash = () => {
       z-index: 2;
       width: 80px;
       height: 80px;
+    }
+    .disImg {
+      width: 45px;
+      height: 45px;
+      z-index: 2;
     }
   }
 }

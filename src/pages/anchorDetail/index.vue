@@ -100,18 +100,26 @@
               />
             </div>
           </div>
-          <van-image
-            fit="cover"
-            radius="50"
-            :src="data?.user?.avatar"
-            class="imgClass"
-            lazy-load
-            @click.stop="
-              () => {
-                showImagePreview([data?.user?.avatar]);
-              }
-            "
-          ></van-image>
+          <div class="disPos">
+            <van-image
+              fit="cover"
+              radius="50"
+              :src="data?.user?.avatar"
+              class="imgClass"
+              lazy-load
+              @click.stop="
+                () => {
+                  showImagePreview([data?.user?.avatar]);
+                }
+              "
+            ></van-image>
+            <div class="disBox" v-if="data?.user?.distance">
+              <img src="./assets/dis2.webp" class="disImg" />
+              <div class="disText">
+                {{ new BigNumber(data?.user?.distance).div(1000) || 2 }}km
+              </div>
+            </div>
+          </div>
         </div>
         <div class="infoBoxBottom" v-html="data?.user?.intro"></div>
         <div class="infoBottom">
@@ -342,6 +350,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import BigNumber from "bignumber.js";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -699,9 +708,41 @@ const onChange = (index: number) => {
             }
           }
         }
-        .imgClass {
-          width: 128px;
-          height: 128px;
+        .disPos {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          .imgClass {
+            width: 128px;
+            height: 128px;
+          }
+          .disBox {
+            position: absolute;
+            bottom: -10px;
+            // left: 14px;
+            // width: 100px;
+            padding: 10px;
+            height: 32px;
+            background: #ffffff;
+            border-radius: 28px 28px 28px 28px;
+            border: 2px solid #eb6300;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            .disImg {
+              width: 20px;
+              height: 20px;
+              margin-right: 4px;
+            }
+            .disText {
+              font-family: "Inter", sans-serif;
+              font-weight: 400;
+              font-size: 20px;
+              color: #eb6300;
+            }
+          }
         }
       }
       .infoBoxBottom {

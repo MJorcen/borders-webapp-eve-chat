@@ -95,7 +95,12 @@
                   }
                 "
               />
-
+              <div class="disBox" v-if="item.user.distance">
+                <img src="./assets/dis.webp" class="disImg" />
+                <div class="disText">
+                  {{ new BigNumber(item.user.distance).div(1000) || 2 }}km
+                </div>
+              </div>
               <div class="bottmBox2">
                 <div class="yuan" v-if="item.user.onDuty"></div>
                 <div class="yuan2" v-else></div>
@@ -218,7 +223,12 @@
                   }
                 "
               />
-
+              <div class="disBox" v-if="item?.distance">
+                <img src="./assets/dis.webp" class="disImg" />
+                <div class="disText">
+                  {{ new BigNumber(item.distance).div(1000) || 2 }}km
+                </div>
+              </div>
               <div class="bottmBox2">
                 <div class="yuan" v-if="item.onDuty"></div>
                 <div class="yuan2" v-else></div>
@@ -301,6 +311,7 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import { useUserDetailStore } from "@/stores/userDetail";
 import FloatIconGame from "@/components/floatIconGame/index.vue";
 const { userDetail }: any = useUserDetailStore();
+import BigNumber from "bignumber.js";
 
 const active = ref(0);
 
@@ -360,8 +371,8 @@ onActivated(async () => {
   setVipConfigData(configDataTwo.value);
 
   const localVersion = localStorage.getItem("version") || "1.0.0";
-  if (localVersion !== webConfigData.value.version) {
-    localStorage.setItem("version", webConfigData.value.version);
+  if (localVersion !== webConfigData.value?.version) {
+    localStorage.setItem("version", webConfigData.value?.version || "1.0.0");
     window.location.reload();
   }
   const canVipCheckIn = Cookies.get("canVipCheckIn");
@@ -590,6 +601,32 @@ const onLoad = () => {
           margin-left: 8px;
           width: 40px;
           height: 40px;
+        }
+      }
+      .disBox {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        left: 20px;
+        bottom: 98px;
+        // width: 100px;
+        padding: 10px;
+        height: 32px;
+        background: linear-gradient(180deg, #29191a 0%, #481816 100%);
+        border-radius: 28px 28px 28px 28px;
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        .disImg {
+          width: 20px;
+          height: 20px;
+          margin-right: 4px;
+        }
+        .disText {
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 20px;
+          color: #ffffff;
         }
       }
       .bottmBox2 {

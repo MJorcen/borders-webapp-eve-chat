@@ -60,6 +60,7 @@ const useWebSocketHeartbeat = () => {
         startHeartbeat();
         reconnectDelay = INITIAL_RECONNECT_DELAY; // 重置重连延迟时间
         clearTimeout(reconnectTimer); // 取消重连定时器
+        window.wsConnet = ws.value;
       });
 
       // 监听WebSocket消息接收事件
@@ -71,7 +72,8 @@ const useWebSocketHeartbeat = () => {
 
         if (
           data[0].body.type === "im/p2p/msg/insert" &&
-          data[0].body.data.subType === 0
+          (data[0].body.data.subType === 0 ||
+            data[0]?.body?.data?.type === "maps")
         ) {
           let newWsMsgArr: any = [];
           try {
@@ -165,11 +167,10 @@ const useWebSocketHeartbeat = () => {
     if (ws.value) {
       ws.value.close();
     }
+
     stopHeartbeat();
     clearTimeout(reconnectTimer);
   };
-
-
 
   // onMounted(connectWebSocket);
   // onUnmounted(disconnectWebSocket);
@@ -180,6 +181,7 @@ const useWebSocketHeartbeat = () => {
     connectWebSocket,
     sendMessage,
     stopConnect,
+    disconnectWebSocket,
   };
 };
 

@@ -6,6 +6,17 @@ import {
 } from "vue-router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import { generateRandomString } from "@/common/utils";
+
+const dataObj = {
+  body: {
+    path: "active/off",
+    code: 0,
+  },
+  ts: new Date().getTime(),
+  tp: 10,
+  id: generateRandomString(10),
+};
 
 NProgress.configure({ showSpinner: true });
 
@@ -20,6 +31,9 @@ router.beforeEach((to, from: any) => {
   const userInfo = localStorage.getItem("userInfo");
   NProgress.start();
   if (!userInfo) {
+    // 关闭ws连接
+    window.wsConnet?.send(JSON.stringify(dataObj));
+    window.wsConnet?.close();
     if (!["Login"].includes(to.name as string)) {
       return {
         name: "Login",

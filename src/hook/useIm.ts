@@ -128,7 +128,7 @@ export const useImHook = () => {
     newData.unshift(session);
     console.log("会话更新了", session);
     evenBus.emit("updateSession", session);
-    evenBus.emit("updateSessionChatRoom", newData);
+    evenBus.emit("updateSessionChatRoom", session);
     evenBus.emit("updateTopNotification", session);
     closeToast();
   }
@@ -172,6 +172,8 @@ export const useImHook = () => {
             // closeToast();
           } else {
             msgHistoryArr = obj.msgs || [];
+            console.log(`output->`, obj.msgs);
+            // debugger;
             closeToast();
             resolve(msgHistoryArr);
           }
