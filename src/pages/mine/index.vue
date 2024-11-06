@@ -155,12 +155,12 @@
     </div>
   </div>
   <!-- v-if="environmentVariable === 'development'" -->
-  <a
+  <!-- <a
     v-if="environmentVariable === 'development'"
     style="color: #fff"
     :href="state.href"
     >跳转</a
-  >
+  > -->
   <div class="w-[100%] h-[100px]"></div>
 
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
@@ -217,9 +217,8 @@ const state = reactive({
 const { setUser }: any = useUserDetailStore();
 
 const getUserDetail = async () => {
-  await fetchData();
-  await wollectFetch();
-  await configFetch();
+  await Promise.all([fetchData(), wollectFetch(), configFetch()]);
+
   // await downConfig({
   //   userId: data.value.user.id,
   // });

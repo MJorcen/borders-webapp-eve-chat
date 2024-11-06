@@ -67,7 +67,17 @@
 
           <div
             class="closeImg"
-            v-if="user?.user?.id !== props?.wsData?.fromUser?.id"
+            v-if="
+              user?.user?.id !== props?.wsData?.fromUser?.id &&
+              !state.isReactive
+            "
+            @click="handleClosePopup"
+          >
+            <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+          </div>
+          <div
+            class="closeImg"
+            v-if="state.isReactive"
             @click="handleClosePopup"
           >
             <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />

@@ -117,7 +117,8 @@ service.interceptors.response.use(
       //  没有权限跳转到登录页面重新登录
       if (status === 401) {
         console.log("== 401");
-        localStorage.removeItem("userInfo");
+        // localStorage.removeItem("userInfo");
+        localStorage.clear();
         router.push("/login");
         // location.reload();
       }

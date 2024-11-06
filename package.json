@@ -28,6 +28,7 @@
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^4.5.2",
     "axios": "^1.6.8",
+    "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
     "js-cookie": "^3.0.5",
     "mitt": "^3.0.1",
@@ -48,6 +49,7 @@
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue-tsc": "^1.8.25",
     "vue3-emoji": "^2.1.8",
+    "vue3-google-map": "^0.21.0",
     "zego-express-engine-webrtc": "^3.5.0"
   }
 }

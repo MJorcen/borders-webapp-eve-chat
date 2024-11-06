@@ -24,6 +24,7 @@
         <span>Loading...</span>
       </template>
       <van-list
+        v-if="state.list.length > 0"
         v-model:loading="loading"
         :finished="state.finished"
         finished-text="Noting More"
@@ -194,14 +195,14 @@
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
-                    if (!res) {
-                      if (userDetail?.user?.vipLevel === 0) {
-                        state.showVipPopup = true;
-                      } else {
-                        state.showRechargePopup = true;
+                      if (!res) {
+                        if (userDetail?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
                       }
-                    }
-                  });
+                    });
                   }
                 "
               >
@@ -215,6 +216,7 @@
           <div class="line"></div>
         </div>
       </van-list>
+      <Empty v-else></Empty>
     </van-pull-refresh>
   </div>
   <van-action-sheet
@@ -286,7 +288,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import { useUserDetailStore } from "@/stores/userDetail";
-
+import Empty from "@/components/Empty.vue";
 const { userDetail }: any = useUserDetailStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
 
@@ -304,7 +306,7 @@ onActivated(() => {
   window.addEventListener("scroll", handleScroll);
   const scrollY = localStorage.getItem("dynaMicScroll") || 0;
   window.scrollTo({
-    top: scrollY,
+    top: scrollY as number,
     behavior: "instant",
   });
 });
