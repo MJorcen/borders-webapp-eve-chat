@@ -11,12 +11,14 @@
       <div class="popupContentBox">
         <img src="./assets/image_930@2x.webp" class="popupImg" />
         <div class="popupContentOne">
-          Your current network does not support video chat, please download the
-          app to make video calls, and you can also get
-          <span style="color: #e54b6d">5700</span> coins for free.
+          Aapka abhi ka network video chat ko support nahi karta he, krpaya
+          <span style="color: #e54b6d">video call karne</span> ke liye App
+          download kare, aur aap <span style="color: #e54b6d">5700</span> sikke
+          bhi free me praapt kar sakte he.
         </div>
         <div class="popupContentTwo">
-          Your balance and VIP information will be automatically transferred.
+          Aapka balance aur VIP jaankari svachaalit roop se transfer kar di
+          jayegi.
         </div>
         <div class="btnBox">
           <a :href="state.href" class="btn">Download</a>
