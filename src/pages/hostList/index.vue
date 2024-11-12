@@ -106,8 +106,8 @@
                         if (userDetail?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          // state.showRechargePopup = true;
-                          state.showCallDownLoadPopup = true;
+                          state.showRechargePopup = true;
+                          // state.showCallDownLoadPopup = true;
                         }
                       }
                     });
@@ -249,8 +249,8 @@
                         if (userDetail?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          // state.showRechargePopup = true;
-                          state.showCallDownLoadPopup = true;
+                          state.showRechargePopup = true;
+                          // state.showCallDownLoadPopup = true;
                         }
                       }
                     });

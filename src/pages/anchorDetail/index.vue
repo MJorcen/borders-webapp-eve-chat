@@ -281,16 +281,16 @@
         class="bottomBoxLeft"
         @click.stop="
           () => {
-            // handleGo(data).then((res) => {
-            //   if (!res) {
-            //     if (user?.user?.vipLevel === 0) {
-            //       state.showVipPopup = true;
-            //     } else {
-            //       state.showRechargePopup = true;
-            //     }
-            //   }
-            // });
-            state.showCallDownLoadPopup = true;
+            handleGo(data).then((res) => {
+              if (!res) {
+                if (user?.user?.vipLevel === 0) {
+                  state.showVipPopup = true;
+                } else {
+                  state.showRechargePopup = true;
+                  // state.showCallDownLoadPopup = true;
+                }
+              }
+            });
           }
         "
       >
