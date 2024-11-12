@@ -399,11 +399,23 @@ onUnmounted(() => {
   });
 });
 
+const dataObj = {
+  body: {
+    path: "active/off",
+    code: 0,
+  },
+  ts: new Date().getTime(),
+  tp: 10,
+  id: generateRandomString(10),
+};
+
 const handleVisibilityChange = async () => {
   console.log(`我重新进来了`, document.visibilityState);
   if (document.visibilityState === "hidden") {
     window.removeEventListener("visibilitychange", () => {});
     Cookies.remove("showDownLoadPopups");
+    window.wsConnet?.send(JSON.stringify(dataObj));
+    window.wsConnet?.close();
   } else {
     await connectWebSocket(true);
   }
