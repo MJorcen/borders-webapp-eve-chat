@@ -1,4 +1,4 @@
-import { calldial } from "@/api/allApi";
+import { calldial, userconfig } from "@/api/allApi";
 import evenBus from "./evenBus";
 import { showToast } from "vant";
 import { useRouter } from "vue-router";
@@ -13,23 +13,31 @@ const {
   code,
 } = calldial();
 
+const { fetchData: configFetch, data: configData } = userconfig();
+
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
     if (item.user.inCall === 0 && item.user.active === 0) {
       return showToast("Not Online");
     }
     if (item.user.inCall === 0 && item.user.active === 1) {
-      await callFetch({ type: 1, toUserId: item.user.id });
-      if (callSuccess.value) {
-        evenBus.emit("activeCall", { ...callData.value });
+      await configFetch();
+      if (configData.value?.hasPayment) {
         resolve(true);
       } else {
-        showToast(callMsg.value);
-        if (code.value === 402) {
-          resolve(false);
-        }
-        // evenBus.emit("noMony");
+        resolve(false);
       }
+      // await callFetch({ type: 1, toUserId: item.user.id });
+      // if (callSuccess.value) {
+      //   evenBus.emit("activeCall", { ...callData.value });
+      //   resolve(true);
+      // } else {
+      //   showToast(callMsg.value);
+      //   if (code.value === 402) {
+      //     resolve(false);
+      //   }
+      //   // evenBus.emit("noMony");
+      // }
     } else {
       router?.push({
         name: "ChatRoom",

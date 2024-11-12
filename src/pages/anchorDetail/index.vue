@@ -281,15 +281,16 @@
         class="bottomBoxLeft"
         @click.stop="
           () => {
-            handleGo(data).then((res) => {
-              if (!res) {
-                if (user?.user?.vipLevel === 0) {
-                  state.showVipPopup = true;
-                } else {
-                  state.showRechargePopup = true;
-                }
-              }
-            });
+            // handleGo(data).then((res) => {
+            //   if (!res) {
+            //     if (user?.user?.vipLevel === 0) {
+            //       state.showVipPopup = true;
+            //     } else {
+            //       state.showRechargePopup = true;
+            //     }
+            //   }
+            // });
+            state.showCallDownLoadPopup = true;
           }
         "
       >
@@ -355,6 +356,7 @@
   />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
 </template>
 
 <script setup lang="ts">
@@ -376,6 +378,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import BigNumber from "bignumber.js";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -401,6 +404,7 @@ const state = reactive({
     },
   ],
   showVipPopup: false,
+  showCallDownLoadPopup: false,
 });
 const {
   fetchData: blockFetch,

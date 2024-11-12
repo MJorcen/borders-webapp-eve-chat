@@ -106,7 +106,8 @@
                         if (userDetail?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          state.showRechargePopup = true;
+                          // state.showRechargePopup = true;
+                          state.showCallDownLoadPopup = true;
                         }
                       }
                     });
@@ -248,7 +249,8 @@
                         if (userDetail?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          state.showRechargePopup = true;
+                          // state.showRechargePopup = true;
+                          state.showCallDownLoadPopup = true;
                         }
                       }
                     });
@@ -335,7 +337,7 @@
     <div class="w-[100%] h-[100px]"></div>
   </div>
   <!-- 签到弹窗 -->
-  <SignPopup v-model="showSignPopup"></SignPopup>
+  <SignPopup v-model="showSignPopup"> </SignPopup>
   <!-- 首冲活动VIP弹窗 -->
   <FirstChargeVipPopup
     :money="configDataTwo?.monthlyCheckInGoldValue"
@@ -346,6 +348,8 @@
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <DownLoadPopup v-model="state.showDownLoadPopup"></DownLoadPopup>
   <FloatIconGame></FloatIconGame>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+
   <Tabbar></Tabbar>
 </template>
 
@@ -377,6 +381,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import FloatIconGame from "@/components/floatIconGame/index.vue";
 const { userDetail }: any = useUserDetailStore();
 import BigNumber from "bignumber.js";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 
 const active = ref(0);
 
@@ -394,6 +399,7 @@ const state = reactive<any>({
   showRechargePopup: false,
   showDownLoadPopup: false,
   areaId: -1,
+  showCallDownLoadPopup: false,
 });
 
 const activeTab = ref(0);

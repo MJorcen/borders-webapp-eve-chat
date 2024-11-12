@@ -53,10 +53,11 @@
   <audio style="display: none" controls loop muted ref="audioRef">
     <source src="./assets/call.mp3" />
   </audio>
-  <!-- 谷歌地图 -->
+  <!-- 谷歌地图主要用于调用他的api -->
   <div style="display: none">
     <div id="map"></div>
   </div>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
@@ -78,6 +79,7 @@ import {
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
 import TopNotification from "@/components/topNotification/index.vue";
 import { useRouter } from "vue-router";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -91,6 +93,7 @@ const state = reactive<any>({
   showCallFreeDetail: false,
   notificationData: {},
   showNotification: false,
+  showCallDownLoadPopup: false,
 });
 
 const audioRef = ref<any>(null);
@@ -126,6 +129,8 @@ evenBus.on("inviteCall", async (data: any) => {
   const isPlaying = localStorage.getItem("isPlayingGame");
   // 被呼叫时
   if (data[0].body.type === "call/dial") {
+    state.showCallDownLoadPopup = true;
+    return;
     if (isPlaying) return;
     // 判断是否已在通话中
     const isCall = localStorage.getItem("isCall");
@@ -143,6 +148,8 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   // 主动呼叫时
   if (data[0].body.type === "call/pickUp") {
+    state.showCallDownLoadPopup = true;
+    return;
     if (isPlaying) return;
 
     // callDialogRef.value.state.isReactive = false;
@@ -378,15 +385,9 @@ const { connectWebSocket } = useWebSocketHeartbeat();
 
 onMounted(async () => {
   // 监听是否在触碰屏幕。在的话，播放音乐
-  document.addEventListener(
-    "touchmove",
-    (e) => {
-      // screenfull.request();
-      audioRef?.value?.play();
-      // e.preventDefault();
-    }
-    // { passive: false }
-  );
+  document.addEventListener("touchmove", (e) => {
+    audioRef?.value?.play();
+  });
   // 监听是否重新返回程序
   document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用

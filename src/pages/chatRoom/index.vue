@@ -516,7 +516,8 @@
                   if (userDetail?.user?.vipLevel === 0) {
                     state.showVipPopup = true;
                   } else {
-                    state.showRechargePopup = true;
+                    // state.showRechargePopup = true;
+                    state.showCallDownLoadPopup = true;
                   }
                 }
               });
@@ -575,6 +576,9 @@
     ></giftPopup>
     <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
     <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+    <CallDownLoadPopup
+      v-model="state.showCallDownLoadPopup"
+    ></CallDownLoadPopup>
   </div>
 </template>
 
@@ -620,6 +624,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import GoogleMap from "@/components/googleMap/index.vue";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -657,6 +662,7 @@ const state = reactive<any>({
   isInput: true,
   showRechargePopup: false,
   showVipPopup: false,
+  showCallDownLoadPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
