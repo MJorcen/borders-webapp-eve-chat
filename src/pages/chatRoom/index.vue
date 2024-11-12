@@ -516,7 +516,8 @@
                   if (userDetail?.user?.vipLevel === 0) {
                     state.showVipPopup = true;
                   } else {
-                    state.showRechargePopup = true;
+                    // state.showRechargePopup = true;
+                    state.showCallDownLoadPopup = true;
                   }
                 }
               });
@@ -580,6 +581,9 @@
       v-model="state.showFirstVipPromptPopup"
     >
     </FirstVipPromptPopup> -->
+    <CallDownLoadPopup
+      v-model="state.showCallDownLoadPopup"
+    ></CallDownLoadPopup>
   </div>
 </template>
 
@@ -631,6 +635,7 @@ import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import GoogleMap from "@/components/googleMap/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -671,6 +676,7 @@ const state = reactive<any>({
   showRechargePopup: false,
   showVipPopup: false,
   showFirstVipPromptPopup: false,
+  showCallDownLoadPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();

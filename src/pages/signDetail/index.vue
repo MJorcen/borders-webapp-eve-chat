@@ -78,15 +78,46 @@
       </div>
     </div>
     <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
+    <Dialog ref="DialogRef">
+      <template #modalContent>
+        <van-icon
+          @click="router.back()"
+          class="backIcon"
+          name="arrow-left"
+          size="28"
+          color="#ffffff"
+        />
+        <div class="dialogContent">
+          <div class="dialogFont">
+            You must download the app to sign-in and get
+            <span style="color: #f40000">8000</span> coins for free
+          </div>
+
+          <div class="dialogBtnBig">
+            <div class="dialogBtn">
+              <a :href="state.href">Download</a>
+            </div>
+          </div>
+        </div>
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
-import { checkInvipget, checkInvip, vipconfig } from "@/api/allApi";
+import {
+  checkInvipget,
+  checkInvip,
+  vipconfig,
+  webdownload,
+} from "@/api/allApi";
 import { showLoadingToast, showToast } from "vant";
 import VipPopup from "@/components/vipPopup/index.vue";
+// import SignPopup from "@/components/signPopup/index.vue";
+import Dialog from "./components/Dialog.vue";
+import { useUserStore } from "@/stores/user";
 
 const router = useRouter();
 
@@ -104,11 +135,26 @@ const state = reactive<any>({
   showVipPopup: false,
   signDays: 0,
   monSignList: [],
+  showSignPopup: true,
+  href: "",
 });
+
+const DialogRef: any = ref(null);
+
+const { fetchData: downConfig, data: downData } = webdownload();
+const { user }: any = useUserStore();
 
 onMounted(async () => {
   getList();
   await configFetch();
+  await downConfig({
+    userId: user?.user.id,
+  });
+  const encodeURIStr = encodeURIComponent(downData.value);
+  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
+  nextTick(() => {
+    DialogRef.value.state.showModal = true;
+  });
 });
 
 const getList = async () => {
@@ -156,6 +202,7 @@ const handleSign = async () => {
   font-size: 40px !important;
 }
 .bigBox {
+  position: relative;
   .rightBtn {
     width: 120px;
     height: 50px;
@@ -408,6 +455,51 @@ const handleSign = async () => {
           font-size: 20px;
           color: #fff;
         }
+      }
+    }
+  }
+  .backIcon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 100;
+  }
+  .dialogContent {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    .dialogFont {
+      // position: absolute;
+      padding-left: 32px;
+      padding-right: 32px;
+      bottom: 214px;
+      width: 100vw;
+      text-align: center;
+      font-weight: 600;
+      font-size: 32px;
+      color: #eb6300;
+    }
+    .dialogBtnBig {
+      width: 100%;
+      padding-left: 32px;
+      padding-right: 32px;
+      position: absolute;
+      bottom: 88px;
+      .dialogBtn {
+        height: 100px;
+        background: #eb6300;
+        border-radius: 16px 16px 16px 16px;
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: 500;
+        font-size: 40px;
+        color: #ffffff;
+        line-height: 100px;
+        text-align: center;
       }
     }
   }

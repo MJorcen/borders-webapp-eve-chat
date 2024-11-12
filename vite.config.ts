@@ -83,7 +83,7 @@ export default defineConfig(({ command, mode }) => {
           ],
         },
         workbox: {
-          globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg}"],
+          globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg,webp,gif}"],
           // runtimeCaching: [
           //   {
           //     urlPattern: /^https:\/\/fonts\.gstatic\.com/,

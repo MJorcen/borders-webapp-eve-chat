@@ -390,15 +390,16 @@
         class="bottomBoxLeft"
         @click.stop="
           () => {
-            handleGo(data).then((res) => {
-              if (!res) {
-                if (user?.user?.vipLevel === 0) {
-                  state.showVipPopup = true;
-                } else {
-                  state.showRechargePopup = true;
-                }
-              }
-            });
+            // handleGo(data).then((res) => {
+            //   if (!res) {
+            //     if (user?.user?.vipLevel === 0) {
+            //       state.showVipPopup = true;
+            //     } else {
+            //       state.showRechargePopup = true;
+            //     }
+            //   }
+            // });
+            state.showCallDownLoadPopup = true;
           }
         "
       >
@@ -500,6 +501,7 @@
       ></van-image>
     </div>
   </van-popup>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
 </template>
 
 <script setup lang="ts">
@@ -526,6 +528,8 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import BigNumber from "bignumber.js";
 import flvjs from "flv.js";
 import { convertRtmpToFlv } from "@/common/utils";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+
 const { vipConfigData } = useVipConfigStore();
 
 const { fetchData: albumConfigFetch, data: albumConfigData } =
@@ -559,6 +563,7 @@ const state = reactive({
   picUrl: "",
   paidObj: {},
   mengceng: false,
+  showCallDownLoadPopup: false,
 });
 const {
   fetchData: blockFetch,

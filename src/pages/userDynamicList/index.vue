@@ -226,7 +226,8 @@
                         if (userDetail?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          state.showRechargePopup = true;
+                          // state.showRechargePopup = true;
+                          state.showCallDownLoadPopup = true;
                         }
                       }
                     });
@@ -256,6 +257,7 @@
   />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
 </template>
 
 <script lang="ts" setup>
@@ -281,10 +283,12 @@ const { userDetail }: any = useUserDetailStore();
 const { vipConfigData } = useVipConfigStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
 import { useUserStore } from "@/stores/user";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 
 const { user }: any = useUserStore();
 
 const state = reactive<any>({
+  showCallDownLoadPopup: false,
   showPopover: false,
   offset: 0,
   finished: true,

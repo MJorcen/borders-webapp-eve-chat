@@ -1,5 +1,10 @@
 <template>
   <div class="bigBoxs">
+    <img
+      class="siginImg"
+      @click.stop="handleSigin"
+      src="./assets/Group1000004767@2x.webp"
+    />
     <div class="topBox">
       <div class="tabsBox">
         <div class="tabsBoxLeft">
@@ -295,7 +300,8 @@
                         if (userDetail?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          state.showRechargePopup = true;
+                          // state.showRechargePopup = true;
+                          state.showCallDownLoadPopup = true;
                         }
                       }
                     });
@@ -333,6 +339,8 @@
   <Tabbar ref="TabbarRef"></Tabbar>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <SignPopup v-model="state.showSignPopup"> </SignPopup>
 </template>
 
 <script setup lang="ts" name="Messages">
@@ -349,7 +357,7 @@ import Tabbar from "@/components/Tabbar/index.vue";
 import Empty from "@/components/Empty.vue";
 import dayjs from "dayjs";
 import { useImHook } from "@/hook/useIm";
-import { callrecordlist, notiflist, livelist } from "@/api/allApi";
+import { callrecordlist, notiflist,livelist, userconfig } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import msgImg from "./assets/ic_video@2x (1).png";
 import videoImg from "./assets/ic_video@2x.png";
@@ -362,11 +370,15 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import SignPopup from "@/components/signPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
 const { vipConfigData } = useVipConfigStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
+
+const { fetchData: configFetch, data: configData } = userconfig();
 
 const state = reactive<any>({
   messageList: [],
@@ -375,6 +387,8 @@ const state = reactive<any>({
   finished: true,
   showRechargePopup: false,
   showVipPopup: false,
+  showCallDownLoadPopup: false,
+  showSignPopup: false,
 });
 
 const { fetchData: liveFetch, data: liveData } = livelist();
@@ -496,6 +510,7 @@ onActivated(async () => {
   await liveFetch({
     limit: 4,
   });
+  await configFetch();
   // showLoadingToast({
   //   duration: 0,
   //   message: "Loading...",
@@ -508,6 +523,14 @@ onActivated(async () => {
 
   closeToast();
 });
+
+const handleSigin = () => {
+  if (!configData.value?.hasPayment) {
+    state.showVipPopup = true;
+  } else {
+    state.showSignPopup = true;
+  }
+};
 
 watch(
   () => state.messageList,
@@ -699,7 +722,15 @@ const handleClick = (index: number) => {
 .bigBoxs {
   // padding-bottom: 100px;
   background-color: #241213;
-
+  position: relative;
+  .siginImg {
+    position: absolute;
+    bottom: 200px;
+    right: 0px;
+    width: 168px;
+    height: 169px;
+    z-index: 10;
+  }
   .tabsBox {
     display: flex;
     align-items: center;
