@@ -519,6 +519,8 @@
                     // state.showRechargePopup = true;
                     state.showCallDownLoadPopup = true;
                   }
+                } else {
+                  state.showCallDownLoadPopup = true;
                 }
               });
             }
