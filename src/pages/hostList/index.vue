@@ -458,6 +458,7 @@ const state = reactive<any>({
   showRechargePopup: false,
   showDownLoadPopup: false,
   areaId: -1,
+  showCallDownLoadPopup: false,
 });
 
 const activeTab = ref(0);
