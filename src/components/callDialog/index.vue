@@ -8,8 +8,8 @@
           v-if="!state.isReactive"
           :src="
             user?.user?.id !== props?.wsData?.fromUser?.id
-              ? props?.wsData?.fromUser?.avatar
-              : props?.wsData?.toUser?.avatar
+              ? props?.wsData?.fromUser?.portrait
+              : props?.wsData?.toUser?.portrait
           "
           class="hostImg"
           fit="cover"

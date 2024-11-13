@@ -32,6 +32,158 @@
       <img src="./assets/gold@2x.webp" class="rightImg" />
       <div class="myWalletFont">{{ walletData?.wallet?.gold }}</div>
     </div>
+    <div class="swiperBox">
+      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">
+                Get {{ vipConfigData?.monthlyGoldBonus }} coins every month
+              </div>
+            </div>
+            <div class="swiperItemBottom">
+              <img class="swiperItemBottomLeft" src="./assets/Group@2x.webp" />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Get coins immediately
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">VIP exclusive sign in</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(1).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Worth
+                  <span style="color: #ff0000">{{
+                    vipConfigData?.monthlyCheckInGoldValue
+                  }}</span>
+                  coins
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Unlimited free text message</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(2).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Chat with other users
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Recharge 15% OFF</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(3).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">Special offer</div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Profiles are displayed at the top</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(4).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Discovered by more people
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Check who visited my profile</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(5).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  nerver miss the destiny with her
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">VIP badge</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(6).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Shine brighter in a crowd
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+      </van-swipe>
+    </div>
     <div class="coinBox">
       <div
         :class="
@@ -130,6 +282,9 @@ import {
   userwallet,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
+import { useVipConfigStore } from "@/stores/vipConfig";
+
+const { vipConfigData } = useVipConfigStore();
 
 const { fetchData, data } = rechargeV2priceList();
 
@@ -241,6 +396,77 @@ const router = useRouter();
       height: 40px;
     }
   }
+  .swiperBox {
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-bottom: 30px;
+    .swiperItem {
+      background-image: url("./assets/Rectangle2282@2x.webp");
+      width: 100%;
+      height: 264px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      .topSwiper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+        .topSwiperItem {
+          background-image: url("./assets/Rectangle34625260@2x.webp");
+          width: 550px;
+          height: 44px;
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Inter", sans-serif;
+          font-weight: normal;
+          font-size: 32px;
+          color: #ffffff;
+          line-height: 44px;
+        }
+      }
+      .swiperItemBottom {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 28px;
+        padding-right: 28px;
+        .swiperItemBottomLeft {
+          width: 160px;
+          height: 160px;
+        }
+        .swiperItemBottomRight {
+          .swiperItemBottomRightTop {
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 32px;
+            text-align: right;
+            color: #ffffff;
+            margin-bottom: 52px;
+          }
+          .btnBig {
+            display: flex;
+            justify-content: flex-end;
+            .btn {
+              width: 160px;
+              height: 60px;
+              background: #eb6300;
+              border-radius: 20px 20px 20px 20px;
+              border: 2px solid #ffffff;
+              font-family: "Inter", sans-serif;
+              font-weight: normal;
+              font-size: 32px;
+              color: #ffffff;
+              line-height: 60px;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
   .coinBox {
     width: 100%;
     padding-left: 62px;
@@ -256,7 +482,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImg {
-          background-image: url("./assets/Union@2x (1).png");
+          background-image: url("./assets/Union@2x(1).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -274,7 +500,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImgTwo {
-          background-image: url("./assets/Union@2x (2).png");
+          background-image: url("./assets/Union@2x(2).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -329,7 +555,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImg {
-          background-image: url("./assets/Union@2x (1).png");
+          background-image: url("./assets/Union@2x(1).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -347,7 +573,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImgTwo {
-          background-image: url("./assets/Union@2x (2).png");
+          background-image: url("./assets/Union@2x(2).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -405,7 +631,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImg {
-          background-image: url("./assets/Union@2x (1).png");
+          background-image: url("./assets/Union@2x(1).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -423,7 +649,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImgTwo {
-          background-image: url("./assets/Union@2x (2).png");
+          background-image: url("./assets/Union@2x(2).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -531,7 +757,7 @@ const router = useRouter();
         // width: 160px;
         // height: 64px;
         padding: 7px;
-        background: #EB6300;
+        background: #eb6300;
         // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;

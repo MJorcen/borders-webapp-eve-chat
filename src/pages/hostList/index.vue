@@ -57,7 +57,7 @@
                 fit="cover"
                 radius="8"
                 class="itemImg"
-                :src="item?.user?.avatar"
+                :src="item?.user?.portrait"
                 lazy-load
               ></van-image>
               <div
@@ -171,7 +171,7 @@
                 fit="cover"
                 radius="12"
                 class="itemImg"
-                :src="item?.avatar"
+                :src="item?.portrait"
                 lazy-load
               ></van-image>
               <!-- <img

@@ -84,7 +84,7 @@
               class="choseBoxImg"
             />
             <img
-              src="./assets/ic_select@2x (1).png"
+              src="./assets/ic_select@2x(1).png"
               v-else
               class="choseBoxImg"
             />
@@ -304,7 +304,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImg {
-        background-image: url("./assets/Union@2x (1).png");
+        background-image: url("./assets/Union@2x(1).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -322,7 +322,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImgTwo {
-        background-image: url("./assets/Union@2x (2).png");
+        background-image: url("./assets/Union@2x(2).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -378,7 +378,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImg {
-        background-image: url("./assets/Union@2x (1).png");
+        background-image: url("./assets/Union@2x(1).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -396,7 +396,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImgTwo {
-        background-image: url("./assets/Union@2x (2).png");
+        background-image: url("./assets/Union@2x(2).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -454,7 +454,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImg {
-        background-image: url("./assets/Union@2x (1).png");
+        background-image: url("./assets/Union@2x(1).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -472,7 +472,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImgTwo {
-        background-image: url("./assets/Union@2x (2).png");
+        background-image: url("./assets/Union@2x(2).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
