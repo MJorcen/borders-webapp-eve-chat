@@ -4,6 +4,7 @@
       @click.stop="router.go(-1)"
       src="./assets/Slice90@2x.webp"
       class="backBtn"
+      v-if="!state.showPaidPopup"
     />
     <img
       src="./assets/Slice91@2x.webp"
@@ -163,6 +164,53 @@
                 {{ data?.user?.fansCount }}
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="momentBoxBig"
+        v-if="paidalbumlistAnchorAlbumData?.list?.length > 0"
+      >
+        <div class="momentBox">
+          <div class="momentBoxLeft">Private Picture</div>
+        </div>
+        <div class="momentBoxFlex2">
+          <div
+            class="maojinBox"
+            @click="
+              () => {
+                if (rowItems?.unlock) return;
+                state.showPaidPopup = true;
+                state.paidObj = rowItems;
+              }
+            "
+            v-for="(rowItems, rowIndex) in paidalbumlistAnchorAlbumData?.list"
+          >
+            <van-image
+              v-if="rowItems?.unlock"
+              fit="cover"
+              radius="5px"
+              :src="rowItems?.path"
+              @click.stop="
+                () => {
+                  showImagePreview([rowItems?.path]);
+                }
+              "
+              class="momentBoxFlexImg3"
+            ></van-image>
+            <van-image
+              v-else
+              fit="cover"
+              radius="5px"
+              :src="rowItems?.path"
+              class="momentBoxFlexImg3"
+            ></van-image>
+            <img
+              v-if="!rowItems?.unlock"
+              class="suo"
+              src="./assets/2@2x.webp"
+            />
+            <div v-if="!rowItems?.unlock" class="overlay"></div>
           </div>
         </div>
       </div>
@@ -339,6 +387,42 @@
   />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <van-popup
+    @click-overlay="
+      () => {
+        state.showPaidPopup = false;
+        state.picUrl = '';
+      }
+    "
+    v-model:show="state.showPaidPopup"
+    position="center"
+    round
+    z-index="20"
+  >
+    <div class="popupPaidBox">
+      <div class="mengceng" v-if="state.picUrl === ''">
+        <img class="suo" src="./assets/2@2x.webp" />
+        <div class="font">Paid picture</div>
+        <div class="possBig">
+          <div class="possBigBtn" @click="handlePaidPic">
+            <img class="gold" src="./assets/goldNew.png" />
+            {{ albumConfigData?.unlockGoldPrice || 0 }} Coins
+          </div>
+        </div>
+      </div>
+      <van-image
+        v-else
+        fit="cover"
+        :src="state.picUrl"
+        class="paidImgBig"
+        @click.stop="
+          () => {
+            showImagePreview([state.picUrl]);
+          }
+        "
+      ></van-image>
+    </div>
+  </van-popup>
 </template>
 
 <script setup lang="ts">
@@ -350,6 +434,9 @@ import {
   postuser,
   userunfollow,
   userblock,
+  userpaidalbumlistAnchorAlbum,
+  userpaidalbumconfig,
+  userpaidalbumunlock,
 } from "@/api/allApi";
 import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
@@ -363,10 +450,15 @@ import BigNumber from "bignumber.js";
 
 const { vipConfigData } = useVipConfigStore();
 
-onMounted(() => {
+const { fetchData: albumConfigFetch, data: albumConfigData } =
+  userpaidalbumconfig();
+
+onMounted(async () => {
   state.showPopup = false;
   getUserDetail();
   getReciveGifs();
+  getPaidPic();
+  await albumConfigFetch();
   document.body.style.overflow = "auto";
   nextTick(() => {
     window.scroll({ top: 0 });
@@ -385,6 +477,9 @@ const state = reactive({
     },
   ],
   showVipPopup: false,
+  showPaidPopup: false,
+  picUrl: "",
+  paidObj: {},
 });
 const {
   fetchData: blockFetch,
@@ -510,6 +605,40 @@ const handleCancelFollow = async () => {
     showToast(UnFollowMsg.value);
   }
 };
+
+const {
+  fetchData: paidalbumlistAnchorAlbum,
+  data: paidalbumlistAnchorAlbumData,
+} = userpaidalbumlistAnchorAlbum();
+
+const getPaidPic = async () => {
+  await paidalbumlistAnchorAlbum({ userId: route.query.id });
+};
+
+const {
+  fetchData: userPaidAlbumUnlock,
+  data: userPaidAlbumUnlockData,
+  code,
+  success: userPaidAlbumUnlockSuccess,
+} = userpaidalbumunlock();
+
+const handlePaidPic = async () => {
+  await userPaidAlbumUnlock({ id: state.paidObj.id });
+  if (userPaidAlbumUnlockSuccess.value) {
+    getPaidPic();
+    state.picUrl = state.paidObj.path;
+  } else {
+    if (code.value === 4003) {
+      // state.showRechargePopup = true;
+      if (user?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+    }
+  }
+};
+
 const regions = [
   "bgd",
   "bra",
@@ -846,6 +975,50 @@ const onChange = (index: number) => {
           margin-right: 20px;
         }
       }
+      .momentBoxFlex2 {
+        width: 100%;
+        overflow-x: auto;
+        display: flex;
+        padding-left: 26px;
+        margin-bottom: 48px;
+        .maojinBox {
+          width: 200px;
+          height: 200px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          position: relative;
+          margin-right: 20px;
+          .momentBoxFlexImg2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px 16px 16px 16px;
+            flex-shrink: 0;
+            margin-right: 20px;
+          }
+          .suo {
+            position: absolute;
+            width: 72px;
+            height: 72px;
+            z-index: 2;
+            left: 30%;
+          }
+          .overlay {
+            border-radius: 16px 16px 16px 16px;
+            position: absolute;
+            top: 0;
+            left: -10px;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            background: rgba(255, 255, 255, 0.3); /* 半透明背景 */
+            pointer-events: none; /* 禁止点击事件 */
+            transition: backdrop-filter 0.3s ease; /* 过渡效果 */
+          }
+        }
+      }
     }
     .ProfileBig {
       margin-bottom: 20px;
@@ -1036,6 +1209,66 @@ const onChange = (index: number) => {
     .bottomBoxLeftImg {
       width: 240px;
       height: 100px;
+    }
+  }
+}
+.popupPaidBox {
+  .paidImgBig {
+    width: 100%;
+    height: 100%;
+  }
+  .mengceng {
+    width: 600px;
+    height: 600px;
+    background-image: url("./assets/image@2x.webp");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .suo {
+      width: 240px;
+      height: 240px;
+    }
+    .font {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 64px;
+      color: #ffffff;
+      margin-top: 22px;
+      margin-bottom: 30px;
+    }
+    .momentBoxFlexImg3 {
+      width: 100%;
+      height: 100%;
+    }
+    .possBig {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .possBigBtn {
+        width: 400px;
+        height: 100px;
+        background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+        border-radius: 1200px 1200px 1200px 1200px;
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: 400;
+        font-size: 40px;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .gold {
+          width: 60px;
+          height: 60px;
+          margin-right: 28px;
+        }
+      }
     }
   }
 }

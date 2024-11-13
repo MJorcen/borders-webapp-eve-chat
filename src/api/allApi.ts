@@ -463,3 +463,29 @@ export const userlistTabs = () => {
     method: "get",
   });
 };
+
+export const userpaidalbumlistAnchorAlbum = () => {
+  return useRequest({
+    url: "/user/paid/album/listAnchorAlbum",
+    method: "get",
+    otherApi: true,
+  });
+};
+
+// 付费相册配置
+export const userpaidalbumconfig = () => {
+  return useRequest({
+    url: "/user/paid/album/config",
+    method: "get",
+    otherApi: true,
+  });
+};
+
+// 解锁付费相册（男端）
+export const userpaidalbumunlock = () => {
+  return useRequest({
+    url: "/user/paid/album/unlock",
+    method: "post",
+    otherApi: true,
+  });
+};
