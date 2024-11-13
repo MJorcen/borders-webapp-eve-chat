@@ -6,6 +6,19 @@
     round
   >
     <div class="coinBox">
+      <div class="vipBox">
+        <div class="vipBoxItem">
+          <div class="vipBoxItemLeft">
+            Become VIP Get <span style="color: #fdff87">8000</span> coins for
+            just %d!
+          </div>
+          <img
+            @click.stop="state.showVipPopup = true"
+            class="vipBoxItemRight"
+            src="./assets/Group1000004643@2x.webp"
+          />
+        </div>
+      </div>
       <div
         :class="
           item.type === 1
@@ -91,6 +104,7 @@
       </div>
     </div>
   </van-popup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
@@ -102,8 +116,12 @@ import {
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import { useRouter } from "vue-router";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
 
 const { fetchData, data } = rechargeV2priceList();
+
+const { vipConfigData } = useVipConfigStore();
 
 const { fetchData: wollectFetch, data: walletData } = userwallet();
 
@@ -137,6 +155,7 @@ const state = reactive<any>({
   payUrl: "",
   showLink: false,
   channelData: [],
+  showVipPopup: false,
 });
 
 watch(
@@ -231,6 +250,41 @@ const handleSubmit = async () => {
 const router = useRouter();
 </script>
 <style lang="scss" scoped>
+.vipBox {
+  width: 100%;
+  // padding-left: 24px;
+  // padding-right: 24px;
+  margin-bottom: 20px;
+  background-color: #2e1819;
+  .vipBoxItem {
+    height: 116px;
+    background: #eb6300;
+    border-radius: 20px 20px 20px 20px;
+    border-image: linear-gradient(
+        180deg,
+        rgba(255, 181, 184, 1),
+        rgba(255, 250, 229, 1),
+        rgba(215, 121, 37, 1)
+      )
+      2 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 32px;
+    padding-right: 22px;
+    .vipBoxItemLeft {
+      font-family: "Inter", sans-serif;
+      font-weight: normal;
+      font-size: 32px;
+      color: #ffffff;
+      line-height: 40px;
+    }
+    .vipBoxItemRight {
+      width: 114px;
+      height: 48px;
+    }
+  }
+}
 .coinBox {
   width: 100%;
   padding-left: 62px;
