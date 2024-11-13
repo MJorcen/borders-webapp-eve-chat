@@ -37,6 +37,9 @@ const service = axios.create({
  */
 service.interceptors.request.use(
   (config: any) => {
+    if (config?.otherApi) {
+      config.baseURL = import.meta.env.VITE_APP_BASE_API_OTHER;
+    }
     let userInfo: any;
     const region = localStorage.getItem("region");
     const country = localStorage.getItem("country");

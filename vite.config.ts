@@ -149,6 +149,12 @@ export default defineConfig(({ command, mode }) => {
           secure: true, // 禁用 SSL 证书验证
           rewrite: (path) => path.replace(/^\/qqq/, ""), // 重写路径，去除请求前缀
         },
+        "/www": {
+          target: "http://hnybgz.asuscomm.com:6688/gateway/mapping/cloud/v1", // 后端API的实际地址
+          changeOrigin: true, // 是否改变源，开启后会对主机头进行修改， 默认false
+          rewrite: (path) => path.replace(/^\/www/, ""), // 重写路径，去除请求前缀
+          // rewrite: (path) => path.replace(new RegExp(`^${baseApiOther}`), ""), // Rewrite the path dynamically
+        },
       },
       hmr: true,
     },

@@ -17,6 +17,7 @@ export interface RequestOptions {
   setExpireTime?: number; // 缓存时间
   cancelRequest?: boolean; // 是否开启取消重复请求
   query?: any;
+  otherApi?: boolean; // 是否使用其他api
 }
 
 export interface RequestState<
