@@ -36,7 +36,7 @@ export const userfillInfo = () => {
 // 主播墙发现列表
 export const userrecommendList = () => {
   return useRequest({
-    url: "/user/recommendList",
+    url: "/user/recommendListV2",
     method: "get",
   });
 };
@@ -453,6 +453,13 @@ export const webdownload = () => {
 export const gametoken = () => {
   return useRequest({
     url: "/user/token/jwt/games",
+    method: "get",
+  });
+};
+
+export const userlistTabs = () => {
+  return useRequest({
+    url: "/user/listTabs",
     method: "get",
   });
 };

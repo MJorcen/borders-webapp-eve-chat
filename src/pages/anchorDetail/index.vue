@@ -277,6 +277,15 @@
           }
         "
       >
+        <div class="noVipBox" v-if="user?.user?.vipLevel === 0">
+          <img class="vipIcon" src="./assets/Group1000004778@2x.webp" />
+          <img class="caiIcon" src="./assets/Rectangle34625288@2x.webp" />
+          <div class="fontFlexBox">
+            <div>VIP Only</div>
+            <img src="./assets/image10@2x.webp" class="moneyImg" />
+            <div>{{ data?.user?.videoCallVipPrice | 0 }}/min</div>
+          </div>
+        </div>
         <img
           src="./assets/vipImg.webp"
           class="vipimg"
@@ -946,7 +955,43 @@ const onChange = (index: number) => {
       padding-left: 70px;
       display: flex;
       align-items: center;
-
+      .noVipBox {
+        background-image: url("./assets/Group1000004508@2x.webp");
+        min-width: 336px;
+        max-width: 360px;
+        height: 108px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0px;
+        top: -100px;
+        display: flex;
+        align-items: center;
+        padding-left: 5px;
+        .vipIcon {
+          width: 64px;
+          height: 52px;
+        }
+        .caiIcon {
+          width: 72px;
+          height: 60px;
+          margin-left: -30px;
+        }
+        .fontFlexBox {
+          margin-left: -30px;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          font-family: "ABeeZee", sans-serif;
+          font-weight: 400;
+          font-size: 28px;
+          color: #ffffff;
+          .moneyImg {
+            width: 24px;
+            height: 30px;
+          }
+        }
+      }
       .vipimg {
         position: absolute;
         left: 0px;

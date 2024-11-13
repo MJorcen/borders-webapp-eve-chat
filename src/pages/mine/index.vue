@@ -95,7 +95,12 @@
 
     <div class="vipBox">
       <img class="vipBoxLeft" src="./assets/image922@2x.webp" />
-
+      <div class="becomeVipBoxFont1" v-if="data?.user?.vipLevel === 0">
+        Become <span style="color: #ffec93">VIP</span>
+      </div>
+      <div class="becomeVipBoxFont2" v-if="data?.user?.vipLevel === 0">
+        Get <span style="color: #ffec93">8000</span> coins
+      </div>
       <div class="vipBoxRight">
         <div v-if="data?.user?.vipLevel !== 0" class="vipBoxRightOne">
           Valid until {{ data?.info?.vipValidEnd }}
@@ -492,6 +497,24 @@ const handleClearStoranage = (e) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .becomeVipBoxFont1 {
+      position: absolute;
+      font-family: "Arial", sans-serif;
+      font-weight: normal;
+      font-size: 28px;
+      color: #ffffff;
+      top: 20px;
+      right: 154px;
+    }
+    .becomeVipBoxFont2 {
+      position: absolute;
+      font-family: "Arial", sans-serif;
+      font-weight: normal;
+      font-size: 28px;
+      color: #ffffff;
+      bottom: 18px;
+      right: 162px;
+    }
     .vipBoxLeft {
       width: 214px;
       height: 70px;

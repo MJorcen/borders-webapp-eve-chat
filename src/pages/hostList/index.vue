@@ -11,6 +11,42 @@
         <div class="line" v-if="item.active"></div>
       </div>
     </div>
+    <van-tabs
+      v-if="active === 0"
+      :ellipsis="false"
+      class="vantabs"
+      v-model:active="activeTab"
+      title-active-color="#FF4D42"
+      title-inactive-color="#8C8C8C"
+      :sticky="false"
+      color="#FF4D42"
+      background="#241213"
+    >
+      <van-tab v-for="(item, index) in userListTabsData?.list">
+        <template #title>
+          <div class="tabsNameBox">
+            <img v-if="item?.icon !== ''" class="tabicon" :src="item?.icon" />
+            <div
+              @click="
+                () => {
+                  state.areaId = item.areaId;
+                  state.offset = 0;
+                  state.list = [];
+                  getList();
+                }
+              "
+            >
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
+        <!-- <template #default
+          ><img class="tabicon" v-if="item?.icon !== ''" :src="item?.icon" />{{
+            item.name
+          }}</template
+        > -->
+      </van-tab>
+    </van-tabs>
     <div v-if="active === 0">
       <van-pull-refresh
         v-model="loading"
@@ -296,6 +332,7 @@ import {
   vipconfig,
   webconfig,
   userwallet,
+  userlistTabs,
 } from "@/api/allApi";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
@@ -328,15 +365,20 @@ const state = reactive<any>({
   showVipPopup: false,
   showRechargePopup: false,
   showDownLoadPopup: false,
+  areaId: -1,
 });
 
+const activeTab = ref(0);
+
 const tabsList: any = reactive([
-  { title: "Discover", active: true },
+  { title: "Popular", active: true },
   //   { title: "Nearby", active: false },
   { title: "Followed", active: false },
 ]);
 
 const router = useRouter();
+
+const { fetchData: userListTabsFetch, data: userListTabsData } = userlistTabs();
 
 const { fetchData: configFetch, data: configData } = userconfig();
 
@@ -367,6 +409,7 @@ onActivated(async () => {
     configFetchTwo(),
     webConfigFetch(),
     wollectFetch(),
+    userListTabsFetch(),
   ]);
   setVipConfigData(configDataTwo.value);
 
@@ -477,6 +520,7 @@ const getFolowList = async () => {
 const getList = async () => {
   await fetchData({
     offset: state.offset,
+    areaId: state.areaId,
   });
   if (data.value) {
     state.offset += data.value.list.length;
@@ -502,12 +546,13 @@ const onLoad = () => {
     // justify-content: center;
     align-items: center;
     padding-top: 20px;
-    margin-bottom: 42px;
+    // margin-bottom: 42px;
     padding-left: 32px;
     position: sticky;
     top: 0;
     z-index: 19;
     background-color: #2c1a1a;
+    border-bottom: 2px solid #585050;
     .tabs {
       font-family: "Inter", sans-serif;
       font-weight: bold;
@@ -542,6 +587,32 @@ const onLoad = () => {
     .tabs:nth-child(2) {
       margin-left: 40px;
       margin-right: 40px;
+    }
+  }
+  .vantabs {
+    margin-bottom: 32px;
+    // .vantabItem {
+    //   min-width: 200px;
+    //   display: flex;
+    //   align-items: center;
+    //   .tabicon {
+    //     width: 24px;
+    //     height: 24px;
+    //   }
+    // }
+
+    .tabsNameBox {
+      display: flex;
+      align-items: center;
+      font-family: "Inter", sans-serif;
+      font-weight: 500;
+      font-size: 32px;
+      color: #a6a0a7;
+      // min-width: 150px;
+      .tabicon {
+        width: 24px;
+        height: 24px;
+      }
     }
   }
   .flexBox {
