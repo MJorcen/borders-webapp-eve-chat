@@ -486,6 +486,7 @@ watch(
       localStorage.setItem("isFreeCalling", "true");
     } else {
       localStorage.setItem("isFreeCalling", "false");
+      toggleBodyScroll(false);
     }
   },
   { immediate: true }

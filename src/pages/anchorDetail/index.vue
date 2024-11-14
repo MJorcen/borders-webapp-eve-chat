@@ -77,15 +77,31 @@
               <div class="name">
                 {{ data?.user?.nickname }}
               </div>
-              <div class="yuan" v-if="data?.user?.onDuty"></div>
-              <div class="yuan2" v-else></div>
+              <div
+                class="yuan"
+                v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
+              ></div>
+              <div class="yuan2" v-if="data?.user?.active === 0"></div>
+              <div
+                class="yuan3"
+                v-if="data?.user?.inCall === 1 && data?.user?.active === 1"
+              ></div>
               <div
                 class="online"
                 v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
               >
                 Online
               </div>
-              <div class="onlineOff" v-else>Offline</div>
+              <div class="onlineOff" v-if="data?.user?.active === 0">
+                Offline
+              </div>
+              <div
+                class="online"
+                style="color: #f1db15"
+                v-if="data?.user?.inCall === 1 && data?.user?.active === 1"
+              >
+                Busy
+              </div>
             </div>
             <div class="infoBoxTopLeftBottom">
               <img
@@ -681,6 +697,13 @@ const onChange = (index: number) => {
               margin-right: 4px;
               border-radius: 50%;
               background-color: #c7c4cc;
+            }
+            .yuan3 {
+              width: 20px;
+              height: 20px;
+              margin-right: 4px;
+              border-radius: 50%;
+              background-color: #f1db15;
             }
             .online {
               font-family: "Inter", sans-serif;

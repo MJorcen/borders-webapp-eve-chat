@@ -33,7 +33,12 @@
       <div class="myWalletFont">{{ walletData?.wallet?.gold }}</div>
     </div>
     <div class="swiperBox">
-      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+      <van-swipe
+        class="my-swipe"
+        :autoplay="3000"
+        indicator-color="white"
+        @click="state.showVipPopup = true"
+      >
         <van-swipe-item>
           <div class="swiperItem">
             <div class="topSwiper">
@@ -270,6 +275,7 @@
         </div>
       </div>
     </van-popup>
+    <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   </div>
 </template>
 
@@ -283,6 +289,7 @@ import {
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -308,6 +315,7 @@ const state = reactive<any>({
   payData: {},
   payUrl: "",
   channelData: [],
+  showVipPopup: false,
 });
 
 const getRemainingMilliseconds = () => {

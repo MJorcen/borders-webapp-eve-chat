@@ -286,6 +286,15 @@ onMounted(() => {
 
 const emit = defineEmits(["update:modelValue", "update:wsData"]);
 
+let user: any = {};
+try {
+  const info: any = localStorage.getItem("userInfo");
+  user = JSON.parse(info as any);
+  // user = user.userDetail;
+} catch (e) {
+  console.log("error::", e);
+}
+
 const state: any = reactive({
   isReactive: false, //未接听状态
   inputValue: "", //输入框内容
@@ -345,8 +354,6 @@ const startTime = ref(0);
 const currentTime = ref(0);
 const timerId = ref(null);
 
-let user = {};
-
 watch(
   () => props.modelValue,
 
@@ -357,13 +364,9 @@ watch(
     state.msgList = [];
     stopTimer();
     if (newValue) {
-      try {
-        const info = localStorage.getItem("userInfo");
-        user = JSON.parse(info as string);
-      } catch (e) {
-        console.log("error::", e);
-      }
       toggleBodyScroll(newValue);
+    } else {
+      toggleBodyScroll(false);
     }
   },
   { immediate: true }

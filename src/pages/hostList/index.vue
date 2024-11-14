@@ -138,15 +138,29 @@
                 </div>
               </div>
               <div class="bottmBox2">
-                <div class="yuan" v-if="item.user.onDuty"></div>
-                <div class="yuan2" v-else></div>
+                <div
+                  class="yuan"
+                  v-if="item.user.inCall === 0 && item.user.active === 1"
+                ></div>
+                <div class="yuan2" v-if="item.user.active === 0"></div>
+                <div
+                  class="yuan3"
+                  v-if="item.user.inCall === 1 && item.user.active === 1"
+                ></div>
+
                 <div
                   class="online"
                   v-if="item.user.inCall === 0 && item.user.active === 1"
                 >
                   Online
                 </div>
-                <div class="online" v-else>Offline</div>
+                <div
+                  class="online"
+                  v-if="item.user.inCall === 1 && item.user.active === 1"
+                >
+                  Busy
+                </div>
+                <div class="online" v-if="item.user.active === 0">Offline</div>
               </div>
               <div class="hostName">{{ item.user.nickname }}</div>
               <div class="bottmBox3">
@@ -266,15 +280,29 @@
                 </div>
               </div>
               <div class="bottmBox2">
-                <div class="yuan" v-if="item.onDuty"></div>
-                <div class="yuan2" v-else></div>
+                <div
+                  class="yuan"
+                  v-if="item.inCall === 0 && item.active === 1"
+                ></div>
+                <div class="yuan2" v-if="item.active === 0"></div>
+                <div
+                  class="yuan3"
+                  v-if="item.inCall === 1 && item.active === 1"
+                ></div>
+
                 <div
                   class="online"
                   v-if="item.inCall === 0 && item.active === 1"
                 >
                   Online
                 </div>
-                <div class="online" v-else>Offline</div>
+                <div
+                  class="online"
+                  v-if="item.inCall === 1 && item.active === 1"
+                >
+                  Busy
+                </div>
+                <div class="online" v-if="item.active === 0">Offline</div>
               </div>
               <div class="hostName">{{ item.nickname }}</div>
               <div class="bottmBox3">
@@ -724,6 +752,13 @@ const onLoad = () => {
           margin-right: 8px;
           border-radius: 50%;
           background-color: #c7c4cc;
+        }
+        .yuan3 {
+          width: 16px;
+          height: 16px;
+          margin-right: 8px;
+          border-radius: 50%;
+          background-color: #f1db15;
         }
         .online {
           font-family: "SF Pro Display", sans-serif;

@@ -34,9 +34,16 @@
             <div class="onlineYuan"></div>
             <div class="onlineYuanFont">Online</div>
           </div>
-          <div v-else class="offlineBox">
+          <div v-if="data?.user?.active === 0" class="offlineBox">
             <div class="onlineYuan"></div>
             <div class="onlineYuanFont">Offline</div>
+          </div>
+          <div
+            v-if="data?.user?.inCall === 1 && data?.user?.active === 1"
+            class="busyBox"
+          >
+            <div class="onlineYuan"></div>
+            <div class="onlineYuanFont">Busy</div>
           </div>
         </div>
       </template>
@@ -1204,47 +1211,68 @@ const handleCancelFollow = async () => {
 };
 
 // 发送定位消息，只发送到本地，不发到服务器
-const handleSendDistance = () => {
+const handleSendDistance = async () => {
   showLoadingToast({
     duration: 0,
     message: "Please wait...",
     forbidClick: true,
   });
-  navigator.geolocation.getCurrentPosition(function (position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    console.log("Latitude is :", latitude);
-    console.log("Longitude is :", longitude);
+  // navigator.geolocation.getCurrentPosition(function (position) {
+  // var latitude = position.coords.latitude;
+  // var longitude = position.coords.longitude;
+  let latitude = "";
+  let longitude = "";
+  await fetch(
+    `https://www.googleapis.com/geolocation/v1/geolocate?key=${
+      import.meta.env.VITE_APP_GOOGLE_MAP_KEY
+    }`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        considerIp: true,
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Location Data:", data);
+      latitude = data.location.lat;
+      longitude = data.location.lng;
+    })
+    .catch((error) => console.error("Error:", error));
 
-    nim.sendGeo({
-      scene: "p2p",
-      to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
-      isLocal: true,
-      env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
-      geo: {
-        lng: longitude,
-        lat: latitude,
-        title: "distance",
-      },
-      done: () => {
-        nim?.getLocalMsgs({
-          scene: "p2p",
-          limit: 500,
-          // to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userId}`,
-          sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
-            data.value.user.id
-          }`,
-          done: (error: any, obj: any) => {
-            if (error) {
-            } else {
-              getChatMsgList(obj.msgs || [], "发定位");
-              closeToast();
-            }
-          },
-        });
-      },
-    });
+  nim.sendGeo({
+    scene: "p2p",
+    to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
+    isLocal: true,
+    env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
+    geo: {
+      lng: longitude,
+      lat: latitude,
+      title: "distance",
+    },
+    done: () => {
+      nim?.getLocalMsgs({
+        scene: "p2p",
+        limit: 500,
+        // to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userId}`,
+        sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+          data.value.user.id
+        }`,
+        done: (error: any, obj: any) => {
+          if (error) {
+          } else {
+            getChatMsgList(obj.msgs || [], "发定位");
+            closeToast();
+          }
+        },
+      });
+    },
   });
+  // });
 };
 
 const getDistance = (it: any) => {
@@ -1380,6 +1408,29 @@ const handleSetCash = () => {
     justify-content: center;
     border-radius: 16px;
     background-color: #898987;
+    margin-left: 12px;
+    .onlineYuan {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin-right: 4px;
+    }
+    .onlineYuanFont {
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffffff;
+    }
+  }
+  .busyBox {
+    width: 104px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #f3cc41;
     margin-left: 12px;
     .onlineYuan {
       width: 16px;
