@@ -1,7 +1,7 @@
 <template>
   <GoogleMap
     :api-key="apiKey"
-    style="width: 208px; height: 100px"
+    style="width: 208px; height: 200px"
     mapId="a44bf139b94a600d"
     :center="{
       lat: props.position?.lat || 40.689247,
