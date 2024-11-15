@@ -144,20 +144,15 @@
             @click="state.showVipPopup = true"
           />
 
-          <div class="sendBox">
-            <input
+          <div class="sendBox" @click="state.showVipPopup = true">
+            <div class="inputBox">Say somethig...</div>
+            <!-- <input
               :disabled="true"
               class="inputBox"
               type="text"
               placeholder="Say somethig..."
-              @click="state.showVipPopup = true"
-            />
-            <img
-              src="./assets/ic_send_2@2x.png"
-              class="sendImg"
-              alt=""
-              @click="state.showVipPopup = true"
-            />
+            /> -->
+            <img src="./assets/ic_send_2@2x.png" class="sendImg" alt="" />
           </div>
           <img
             class="goldIcon"

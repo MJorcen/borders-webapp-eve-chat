@@ -332,3 +332,16 @@ export const getLocalMsgList = (data: any) => {
     resolve(fromArrMsg);
   });
 };
+
+export const getLocalUserDetail = () => {
+  let user: any = {};
+
+  try {
+    const info: any = localStorage.getItem("userDetail");
+    user = JSON.parse(info as any);
+    user = user.userDetail;
+    return user;
+  } catch (e) {
+    console.log("error::", e);
+  }
+};

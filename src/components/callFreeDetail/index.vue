@@ -111,7 +111,7 @@
 import { ref, reactive, watch, onUnmounted } from "vue";
 import { callfeedback, vipconfig } from "@/api/allApi";
 import { showToast } from "vant";
-import { formatSecondsToTime } from "@/common/utils";
+import { formatSecondsToTime, getLocalUserDetail } from "@/common/utils";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
 import RechargePopup from "@/components/rechargePopup/index.vue";
@@ -159,7 +159,16 @@ watch(
   (newValue) => {
     state.showRechargePopup = false;
     if (newValue) {
-      state.showRechargePopup = true;
+      // state.showRechargePopup = true;
+      const userInfo = getLocalUserDetail();
+      if (userInfo?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+
+      toggleBodyScroll(newValue);
+    } else {
       toggleBodyScroll(newValue);
     }
   },
