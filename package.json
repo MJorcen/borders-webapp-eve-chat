@@ -7,8 +7,12 @@
     "dev": "vite --mode development --host",
     "prod": "vite --mode prod --host",
     "build:test": "vite build --mode test",
-    "build:prod": "vite build --mode prod",
     "build:testprod": "vite build --mode testProd",
+    "build:prod": "vite build --mode prod",
+    "build:vidjoy": "vite build --mode vidjoy",
+    "build:yaya": "vite build --mode yaya",
+    "build:chatJoi": "vite build --mode chatJoi",
+    "build:justVidTest": "vite build --mode justVidTest",
     "preview": "vite preview"
   },
   "dependencies": {
