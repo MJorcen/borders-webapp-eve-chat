@@ -616,7 +616,12 @@ import "recorder-core/src/engine/mp3-engine";
 import Dialog from "./compoents/Dialog.vue";
 import SvgaDialog from "@/components/svgaDialog/index.vue";
 import giftPopup from "@/components/giftPopup/index.vue";
-import { giftsend, datatranslate, userunfollow } from "@/api/allApi";
+import {
+  giftsend,
+  datatranslate,
+  userunfollow,
+  userconfig,
+} from "@/api/allApi";
 import { handleGo } from "@/common/fetchCommon";
 import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
@@ -629,6 +634,8 @@ import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 const { vipConfigData } = useVipConfigStore();
 
 const preFix = import.meta.env.VITE_APP_ACCOUNT_PREFIX;
+
+const { fetchData: configFetch, data: configData } = userconfig();
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -667,8 +674,9 @@ const state = reactive<any>({
 
 const SvgaDialogRef = ref<any>();
 
-onMounted(() => {
+onMounted(async () => {
   getUserData();
+  await configFetch();
   nextTick(() => {
     // var height = document.body.clientHeight;
     window.scroll({ top: 100000000, behavior: "instant" });
@@ -1218,6 +1226,15 @@ const handleCancelFollow = async () => {
 
 // 发送定位消息，只发送到本地，不发到服务器
 const handleSendDistance = async () => {
+  if (!configData.value?.hasPayment) {
+    if (userDetail?.user?.vipLevel === 0) {
+      state.showVipPopup = true;
+    } else {
+      state.showRechargePopup = true;
+      // state.showCallDownLoadPopup = true;
+    }
+    return;
+  }
   showLoadingToast({
     duration: 0,
     message: "Please wait...",

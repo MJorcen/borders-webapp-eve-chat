@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { showLoadingToast, showToast } from "vant";
-import { ref, reactive, h, onMounted } from "vue";
+import { ref, reactive, h, onMounted, watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import { webdownload } from "@/api/allApi";
 const emit = defineEmits(["update:modelValue", "handleOpen"]);
@@ -51,12 +51,20 @@ const state = reactive({
   href: "",
 });
 
+watch(
+  () => props.modelValue,
+  async (newValue) => {
+    if (newValue) {
+      await downConfig({
+        userId: user?.user.id,
+      });
+      const encodeURIStr = encodeURIComponent(downData.value);
+      state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
+    }
+  }
+);
+
 onMounted(async () => {
-  await downConfig({
-    userId: user?.user.id,
-  });
-  const encodeURIStr = encodeURIComponent(downData.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
   // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
 });
 </script>

@@ -113,8 +113,11 @@ evenBus.on("updateTopNotification", (data: any) => {
 
   const noticeData = data;
   nim.getUser({
-    account: data?.lastMsg?.from,
-
+    account: !data?.localCustom
+      ? data?.lastMsg?.from
+      : `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+          localCustomObj.fromUserId
+        }`,
     done: (error: any, user: any) => {
       noticeData.avatar = user?.avatar;
       noticeData.nick = user?.nick;
@@ -236,6 +239,7 @@ evenBus.on("inviteCall", async (data: any) => {
       cusstomMsg: JSON.stringify(data[0].body.data),
       ts: new Date().getTime(),
       time: new Date().getTime(),
+      fromUserId: data[0].body.data.from,
     };
 
     nim.saveMsgsToLocal({
@@ -316,6 +320,7 @@ evenBus.on("onSendMsg", async (data: any) => {
       cusstomMsg: data[0].body.data.bodyString,
       idClient: idClient,
       time: data[0].body.data.ts,
+      fromUserId: data[0].body.data.from,
     };
 
     nim.saveMsgsToLocal({

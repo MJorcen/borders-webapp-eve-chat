@@ -12,7 +12,11 @@ import { Lazyload } from "vant";
 import { ImagePreview } from "vant";
 import { GoogleMap, Marker } from "vue3-google-map";
 
-if (import.meta.env.VITE_NODE_ENV !== "prod") {
+if (
+  import.meta.env.VITE_NODE_ENV === "development" ||
+  import.meta.env.VITE_NODE_ENV === "test" ||
+  import.meta.env.VITE_NODE_ENV === "testProd"
+) {
   new Vconsole();
 }
 

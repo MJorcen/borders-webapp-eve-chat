@@ -3,6 +3,9 @@
     <div v-if="props.modelValue" class="popup">
       <!-- v-if="state.showVideo" -->
       <div class="videoBox" v-if="state.showVideo">
+        <div class="bottomFont" v-if="walletData?.wallet?.gold === 0">
+          Top up coins to turn on the voice
+        </div>
         <div class="topLeft">
           <div class="flex items-center">
             <van-image
@@ -233,7 +236,12 @@ import {
   computed,
 } from "vue";
 import { showConfirmDialog, showLoadingToast, showToast } from "vant";
-import { freeCallpickUp, freeCallhangUp, giftsend } from "@/api/allApi";
+import {
+  freeCallpickUp,
+  freeCallhangUp,
+  giftsend,
+  userwallet,
+} from "@/api/allApi";
 import { useUserStore } from "@/stores/user";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import GiftPopup from "@/components/giftPopup/index.vue";
@@ -248,6 +256,8 @@ const { userDetail }: any = useUserDetailStore();
 
 const { vipConfigData } = useVipConfigStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
+
+const { fetchData: wollectFetch, data: walletData } = userwallet();
 
 interface Prop {
   modelValue: boolean;
@@ -473,11 +483,12 @@ const startTimer = () => {
 
 watch(
   () => props.modelValue,
-  (newValue) => {
+  async (newValue) => {
     state.showVideo = false;
     state.msgList = [];
     toggleBodyScroll(newValue);
     if (newValue) {
+      await wollectFetch();
       localStorage.setItem("isFreeCalling", "true");
     } else {
       localStorage.setItem("isFreeCalling", "false");
@@ -610,6 +621,16 @@ const getCountryImg = (item: any) => {
   width: 100%;
   height: 100vh;
   position: relative;
+  .bottomFont {
+    position: absolute;
+    bottom: 200px;
+    left: 20px;
+    font-family: "SF Pro Display", sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    z-index: 10;
+    color: #fff;
+  }
   .videoClass {
     width: 100%;
     height: 100vh;
