@@ -418,6 +418,8 @@ const handleVisibilityChange = async () => {
     window.wsConnet?.close();
   } else {
     await connectWebSocket(true);
+    await fetchData();
+    setUser(data.value);
   }
 };
 

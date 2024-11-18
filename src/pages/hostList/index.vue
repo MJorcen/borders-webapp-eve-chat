@@ -16,10 +16,10 @@
       :ellipsis="false"
       class="vantabs"
       v-model:active="activeTab"
-      title-active-color="#FF4D42"
+      title-active-color="#eb6300"
       title-inactive-color="#8C8C8C"
       :sticky="false"
-      color="#FF4D42"
+      color="#eb6300"
       background="#241213"
     >
       <van-tab v-for="(item, index) in userListTabsData?.list">
