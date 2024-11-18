@@ -90,6 +90,9 @@ const useWebSocketHeartbeat = () => {
         ) {
           eventBus.emit("insetCallMsg", data[0].body.data);
         }
+        if (data[0].body.type === "gift/askFor") {
+          eventBus.emit("askForGift", data[0].body.data);
+        }
         eventBus.emit("onSendMsg", data);
       });
 

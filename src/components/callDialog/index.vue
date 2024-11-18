@@ -129,13 +129,23 @@
         <div class="bottomBoxPushStream" v-if="state.isReactive">
           <div class="mineBox">
             <div id="local-video" class="mineVideo"></div>
-
+            <!-- 
             <img
               class="camera"
               @click.stop="handleChangeCamera"
               src="./assets/ic_changecamera@2x.png"
               alt=""
-            />
+            /> -->
+            <div
+              class="kaiCameraBig"
+              v-if="state.showVideo"
+              @click="handleCloseVideo(false)"
+            >
+              <img src="./assets/Slice356@2x.webp" class="kaiCamera" />
+            </div>
+            <div class="kaiCameraBig" v-else @click="handleCloseVideo(true)">
+              <img src="./assets/Slice357@2x.webp" class="kaiCamera" />
+            </div>
           </div>
         </div>
         <!-- 自己的视频推流 -->
@@ -151,7 +161,7 @@
               <div>I send your a gift</div>
               <img
                 alt=""
-                :src="item?.gift?.icon"
+                :src="item?.gift?.icon || item?.icon"
                 class="w-[48px] h-[48px] ml-[16px] mr-[16px]"
               />
               <div class="text-[#E405FF]">x1</div>
@@ -162,7 +172,7 @@
         <!-- 聊天框 -->
 
         <!-- 接听后底部 -->
-        <img
+        <!-- <img
           class="giftBox"
           src="./assets/ic_calling_gift@2x.png"
           alt=""
@@ -220,7 +230,92 @@
             src="./assets/gold@2x.webp"
             alt=""
           />
+        </div> -->
+        <div class="reciveBottomBoxTwo" v-if="state.isReactive">
+          <div class="reciveBottomBoxTwoTop" v-if="state.showAskForGift">
+            <div class="reciveBottomBoxTwoTopLeft">
+              <div>she ask for gift</div>
+              <img :src="state.askForGiftData?.icon" alt="" class="iconImg3" />
+              <div>
+                [{{ state.askForGiftData?.name }}]
+                {{ state.askForGiftData?.value }} coins
+              </div>
+            </div>
+            <div
+              class="reciveBottomBoxTwoTopRight"
+              @click="handleGive(state.askForGiftData)"
+            >
+              sent
+            </div>
+          </div>
+          <div class="reciveBottomBoxTwoBottom">
+            <div class="reciveBottomBoxTwoBottomItem">
+              <img
+                src="./assets/Group14008@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+                v-if="state.showInput"
+                @click="state.showInput = false"
+              />
+              <img
+                src="./assets/Group1000004829@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+                @click="state.showInput = true"
+                v-else
+              />
+            </div>
+            <div
+              class="suoGiftList"
+              v-if="userGiftListData?.recommendList?.length"
+            >
+              <div
+                class="reciveBottomBoxTwoBottomItem2"
+                v-for="(item, index) in userGiftListData?.recommendList"
+                @click="handleGive(item)"
+              >
+                <img
+                  :src="item?.icon"
+                  class="reciveBottomBoxTwoBottomItemImg2"
+                />
+                <div class="numsCoins">{{ item?.value }}</div>
+              </div>
+            </div>
+            <div
+              class="reciveBottomBoxTwoBottomItem"
+              @click="showGiftPopup = true"
+            >
+              <img
+                style="width: 85px; height: 85px"
+                src="./assets/image925@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+              />
+            </div>
+
+            <div
+              class="reciveBottomBoxTwoBottomItem"
+              @click.stop="handleChangeCamera"
+            >
+              <img
+                src="./assets/Slice353@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+              />
+            </div>
+          </div>
+          <div class="reciveBottomBoxTwoBottomInputBox" v-if="!state.showInput">
+            <input
+              class="inputBox"
+              v-model="state.inputValue"
+              type="text"
+              placeholder="Say somethig..."
+              @keyup.center="handleSendMsg"
+            />
+            <img
+              src="./assets/Group1627@2x.webp"
+              class="reciveBottomBoxTwoBottomInputBoxImg"
+              @click="handleSendMsg"
+            />
+          </div>
         </div>
+
         <!-- 接听后底部 -->
       </slot>
     </div>
@@ -247,7 +342,12 @@ import {
 } from "vue";
 import GiftPopup from "@/components/giftPopup/index.vue";
 import { useUserStore } from "@/stores/user";
-import { callpickUp, callhangUp, datatranslate } from "@/api/allApi";
+import {
+  callpickUp,
+  callhangUp,
+  datatranslate,
+  usergiftmalelist,
+} from "@/api/allApi";
 import {
   closeToast,
   showConfirmDialog,
@@ -262,11 +362,20 @@ import SvgaDialog from "@/components/svgaDialog/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
 const { vipConfigData } = useVipConfigStore();
-import SvgaShow from "@/components/svgaShow/index.vue";
+
+let user: any = {};
+try {
+  const info: any = localStorage.getItem("userInfo");
+  user = JSON.parse(info as any);
+  // user = user.userDetail;
+} catch (e) {
+  console.log("error::", e);
+}
 
 interface Prop {
   modelValue: boolean;
@@ -306,11 +415,19 @@ const state: any = reactive({
   cammera: 0, // 0:前置摄像头 1:后置摄像头
   showRechargePopup: false,
   showVipPopup: false,
+  showInput: true,
+  askForGiftData: {},
+  showAskForGift: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
   document.body.style.overflow = disable ? "hidden" : "auto";
 };
+
+evenBus.on("askForGift", (data: any) => {
+  state.askForGiftData = data;
+  state.showAskForGift = true;
+});
 
 onUnmounted(() => {
   toggleBodyScroll(false);
@@ -354,16 +471,23 @@ const startTime = ref(0);
 const currentTime = ref(0);
 const timerId = ref(null);
 
+const { fetchData: userGiftListFetch, data: userGiftListData } =
+  usergiftmalelist();
+
 watch(
   () => props.modelValue,
 
-  (newValue) => {
+  async (newValue) => {
     startTime.value = 0;
     currentTime.value = 0;
     state.cammera = 0;
     state.msgList = [];
+    state.showInput = true;
+    state.showAskForGift = false;
     stopTimer();
     if (newValue) {
+      await userGiftListFetch();
+
       toggleBodyScroll(newValue);
     } else {
       toggleBodyScroll(false);
@@ -641,6 +765,7 @@ const handleGive = async (item: any) => {
     toUserId: userId,
     giftId: item.id,
     number: 1,
+    callId: props?.wsData?.call?.id,
   });
   if (giftSuccess.value) {
     showToast("Success");
@@ -655,6 +780,7 @@ const handleGive = async (item: any) => {
       ...item,
       type: "gift",
     });
+    state.showAskForGift = false;
   } else {
     // state.showRechargePopup = true;
     state.showVipPopup = true;
@@ -982,6 +1108,141 @@ defineExpose({
     height: 68px;
   }
 }
+.reciveBottomBoxTwo {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  .reciveBottomBoxTwoTop {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    .reciveBottomBoxTwoTopLeft {
+      display: flex;
+      align-items: center;
+      font-family: "ABeeZee", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffe100;
+      padding: 16px 16px 16px 36px;
+      // width: 528px;
+      // height: 60px;
+      background: rgba(235, 99, 0, 0.8);
+      border-radius: 60px 60px 60px 60px;
+      line-height: 60px;
+      overflow: hidden;
+      .iconImg3 {
+        width: 66px;
+        height: 66px;
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+    }
+    .reciveBottomBoxTwoTopRight {
+      width: 132px;
+      height: 60px;
+      background: #eb6300;
+      border-radius: 20px 20px 20px 20px;
+      font-family: "Inter", sans-serif;
+      font-weight: normal;
+      font-size: 32px;
+      color: #fefefe;
+      line-height: 60px;
+      text-align: center;
+      margin-left: 26px;
+    }
+  }
+  .reciveBottomBoxTwoBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    .reciveBottomBoxTwoBottomItem {
+      width: 80px;
+      height: 80px;
+      background: #4c545a;
+      border-radius: 0px 0px 0px 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 50%;
+      .reciveBottomBoxTwoBottomItemImg {
+        width: 34px;
+        height: 30px;
+      }
+    }
+    .suoGiftList {
+      display: flex;
+      align-items: center;
+      .reciveBottomBoxTwoBottomItem2 {
+        width: 80px;
+        height: 80px;
+        background: #4c545a;
+        border-radius: 0px 0px 0px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 50%;
+        margin-right: 24px;
+        .reciveBottomBoxTwoBottomItemImg2 {
+          width: 34px;
+          height: 30px;
+        }
+        .numsCoins {
+          font-family: "Inter", sans-serif;
+          font-weight: 500;
+          font-size: 24px;
+          color: #ffffff;
+        }
+      }
+      .reciveBottomBoxTwoBottomItem2:last-child {
+        margin-right: 0px;
+      }
+    }
+  }
+  .reciveBottomBoxTwoBottomInputBox {
+    margin-top: 38px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 62px;
+    padding-right: 42px;
+    height: 112px;
+    background: #ffffff;
+    box-shadow: inset 0px 0px 180px 0px rgba(255, 255, 255, 0.2);
+    border-radius: 80px 80px 80px 80px;
+    border: 2px solid;
+    // border-image: linear-gradient(
+    //     315deg,
+    //     rgba(255, 95, 109, 0.42),
+    //     rgba(255, 195, 113, 0.33)
+    //   )
+    //   2 2;
+    .inputBox {
+      padding-left: 24px;
+      line-height: 88px;
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      color: #000000;
+      border-radius: 200px 200px 200px 200px;
+      width: 96%;
+    }
+    .inputBox::placeholder {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      color: #ababab;
+    }
+    .reciveBottomBoxTwoBottomInputBoxImg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
 
 .msgBox {
   position: absolute;
@@ -1030,6 +1291,25 @@ defineExpose({
       height: 64px;
       top: 200px;
       left: 68px;
+    }
+    .kaiCameraBig {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      background: #3a5157;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      top: 0;
+      left: 0;
+      z-index: 12;
+
+      .kaiCamera {
+        width: 27px;
+        height: 27px;
+      }
     }
   }
 }

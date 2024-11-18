@@ -489,3 +489,12 @@ export const userpaidalbumunlock = () => {
     otherApi: true,
   });
 };
+
+// 获取推荐赠送礼物列表（男端）
+export const usergiftmalelist = () => {
+  return useRequest({
+    url: "/user/gift/male/list",
+    method: "get",
+    otherApi: true,
+  });
+};

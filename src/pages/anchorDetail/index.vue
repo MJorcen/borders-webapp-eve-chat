@@ -1005,7 +1005,9 @@ const onChange = (index: number) => {
         padding-left: 26px;
         margin-bottom: 48px;
         .maojinBox {
-          width: 200px;
+          min-width: 200px;
+          max-width: 200px;
+
           height: 200px;
           display: flex;
           align-items: center;
@@ -1013,7 +1015,8 @@ const onChange = (index: number) => {
           flex-direction: column;
           position: relative;
           margin-right: 20px;
-          .momentBoxFlexImg2 {
+          flex-shrink: 0;
+          .momentBoxFlexImg3 {
             width: 100%;
             height: 100%;
             border-radius: 16px 16px 16px 16px;
