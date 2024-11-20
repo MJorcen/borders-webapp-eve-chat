@@ -9,6 +9,14 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-vidjoy
+dist-yaya
+dist-chatJoi
+dist-justVidTest
+dist-vidHub
+dist-vidBuzz
+dist-vidLink
+dist-vidChat
 dist-ssr
 *.local
 .history

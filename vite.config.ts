@@ -14,8 +14,34 @@ const getViteEnv = (mode, target) => {
   return loadEnv(mode, process.cwd())[target];
 };
 
+function getOutputDir(buildCommand) {
+  switch (buildCommand) {
+    case "build:vidjoy":
+      return "dist-vidjoy";
+    case "build:yaya":
+      return "dist-yaya";
+    case "build:chatJoi":
+      return "dist-chatJoi";
+    case "build:justVidTest":
+      return "dist-justVidTest";
+    case "build:vidHub":
+      return "dist-vidHub";
+    case "build:vidBuzz":
+      return "dist-vidBuzz";
+    case "build:vidLink":
+      return "dist-vidLink";
+    case "build:vidChat":
+      return "dist-vidChat";
+    default:
+      return "dist"; // 默认构建输出目录
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
+  let outputDir = "dist"; // 默认输出目录
+  const buildCommand = process.env.npm_lifecycle_event;
+
   return {
     plugins: [
       vue(),
@@ -127,6 +153,7 @@ export default defineConfig(({ command, mode }) => {
       hmr: true,
     },
     build: {
+      outDir: getOutputDir(buildCommand),
       // sourcemap: isDevEnv(mode),
       rollupOptions: {
         output: {
