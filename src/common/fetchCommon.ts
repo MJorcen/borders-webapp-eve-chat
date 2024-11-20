@@ -25,23 +25,23 @@ export const handleGo = async (item: any) => {
       return showToast("Not Online");
     }
     if (item.user.inCall === 0 && item.user.active === 1) {
-      await configFetch();
-      if (configData.value?.hasPayment) {
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-      // await callFetch({ type: 1, toUserId: item.user.id });
-      // if (callSuccess.value) {
-      //   evenBus.emit("activeCall", { ...callData.value });
+      // await configFetch();
+      // if (configData.value?.hasPayment) {
       //   resolve(true);
       // } else {
-      //   showToast(callMsg.value);
-      //   if (code.value === 402) {
-      //     resolve(false);
-      //   }
-      //   // evenBus.emit("noMony");
+      //   resolve(false);
       // }
+      await callFetch({ type: 1, toUserId: item.user.id });
+      if (callSuccess.value) {
+        evenBus.emit("activeCall", { ...callData.value });
+        resolve(true);
+      } else {
+        showToast(callMsg.value);
+        if (code.value === 402) {
+          resolve(false);
+        }
+        // evenBus.emit("noMony");
+      }
     } else {
       router?.push({
         name: "ChatRoom",

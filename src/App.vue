@@ -133,8 +133,8 @@ evenBus.on("inviteCall", async (data: any) => {
   const isPlaying = localStorage.getItem("isPlayingGame");
   // 被呼叫时
   if (data[0].body.type === "call/dial") {
-    state.showCallDownLoadPopup = true;
-    return;
+    // state.showCallDownLoadPopup = true;
+    // return;
     if (isPlaying) return;
     // 判断是否已在通话中
     const isCall = localStorage.getItem("isCall");
@@ -152,8 +152,8 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   // 主动呼叫时
   if (data[0].body.type === "call/pickUp") {
-    state.showCallDownLoadPopup = true;
-    return;
+    // state.showCallDownLoadPopup = true;
+    // return;
     if (isPlaying) return;
 
     // callDialogRef.value.state.isReactive = false;

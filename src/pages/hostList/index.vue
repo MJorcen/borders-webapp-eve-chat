@@ -399,7 +399,11 @@
     <div class="w-[100%] h-[100px]"></div>
   </div>
   <!-- 签到弹窗 -->
-  <SignPopup v-model="showSignPopup"></SignPopup>
+  <SignPopup
+    v-model="showSignPopup"
+    :goldNums="configData?.hasPayment ? 5700 : 8000"
+  >
+  </SignPopup>
   <!-- 首冲活动VIP弹窗 -->
   <FirstChargeVipPopup
     :money="configDataTwo?.monthlyCheckInGoldValue"

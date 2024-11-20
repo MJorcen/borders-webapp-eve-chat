@@ -93,7 +93,37 @@
       </div>
     </div>
 
-    <div class="vipBox">
+    <div
+      class="vipBox"
+      v-if="data?.user?.vipLevel !== 0"
+      @click="router.push('/signDetail')"
+    >
+      <img class="vipBoxLeft" src="./assets/image922@2x.webp" />
+      <div class="becomeVipBoxFont1" v-if="data?.user?.vipLevel === 0">
+        Become <span style="color: #ffec93">VIP</span>
+      </div>
+      <div class="becomeVipBoxFont2" v-if="data?.user?.vipLevel === 0">
+        Get <span style="color: #ffec93">8000</span> coins
+      </div>
+      <div class="vipBoxRight">
+        <div v-if="data?.user?.vipLevel !== 0" class="vipBoxRightOne">
+          Valid until {{ data?.info?.vipValidEnd }}
+        </div>
+        <img
+          @click="router.push('/signDetail')"
+          v-if="data?.user?.vipLevel !== 0"
+          class="youjiantou"
+          src="./assets/Polygon18@2x.webp"
+        />
+        <img
+          v-if="data?.user?.vipLevel === 0"
+          @click="state.showVipPopup = true"
+          class="signImg"
+          src="./assets/Group1000004485@2x.webp"
+        />
+      </div>
+    </div>
+    <div class="vipBox" v-else @click="state.showVipPopup = true">
       <img class="vipBoxLeft" src="./assets/image922@2x.webp" />
       <div class="becomeVipBoxFont1" v-if="data?.user?.vipLevel === 0">
         Become <span style="color: #ffec93">VIP</span>

@@ -143,7 +143,10 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
+<<<<<<< HEAD
   // await configFetch();
+=======
+>>>>>>> 10dfc30 (✨ feat(改为不屏蔽打电话功能):)
   await fetchMatchStart({
     type,
   });
@@ -156,19 +159,35 @@ const handleMatch = async (type: number) => {
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 10dfc30 (✨ feat(改为不屏蔽打电话功能):)
       if (userDetail?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
       }
+<<<<<<< HEAD
       if (configData?.value?.showFirstVipPrompt) {
         state.showFirstVipPromptPopup = true;
       }
 
+=======
+>>>>>>> 10dfc30 (✨ feat(改为不屏蔽打电话功能):)
       audioMatchRef.value.pause();
     }
   }
+  // await configFetch();
+  // if (configData.value?.hasPayment) {
+  //   state.showCallDownLoadPopup = true;
+  // } else {
+  //   if (userDetail?.user?.vipLevel === 0) {
+  //     state.showVipPopup = true;
+  //   } else {
+  //     state.showCallDownLoadPopup = true;
+  //   }
+  // }
 };
 
 evenBus.on("matchDone", () => {
