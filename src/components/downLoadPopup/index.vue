@@ -11,12 +11,12 @@
       <div class="popupContentBox">
         <img src="./assets/image931@2x.webp" class="popupImg" />
         <div class="popupContentOne">
-          Download and get <span style="color: #e54b6d">2000</span>
-          coins!
+          Download and get <span style="color: #e54b6d">8000</span>
+          coins sign-in reward(worth ₹850)
         </div>
-        <div class="popupContentTwo">
+        <!-- <div class="popupContentTwo">
           Your balance and VIP information will be automatically transferred
-        </div>
+        </div> -->
         <div class="btnBox">
           <a :href="state.href" class="btn">Download</a>
         </div>
@@ -53,8 +53,8 @@ onMounted(async () => {
     userId: user?.user.id,
   });
   const encodeURIStr = encodeURIComponent(downData.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
-  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
+  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
+  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
 });
 </script>
 <style lang="scss" scoped>

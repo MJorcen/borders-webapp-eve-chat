@@ -259,7 +259,7 @@ const getUserDetail = async () => {
   // });
   setUser(data.value);
   // const encodeURIStr = encodeURIComponent(downData.value);
-  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
+  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
   // alert(state.href);
 };
 

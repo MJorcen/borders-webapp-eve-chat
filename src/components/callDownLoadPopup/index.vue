@@ -61,13 +61,13 @@ watch(
         userId: user?.user.id,
       });
       const encodeURIStr = encodeURIComponent(downData.value);
-      state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
+      state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
     }
   }
 );
 
 onMounted(async () => {
-  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
+  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
 });
 </script>
 <style lang="scss" scoped>

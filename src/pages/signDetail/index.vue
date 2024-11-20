@@ -151,7 +151,7 @@ onMounted(async () => {
     userId: user?.user.id,
   });
   const encodeURIStr = encodeURIComponent(downData.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&referrer=${encodeURIStr}`;
+  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
   nextTick(() => {
     DialogRef.value.state.showModal = true;
   });
