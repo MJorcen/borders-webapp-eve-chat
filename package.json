@@ -13,6 +13,10 @@
     "build:yaya": "vite build --mode yaya",
     "build:chatJoi": "vite build --mode chatJoi",
     "build:justVidTest": "vite build --mode justVidTest",
+    "build:vidHub": "vite build --mode vidHub",
+    "build:vidBuzz": "vite build --mode vidBuzz",
+    "build:vidLink": "vite build --mode vidLink",
+    "build:vidChat": "vite build --mode vidChat",
     "preview": "vite preview"
   },
   "dependencies": {
