@@ -204,7 +204,7 @@
               v-model="state.inputValue"
               class="inputBox"
               type="text"
-              placeholder="Say somethig..."
+              placeholder="Say something..."
               @keyup.center="handleSendMsg"
             />
             <img

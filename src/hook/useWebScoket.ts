@@ -90,6 +90,9 @@ const useWebSocketHeartbeat = () => {
         ) {
           eventBus.emit("insetCallMsg", data[0].body.data);
         }
+        // if (data[0].body.type === "live/endLive") {
+        //   eventBus.emit("liveEnd", data[0].body.data);
+        // }
         eventBus.emit("onSendMsg", data);
       });
 

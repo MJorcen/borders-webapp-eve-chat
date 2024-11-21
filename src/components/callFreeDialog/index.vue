@@ -149,7 +149,7 @@
               :disabled="true"
               class="inputBox"
               type="text"
-              placeholder="Say somethig..."
+              placeholder="Say something..."
               @click="state.showVipPopup = true"
             />
             <img

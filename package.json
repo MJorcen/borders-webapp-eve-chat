@@ -30,6 +30,7 @@
     "axios": "^1.6.8",
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
+    "flv.js": "^1.6.2",
     "js-cookie": "^3.0.5",
     "mitt": "^3.0.1",
     "nprogress": "^0.2.0",
