@@ -3,6 +3,14 @@
     <div class="title">Match</div>
     <div class="kongBox">
       <img src="./assets/Group 1000004710@2x.png" class="bigImg" />
+      <div class="posBox">
+        <SvgaShow
+          :divId="'demoase'"
+          :width="350"
+          :height="350"
+          :url="'https://fs.duome.live/app/match/match.svga'"
+        ></SvgaShow>
+      </div>
     </div>
 
     <div class="matchBig">
@@ -69,6 +77,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
 
 const route = useRoute();
 
@@ -191,10 +200,15 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    position: relative;
     .bigImg {
       margin-left: 26px;
       margin-right: 26px;
       height: 696px;
+    }
+    .posBox {
+      position: absolute;
+      top: 550px;
     }
   }
 

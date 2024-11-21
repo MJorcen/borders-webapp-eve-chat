@@ -449,39 +449,12 @@ const handleFollow = async (item: any) => {
   }
 };
 
-const regions = [
-  "bgd",
-  "bra",
-  "col",
-  "egy",
-  "esp",
-  "fra",
-  "idn",
-  "ind",
-  "mar",
-  "nga",
-  "pak",
-  "phl",
-  "usa",
-  "ven",
-  "vnm",
-];
-
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `/public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/contryIcon/icon_counties_rectangle_${item?.region.toLowerCase()}.png`,
     import.meta.url
   );
-  const defaultImg: any = new URL(
-    `/public/ic_contry_ind.webp`,
-    import.meta.url
-  );
-
-  if (regions.includes(item?.region?.toLowerCase())) {
-    return path;
-  } else {
-    return defaultImg;
-  }
+  return path || "";
 };
 </script>
 <style scoped lang="scss">
