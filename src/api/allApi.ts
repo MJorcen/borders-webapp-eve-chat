@@ -490,11 +490,61 @@ export const userpaidalbumunlock = () => {
   });
 };
 
+// 在线视频流列表
+export const livelistPage = () => {
+  return useRequest({
+    url: "/live/listPage",
+    method: "get",
+  });
+};
+
+// 进入直播观看
+export const livewatch = () => {
+  return useRequest({
+    url: "/live/watch",
+    method: "post",
+  });
+};
+
+// 退出直播观看
+export const liveexitWatch = () => {
+  return useRequest({
+    url: "/live/exitWatch",
+    method: "post",
+  });
+};
+
 // 获取推荐赠送礼物列表（男端）
 export const usergiftmalelist = () => {
   return useRequest({
     url: "/user/gift/male/list",
     method: "get",
     otherApi: true,
+  });
+};
+
+// 直播间赠送礼物（男端）
+export const giftmalesendOfLive = () => {
+  return useRequest({
+    url: "/user/gift/male/sendOfLive",
+    method: "post",
+    otherApi: true,
+  });
+};
+
+// live发消息-前置校验
+export const livecheckPreIm = () => {
+  return useRequest({
+    url: "/live/checkPreIm",
+    method: "post",
+  });
+};
+
+// 消息列表直播信息
+
+export const livelist = () => {
+  return useRequest({
+    url: "/live/list",
+    method: "get",
   });
 };

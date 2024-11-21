@@ -345,3 +345,21 @@ export const getLocalUserDetail = () => {
     console.log("error::", e);
   }
 };
+/**
+ * 将 RTMP 链接转换为 HTTPS 并添加 .flv 后缀
+ * @param {string} rtmpUrl - 输入的 RTMP URL
+ * @returns {string} - 转换后的 HTTPS URL
+ */
+export function convertRtmpToFlv(rtmpUrl: string) {
+  if (!rtmpUrl.startsWith("rtmp://")) {
+    throw new Error("输入的 URL 必须以 rtmp:// 开头");
+  }
+
+  // 替换 rtmp:// 为 https://
+  const httpsUrl = rtmpUrl.replace("rtmp://", "https://");
+
+  // 添加 .flv 后缀
+  const flvUrl = httpsUrl + ".flv";
+
+  return flvUrl;
+}

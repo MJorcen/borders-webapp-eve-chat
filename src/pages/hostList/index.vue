@@ -80,94 +80,105 @@
               class="itemBox"
               v-for="(item, index) in state.list"
               :key="index"
-              @click="
-                () => {
-                  router.push({
-                    name: 'AnchorDetail',
-                    query: { id: item?.user?.id },
-                  });
-                }
-              "
             >
-              <van-image
-                fit="cover"
-                radius="8"
-                class="itemImg"
-                :src="item?.user?.portrait"
-                lazy-load
-              ></van-image>
               <div
-                v-if="item.user.inCall === 0 && item.user.active === 1"
-                class="caozuo"
-                @click.stop="
+                style="position: relative; width: 100%; height: 100%"
+                v-if="item?.type !== 'live'"
+                @click="
                   () => {
-                    handleGo(item).then((res) => {
-                      if (!res) {
-                        if (userDetail?.user?.vipLevel === 0) {
-                          state.showVipPopup = true;
-                        } else {
-                          state.showRechargePopup = true;
-                        }
-                      }
+                    router.push({
+                      name: 'AnchorDetail',
+                      query: { id: item?.user?.id },
                     });
                   }
                 "
               >
-                <SvgaShow
-                  :divId="`demo${item?.user?.id}${index}`"
-                  :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
-                ></SvgaShow>
-              </div>
-              <img
-                v-else
-                class="caozuo"
-                src="./assets/Group1000004606@2x.webp"
-                @click.stop="
-                  () => {
-                    router.push({
-                      name: 'ChatRoom',
-                      query: { user: JSON.stringify(item.user) },
-                    });
-                  }
-                "
-              />
-              <div class="disBox" v-if="item.user.distance">
-                <img src="./assets/dis.webp" class="disImg" />
-                <div class="disText">
-                  {{ new BigNumber(item.user.distance).div(1000) || 2 }}km
-                </div>
-              </div>
-              <div class="bottmBox2">
-                <div
-                  class="yuan"
-                  v-if="item.user.inCall === 0 && item.user.active === 1"
-                ></div>
-                <div class="yuan2" v-if="item.user.active === 0"></div>
-                <div
-                  class="yuan3"
-                  v-if="item.user.inCall === 1 && item.user.active === 1"
-                ></div>
+                <van-image
+                  fit="cover"
+                  radius="8"
+                  class="itemImg"
+                  :src="item?.user?.portrait"
+                  lazy-load
+                ></van-image>
 
+                <div class="disBox" v-if="item.user.distance">
+                  <img src="./assets/dis.webp" class="disImg" />
+                  <div class="disText">
+                    {{ new BigNumber(item.user.distance).div(1000) || 2 }}km
+                  </div>
+                </div>
+                <div class="bottmBox2">
+                  <div
+                    class="yuan"
+                    v-if="item.user.inCall === 0 && item.user.active === 1"
+                  ></div>
+                  <div class="yuan2" v-if="item.user.active === 0"></div>
+                  <div
+                    class="yuan3"
+                    v-if="item.user.inCall === 1 && item.user.active === 1"
+                  ></div>
+
+                  <div
+                    class="online"
+                    v-if="item.user.inCall === 0 && item.user.active === 1"
+                  >
+                    Online
+                  </div>
+                  <div
+                    class="online"
+                    v-if="item.user.inCall === 1 && item.user.active === 1"
+                  >
+                    Busy
+                  </div>
+                  <div class="online" v-if="item.user.active === 0">
+                    Offline
+                  </div>
+                </div>
                 <div
-                  class="online"
                   v-if="item.user.inCall === 0 && item.user.active === 1"
+                  class="caozuo"
+                  @click.stop="
+                    () => {
+                      handleGo(item).then((res) => {
+                        if (!res) {
+                          if (userDetail?.user?.vipLevel === 0) {
+                            state.showVipPopup = true;
+                          } else {
+                            state.showRechargePopup = true;
+                          }
+                        }
+                      });
+                    }
+                  "
                 >
-                  Online
+                  <SvgaShow
+                    :divId="`demo${item?.user?.id}${index}`"
+                    :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+                  ></SvgaShow>
                 </div>
-                <div
-                  class="online"
-                  v-if="item.user.inCall === 1 && item.user.active === 1"
-                >
-                  Busy
+                <img
+                  v-else
+                  class="caozuo"
+                  src="./assets/Group1000004606@2x.webp"
+                  @click.stop="
+                    () => {
+                      router.push({
+                        name: 'ChatRoom',
+                        query: { user: JSON.stringify(item.user) },
+                      });
+                    }
+                  "
+                />
+                <div class="hostName">{{ item.user.nickname }}</div>
+                <div class="bottmBox3">
+                  <img class="contry" :src="getCountryImg(item.user)" alt="" />
+                  <div class="contryName">
+                    {{ item?.user?.region }}·{{ item?.user?.age }}
+                  </div>
                 </div>
-                <div class="online" v-if="item.user.active === 0">Offline</div>
               </div>
-              <div class="hostName">{{ item.user.nickname }}</div>
-              <div class="bottmBox3">
-                <img class="contry" :src="getCountryImg(item.user)" alt="" />
-                <div class="contryName">
-                  {{ item?.user?.region }}·{{ item?.user?.age }}
-                </div>
+              <div v-else @click="router.push({ name: 'LivePage' })">
+                <img src="./assets/Group1000004599@2x.webp" class="liveImg" />
               </div>
             </div>
           </div>
@@ -551,9 +562,19 @@ const getList = async () => {
     areaId: state.areaId,
   });
   if (data.value) {
-    state.offset += data.value.list.length;
     state.finished = !data.value.hasMore;
     state.list = [...state.list, ...data.value.list];
+    if (
+      state.offset === 0 &&
+      data?.value?.runningLiveExisted &&
+      data?.value?.videoStreamList?.length === 0
+    ) {
+      const obj = {
+        type: "live",
+      };
+      state.list.splice(3, 0, obj);
+    }
+    state.offset += data.value.list.length;
   }
 };
 
@@ -653,7 +674,13 @@ const onLoad = () => {
       width: 332px;
       height: 498px;
       border-radius: 10px 10px 10px 10px;
-      position: relative;
+      // position: relative;
+      .liveImg {
+        width: 100%;
+        height: 498px;
+
+        // object-fit: cover;
+      }
       .itemImg {
         width: 100%;
         height: 100%;

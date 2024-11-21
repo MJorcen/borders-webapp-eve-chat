@@ -205,7 +205,7 @@
               v-model="state.inputValue"
               class="inputBox"
               type="text"
-              placeholder="Say somethig..."
+              placeholder="Say something..."
             />
             <img
               src="./assets/ic_send_2@2x.png"

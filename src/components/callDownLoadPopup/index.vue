@@ -11,15 +11,17 @@
       <div class="popupContentBox">
         <img src="./assets/image_930@2x.webp" class="popupImg" />
         <div class="popupContentOne">
-          Aapka abhi ka network video chat ko support nahi karta he, krpaya
+          <!-- Aapka abhi ka network video chat ko support nahi karta he, krpaya
           <span style="color: #e54b6d">video call karne</span> ke liye App
           download kare, aur aap <span style="color: #e54b6d">5700</span> sikke
-          bhi free me praapt kar sakte he.
+          bhi free me praapt kar sakte he. -->
+          Abhi network unstable he. Plz call ke liye App ka upyog kare, aapka
+          VIP status aur Balance ko nahi kata jayega.
         </div>
-        <div class="popupContentTwo">
+        <!-- <div class="popupContentTwo">
           Aapka balance aur VIP jaankari svachaalit roop se transfer kar di
           jayegi.
-        </div>
+        </div> -->
         <div class="btnBox">
           <a :href="state.href" class="btn">Download</a>
         </div>

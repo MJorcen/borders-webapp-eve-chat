@@ -36,6 +36,40 @@
           ></van-image>
         </div>
       </div> -->
+      <!-- live流入口 -->
+      <div
+        class="liveBoxBig"
+        v-if="active === 0 && liveData?.list?.length"
+        @click="router.push('/livePage')"
+      >
+        <div class="liveBox">
+          <div class="liveBoxLeft">
+            <div class="liveBoxLeftImg">
+              <SvgaShow
+                :divId="`liveBoxSvga`"
+                :url="'https://fs.duome.live/app/live/live.svga'"
+              ></SvgaShow>
+              <div class="liveNums">{{ liveData?.total }}</div>
+            </div>
+            <div class="liveBoxLeftFont">Live streaming</div>
+          </div>
+          <div class="liveBoxRight">
+            <van-image
+              v-for="(item, index) in liveData?.list"
+              round
+              fit="cover"
+              lazy-load
+              radius="50"
+              :src="item?.avatar"
+              class="liveBoxRightImg"
+            >
+            </van-image>
+          </div>
+        </div>
+      </div>
+
+      <!-- live流入口 -->
+
       <!-- 系统消息 -->
       <div class="noticeTopBoxBig" v-if="active === 0">
         <div class="noticeTopBox" @click="router.push('/notification')">
@@ -308,7 +342,7 @@ import Tabbar from "@/components/Tabbar/index.vue";
 import Empty from "@/components/Empty.vue";
 import dayjs from "dayjs";
 import { useImHook } from "@/hook/useIm";
-import { callrecordlist, notiflist } from "@/api/allApi";
+import { callrecordlist, notiflist, livelist } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import msgImg from "./assets/ic_video@2x (1).png";
 import videoImg from "./assets/ic_video@2x.png";
@@ -335,6 +369,8 @@ const state = reactive<any>({
   showRechargePopup: false,
   showVipPopup: false,
 });
+
+const { fetchData: liveFetch, data: liveData } = livelist();
 
 const offsetPover = ref({
   x: -138,
@@ -449,6 +485,9 @@ onActivated(async () => {
   await getList();
   await noticeFetch({
     tab: 3,
+  });
+  await liveFetch({
+    limit: 4,
   });
   // showLoadingToast({
   //   duration: 0,
@@ -773,7 +812,70 @@ const handleClick = (index: number) => {
       margin-right: 32px;
     }
   }
-
+  .liveBoxBig {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding-left: 32px;
+    padding-right: 32px;
+    width: 100%;
+    .liveBox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 168px;
+      border-bottom: 2px dashed #566b88;
+      width: 100%;
+      .liveBoxLeft {
+        display: flex;
+        align-items: center;
+        .liveBoxLeftImg {
+          background-image: url(./assets/1@2x.webp);
+          background-size: 100% 100%;
+          // background-size: cover;
+          width: 112px;
+          height: 112px;
+          background-repeat: no-repeat;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          .liveNums {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ff0000;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 20px;
+            color: #ffffff;
+            line-height: 32px;
+            text-align: center;
+            position: absolute;
+            right: 0;
+            top: -10px;
+          }
+        }
+        .liveBoxLeftFont {
+          margin-left: 20px;
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 32px;
+          color: #eb6300;
+        }
+      }
+      .liveBoxRight {
+        display: flex;
+        align-items: center;
+        .liveBoxRightImg {
+          min-width: 84px;
+          max-width: 84px;
+          height: 84px;
+          margin-left: -23px;
+        }
+      }
+    }
+  }
   .noticeTopBoxBig {
     overflow: hidden;
     display: flex;

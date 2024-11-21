@@ -214,7 +214,7 @@
               v-model="state.inputValue"
               class="inputBox"
               type="text"
-              placeholder="Say somethig..."
+              placeholder="Say something..."
               @keyup.center="handleSendMsg"
             />
             <img
@@ -395,7 +395,6 @@ onMounted(() => {
 
 const emit = defineEmits(["update:modelValue", "update:wsData"]);
 
-let user: any = {};
 try {
   const info: any = localStorage.getItem("userInfo");
   user = JSON.parse(info as any);

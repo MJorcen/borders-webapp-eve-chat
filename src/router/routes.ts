@@ -191,6 +191,24 @@ const routes: any = [
     },
     component: async () => await import("@/pages/gameCat/index.vue"),
   },
+  {
+    path: "/livePage",
+    name: "LivePage",
+    meta: {
+      // 直播页面列表
+      title: "",
+    },
+    component: async () => await import("@/pages/livePage/index.vue"),
+  },
+  {
+    path: "/liveRoom",
+    name: "LiveRoom",
+    meta: {
+      // 直播房间页面
+      title: "",
+    },
+    component: async () => await import("@/pages/liveRoom/index.vue"),
+  },
 ];
 
 export default routes;

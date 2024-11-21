@@ -156,9 +156,15 @@
               :disabled="true"
               class="inputBox"
               type="text"
-              placeholder="Say somethig..."
-            /> -->
-            <img src="./assets/ic_send_2@2x.png" class="sendImg" alt="" />
+              placeholder="Say something..."
+              @click="state.showVipPopup = true"
+            />
+            <img
+              src="./assets/ic_send_2@2x.png"
+              class="sendImg"
+              alt=""
+              @click="state.showVipPopup = true"
+            />
           </div>
           <img
             class="goldIcon"
