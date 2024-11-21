@@ -213,7 +213,11 @@
                 src="./assets/video.png"
               /> -->
               <div
-                v-if="user?.user?.id !== item.user.id"
+                v-if="
+                  user?.user?.id !== item.user.id &&
+                  item.user.active === 1 &&
+                  item.user.inCall === 0
+                "
                 class="caozuo"
                 @click.stop="
                   () => {

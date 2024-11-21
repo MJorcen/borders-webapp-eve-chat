@@ -192,6 +192,7 @@
               /> -->
               <div
                 class="caozuo"
+                v-if="item.user.active === 1 && item.user.inCall === 0"
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
