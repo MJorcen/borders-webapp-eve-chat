@@ -1,10 +1,10 @@
 <template>
   <div class="bigBoxs">
-    <img
+    <!-- <img
       class="siginImg"
       @click.stop="handleSigin"
       src="./assets/Group1000004767@2x.webp"
-    />
+    /> -->
     <div class="topBox">
       <div class="tabsBox">
         <div class="tabsBoxLeft">
@@ -301,10 +301,10 @@
                           state.showVipPopup = true;
                         } else {
                           // state.showRechargePopup = true;
-                          state.showCallDownLoadPopup = true;
+                          state.showAppUserDownLoadPopup = true;
                         }
                       } else {
-                        state.showCallDownLoadPopup = true;
+                        state.showAppUserDownLoadPopup = true;
                       }
                     });
                   }
@@ -343,6 +343,9 @@
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
   <SignPopup v-model="state.showSignPopup"> </SignPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 
 <script setup lang="ts" name="Messages">
@@ -374,6 +377,7 @@ import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import SignPopup from "@/components/signPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -391,6 +395,7 @@ const state = reactive<any>({
   showVipPopup: false,
   showCallDownLoadPopup: false,
   showSignPopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 const { fetchData: liveFetch, data: liveData } = livelist();

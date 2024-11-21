@@ -396,10 +396,10 @@
                   state.showVipPopup = true;
                 } else {
                   // state.showRechargePopup = true;
-                  state.showCallDownLoadPopup = true;
+                  state.showAppUserDownLoadPopup = true;
                 }
               } else {
-                state.showCallDownLoadPopup = true;
+                state.showAppUserDownLoadPopup = true;
               }
             });
           }
@@ -504,6 +504,9 @@
     </div>
   </van-popup>
   <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 
 <script setup lang="ts">
@@ -531,6 +534,7 @@ import BigNumber from "bignumber.js";
 import flvjs from "flv.js";
 import { convertRtmpToFlv } from "@/common/utils";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -566,6 +570,7 @@ const state = reactive({
   paidObj: {},
   mengceng: false,
   showCallDownLoadPopup: false,
+  showAppUserDownLoadPopup: false,
 });
 const {
   fetchData: blockFetch,

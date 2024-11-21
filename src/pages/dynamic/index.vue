@@ -201,10 +201,12 @@
                           state.showVipPopup = true;
                         } else {
                           // state.showRechargePopup = true;
-                          state.showCallDownLoadPopup = true;
+                          // state.showCallDownLoadPopup = true;
+                          state.showAppUserDownLoadPopup = true;
                         }
                       } else {
-                        state.showCallDownLoadPopup = true;
+                        // state.showCallDownLoadPopup = true;
+                        state.showAppUserDownLoadPopup = true;
                       }
                     });
                   }
@@ -273,6 +275,9 @@
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 
 <script lang="ts" setup name="Dynamic">
@@ -297,6 +302,7 @@ import Empty from "@/components/Empty.vue";
 const { userDetail }: any = useUserDetailStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
 const scrollY = ref<any>(window.pageYOffset);
 
@@ -346,6 +352,7 @@ const state = reactive<any>({
   blockAndReportId: "",
   showRechargePopup: false,
   showVipPopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 onMounted(() => {

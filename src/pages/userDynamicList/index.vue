@@ -227,10 +227,12 @@
                           state.showVipPopup = true;
                         } else {
                           // state.showRechargePopup = true;
-                          state.showCallDownLoadPopup = true;
+                          // state.showCallDownLoadPopup = true;
+                          state.showAppUserDownLoadPopup = true;
                         }
                       } else {
-                        state.showCallDownLoadPopup = true;
+                        // state.showCallDownLoadPopup = true;
+                        state.showAppUserDownLoadPopup = true;
                       }
                     });
                   }
@@ -260,6 +262,9 @@
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 
 <script lang="ts" setup>
@@ -286,6 +291,7 @@ const { vipConfigData } = useVipConfigStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
 import { useUserStore } from "@/stores/user";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
 const { user }: any = useUserStore();
 
@@ -306,6 +312,7 @@ const state = reactive<any>({
   ],
   blockAndReportId: "",
   showRechargePopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 onMounted(() => {

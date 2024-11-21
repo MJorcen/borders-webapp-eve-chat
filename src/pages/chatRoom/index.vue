@@ -56,9 +56,9 @@
           >
             Follow
           </div>
-          <div v-else class="rightBtnUn" @click.stop="handleCancelFollow">
+          <!-- <div v-else class="rightBtnUn" @click.stop="handleCancelFollow">
             UnFollow
-          </div>
+          </div> -->
           <!-- <img src="./assets/列表图标@2x.png" class="w-[24px] h-[24px]" /> -->
         </div>
       </template>
@@ -494,7 +494,7 @@
         <div class="bottomImgPos">
           <img
             class="toolsImg"
-            @change="handleFileChange"
+            @click.stop="handleFileChange"
             src="./assets/ic_photo_44@2x.png"
           />
           <input
@@ -517,10 +517,12 @@
                     state.showVipPopup = true;
                   } else {
                     // state.showRechargePopup = true;
-                    state.showCallDownLoadPopup = true;
+                    // state.showCallDownLoadPopup = true;
+                    state.showAppUserDownLoadPopup = true;
                   }
                 } else {
-                  state.showCallDownLoadPopup = true;
+                  // state.showCallDownLoadPopup = true;
+                  state.showAppUserDownLoadPopup = true;
                 }
               });
             }
@@ -586,6 +588,9 @@
     <CallDownLoadPopup
       v-model="state.showCallDownLoadPopup"
     ></CallDownLoadPopup>
+    <AppUserDownLoadPopup
+      v-model="state.showAppUserDownLoadPopup"
+    ></AppUserDownLoadPopup>
   </div>
 </template>
 
@@ -638,6 +643,7 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import GoogleMap from "@/components/googleMap/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -679,6 +685,7 @@ const state = reactive<any>({
   showVipPopup: false,
   showFirstVipPromptPopup: false,
   showCallDownLoadPopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
@@ -808,7 +815,10 @@ const getChatMsgList = (msgList: any, from: string) => {
 
   // state.messageList = groupMessagesByDay(state.messageList);
   state.messageList = groupMessagesByDay(msgList);
-
+  nextTick(() => {
+    window.scroll({ top: 100000000, behavior: "instant" });
+    closeToast();
+  });
   console.log(state.messageList, "最终获取的数据");
   closeToast();
 };
@@ -848,7 +858,12 @@ const triggerFileInput = (event: any) => {
     // afterRead(file);
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      afterRead(file);
+      if (configData.value?.hasPayment) {
+        state.showAppUserDownLoadPopup = true;
+        return;
+      } else {
+        afterRead(file);
+      }
     }
   }
 };
@@ -921,6 +936,10 @@ const afterRead = async (file: any) => {
 
 // 发送文字
 const handleSend = async () => {
+  if (configData.value?.hasPayment) {
+    state.showAppUserDownLoadPopup = true;
+    return;
+  }
   if (state.inputText.trim() === "") {
     return;
   }
@@ -1099,6 +1118,18 @@ const touchElement = ref<any>(null);
 const isInside = ref<any>(false);
 
 const onTouchStart = (event: any) => {
+  if (!configData.value?.hasPayment) {
+    if (userDetail?.user?.vipLevel === 0) {
+      state.showVipPopup = true;
+    } else {
+      // state.showRechargePopup = true;
+      // state.showCallDownLoadPopup = true;
+      state.showAppUserDownLoadPopup = true;
+    }
+  } else {
+    state.showAppUserDownLoadPopup = true;
+    return;
+  }
   event.preventDefault();
 
   rec.start();
@@ -1244,9 +1275,13 @@ const handleSendDistance = async () => {
     if (userDetail?.user?.vipLevel === 0) {
       state.showVipPopup = true;
     } else {
-      state.showRechargePopup = true;
+      // state.showRechargePopup = true;
       // state.showCallDownLoadPopup = true;
+      state.showAppUserDownLoadPopup = true;
     }
+    return;
+  } else {
+    state.showAppUserDownLoadPopup = true;
     return;
   }
   showLoadingToast({

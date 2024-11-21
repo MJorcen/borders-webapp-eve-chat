@@ -82,6 +82,18 @@ const useWebSocketHeartbeat = () => {
             console.log(e);
           }
           newWsMsgArr.push(data[0].body.data);
+
+          let mapMsgArr: any = [];
+          if (data[0].body.data.type === "maps") {
+            try {
+              mapMsgArr = JSON.parse(localStorage.getItem("mapMsgArr") || "[]");
+              mapMsgArr.push(data[0].body.data.from);
+              localStorage.setItem("mapMsgArr", JSON.stringify(mapMsgArr));
+            } catch (e) {
+              console.log(e);
+            }
+          }
+
           localStorage.setItem("wsMsgArr", JSON.stringify(newWsMsgArr));
         }
         if (

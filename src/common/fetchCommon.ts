@@ -13,33 +13,54 @@ const {
   code,
 } = calldial();
 
-const { fetchData: configFetch, data: configData } = userconfig();
+const {
+  fetchData: configFetch,
+  data: configData,
+  success: configSuccess,
+} = userconfig();
 
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
-    // await configFetch();
-    // if (configData?.value?.showFirstVipPrompt) {
-    //   evenBus.emit("showFirstVipPrompt", configData.value);
-    // }
+    let flag = false;
+    let mapMsgArr: any = [];
+
+    try {
+      mapMsgArr = JSON.parse(localStorage.getItem("mapMsgArr") || "[]");
+    } catch (e) {
+      console.log(e);
+    }
+
+    if (mapMsgArr.some((i: any) => i == item.user.id)) {
+      flag = true;
+    }
+
     if (item.user.inCall === 0 && item.user.active === 0) {
       return showToast("Not Online");
     }
     if (item.user.inCall === 0 && item.user.active === 1) {
-      // await configFetch();
+      await configFetch();
       // if (configData.value?.hasPayment) {
       //   resolve(true);
       // } else {
       //   resolve(false);
       // }
-      await callFetch({ type: 1, toUserId: item.user.id });
-      if (callSuccess.value) {
-        evenBus.emit("activeCall", { ...callData.value });
-        resolve(true);
+
+      if (configSuccess.value) {
+        if (configData.value?.hasPayment && flag) {
+          resolve(true);
+        } else {
+          await callFetch({ type: 1, toUserId: item.user.id });
+          if (callSuccess.value) {
+            evenBus.emit("activeCall", { ...callData.value });
+            // resolve(true);
+          } else {
+            if (code.value === 402) {
+              resolve(false);
+            }
+          }
+        }
       } else {
         showToast(callMsg.value);
-        if (code.value === 402) {
-          resolve(false);
-        }
         // evenBus.emit("noMony");
       }
     } else {

@@ -147,14 +147,14 @@ const { user }: any = useUserStore();
 onMounted(async () => {
   getList();
   await configFetch();
-  await downConfig({
-    userId: user?.user.id,
-  });
-  const encodeURIStr = encodeURIComponent(downData.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
-  nextTick(() => {
-    DialogRef.value.state.showModal = true;
-  });
+  // await downConfig({
+  //   userId: user?.user.id,
+  // });
+  // const encodeURIStr = encodeURIComponent(downData.value);
+  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
+  // nextTick(() => {
+  //   DialogRef.value.state.showModal = true;
+  // });
 });
 
 const getList = async () => {

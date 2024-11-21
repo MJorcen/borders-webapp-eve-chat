@@ -58,6 +58,9 @@
     <div id="map"></div>
   </div>
   <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
@@ -81,6 +84,7 @@ import TopNotification from "@/components/topNotification/index.vue";
 
 import { useRouter } from "vue-router";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
 const { setUser, user }: any = useUserDetailStore();
 
@@ -95,6 +99,7 @@ const state = reactive<any>({
   notificationData: {},
   showNotification: false,
   showCallDownLoadPopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 const audioRef = ref<any>(null);
