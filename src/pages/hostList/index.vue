@@ -412,7 +412,7 @@ const activeTab = ref(0);
 const tabsList: any = reactive([
   { title: "Popular", active: true },
   //   { title: "Nearby", active: false },
-  { title: "Followed", active: false },
+  { title: "Follow", active: false },
 ]);
 
 const router = useRouter();
