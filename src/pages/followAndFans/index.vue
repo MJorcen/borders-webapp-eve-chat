@@ -58,7 +58,7 @@
           v-if="state.followList.length"
           v-model:loading="loadingTwo"
           :finished="state.finishedTwo"
-          finished-text="Noting More"
+          finished-text="Nothing More"
           loading-text="Loading..."
           @load="getFolowList()"
         >
@@ -105,7 +105,7 @@
         <van-list
           v-model:loading="loading"
           :finished="state.finished"
-          finished-text="Noting More"
+          finished-text="Nothing More"
           loading-text="Loading..."
           @load="getList()"
           v-if="state.list.length"
@@ -147,7 +147,7 @@ const router = useRouter();
 const route = useRoute();
 
 const tabsList: any = reactive([
-  { title: "Followed", active: true },
+  { title: "Follow", active: true },
   { title: "Followers", active: false },
 ]);
 

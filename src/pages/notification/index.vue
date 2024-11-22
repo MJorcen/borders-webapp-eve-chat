@@ -58,7 +58,7 @@
             <van-list
               v-model:loading="loading"
               :finished="state.finished"
-              finished-text="Noting More"
+              finished-text="Nothing More"
               loading-text="Loading..."
               @load="getListLeft(1)"
             >
@@ -140,7 +140,7 @@
           <van-list
             v-model:loading="loading"
             :finished="state.noticeFinished"
-            finished-text="Noting More"
+            finished-text="Nothing More"
             loading-text="Loading..."
             @load="getListRight(3)"
           >

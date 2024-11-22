@@ -149,10 +149,15 @@
       />
     </div>
     <div class="bottomFlex">
-      <div class="sayBox" @click.stop="handleShowInput">
+      <div
+        class="sayBox"
+        @click.stop="handleShowInput"
+        v-if="configData?.liveCanSendMsg"
+      >
         <div class="sayBoxLeft">Say ...</div>
         <img class="sayBoxRight" src="./assets/Group1627@2x.webp" />
       </div>
+      <div class="sayBox1" v-else></div>
       <div class="giftScrollBox">
         <div
           class="giftItem"
@@ -186,6 +191,57 @@
       v-model="state.showCallDownLoadPopup"
     ></CallDownLoadPopup>
     <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+    <van-popup
+      @click-overlay="state.showCallPopup = false"
+      v-model:show="state.showCallPopup"
+      position="center"
+      round
+      z-index="20"
+    >
+      <div class="popupBox">
+        <div class="popupTitleBox">
+          <img src="./assets/vidoo@2x.webp" class="popupImg" />
+        </div>
+        <div class="popupContentBox">
+          <div class="popupContentOne">
+            {{ state.severMsg }}
+          </div>
+          <div class="btnBox">
+            <div class="btnBoxLeft" @click="state.showCallPopup = false">
+              cancal
+            </div>
+            <div
+              class="btnBoxRight"
+              @click.stop="
+                () => {
+                  handleGo({
+                    user: {
+                      inCall: 0,
+                      active: 1,
+                      id: state.userObj?.id,
+                    },
+                  }).then((res) => {
+                    if (!res) {
+                      if (userDetail?.user?.vipLevel === 0) {
+                        state.showVipPopup = true;
+                      } else {
+                        // state.showRechargePopup = true;
+                        state.showCallDownLoadPopup = true;
+                      }
+                    } else {
+                      state.showCallDownLoadPopup = true;
+                    }
+                  });
+                }
+              "
+            >
+              <img src="./assets/Path_1540@2x.webp" class="btnImg" />
+              <div>call</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -202,6 +258,7 @@ import {
   liveexitWatch,
   usergiftmalelist,
   livecheckPreIm,
+  userconfig,
 } from "@/api/allApi";
 import SvgaDialog from "@/components/svgaDialog/index.vue";
 import { closeToast, showLoadingToast, showToast } from "vant";
@@ -234,11 +291,13 @@ const videoSwipeRef = ref<any>();
 const { fetchData: userGiftListFetch, data: userGiftListData } =
   usergiftmalelist();
 
+const { fetchData: configFetch, data: configData } = userconfig();
+
 onMounted(async () => {
   state.msgList = [];
   addFirstMsg();
   await userGiftListFetch();
-
+  await configFetch();
   await fetchData({
     offset: 0,
   });
@@ -401,6 +460,7 @@ const state = reactive<any>({
   showVipPopup: false,
   showFromGift: false,
   fromGiftObj: {},
+  showCallPopup: false,
 });
 
 const inputRef = ref<any>(null);
@@ -424,6 +484,7 @@ const {
   fetchData: checkPreImFetch,
   success: checkPreImSuccess,
   msg: checkPreImMsg,
+  code,
 } = livecheckPreIm();
 
 // 发送消息
@@ -457,7 +518,12 @@ const handleSendMsg = async () => {
       },
     });
   } else {
-    showToast(checkPreImMsg.value);
+    if (code.value === 5001) {
+      state.severMsg = checkPreImMsg.value;
+      state.showCallPopup = true;
+    } else {
+      showToast(checkPreImMsg.value);
+    }
   }
 };
 
@@ -908,6 +974,30 @@ const getCountryImg = (item: any) => {
         height: 40px;
       }
     }
+    .sayBox1 {
+      width: 252px;
+      height: 112px;
+      background: none;
+      box-shadow: inset 0px 0px 180px 0px rgba(255, 255, 255, 0.2);
+      border-radius: 80px 80px 80px 80px;
+      //   border: 2px solid;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 18px;
+      padding-right: 36px;
+      .sayBoxLeft {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 28px;
+        color: #ababab;
+      }
+      .sayBoxRight {
+        width: 40px;
+        height: 40px;
+      }
+    }
     .giftScrollBox {
       width: 348px;
       overflow-x: scroll;
@@ -940,6 +1030,99 @@ const getCountryImg = (item: any) => {
     .bottomImg {
       width: 100px;
       height: 100px;
+    }
+  }
+  .van-popup {
+    background: none;
+  }
+  .popupBox {
+    .popupTitleBox {
+      width: 600px;
+      height: 120px;
+      background: linear-gradient(90deg, #fcb73e 0%, #fc9b57 100%);
+      border-radius: 20px 20px 0px 0px;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      .popupImg {
+        width: 138px;
+        height: 44px;
+      }
+    }
+    .popupContentBox {
+      width: 600px;
+      background: #752e2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 36px;
+      flex-direction: column;
+      .popupImg {
+        width: 180px;
+        height: 175px;
+      }
+      .popupContentOne {
+        //   padding-left: 42px;
+        //   padding-right: 42px;
+        padding-left: 24px;
+        padding-right: 24px;
+        font-family: "ABeeZee", sans-serif;
+        font-weight: 400;
+        font-size: 40px;
+        color: #ffffff;
+        text-align: center;
+      }
+      .popupContentTwo {
+        text-align: center;
+        margin-top: 20px;
+        padding-left: 24px;
+        padding-right: 24px;
+        font-weight: 400;
+        font-size: 40px;
+        color: #ffffff;
+      }
+      .btnBox {
+        padding-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding-left: 32px;
+        padding-right: 32px;
+        .btnBoxLeft {
+          background-image: url(./assets/Slice174@2x.webp);
+          background-size: 100% 100%;
+          // background-size: cover;
+          background-repeat: no-repeat;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 256px;
+          height: 76px;
+          font-family: "Inter", sans-serif;
+          font-weight: 500;
+          font-size: 40px;
+          color: #eb6300;
+        }
+        .btnBoxRight {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 256px;
+          height: 76px;
+          background-color: #eb6300;
+          border-radius: 20px;
+          .btnImg {
+            width: 44px;
+            height: 44px;
+            margin-right: 8px;
+          }
+          font-family: "Inter", sans-serif;
+          font-weight: 500;
+          font-size: 40px;
+          color: #ffffff;
+        }
+      }
     }
   }
 }

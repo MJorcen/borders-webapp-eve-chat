@@ -9,6 +9,7 @@
       @touchstart="handleTouchStart"
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
+      @click.stop="handleRoom"
     >
       <div class="notificationBoxLeft">
         <van-image
@@ -69,13 +70,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="notificationBoxRight"
-        v-if="!state.inRoom"
-        @click.stop="handleRoom"
-      >
-        Reply
-      </div>
+      <div class="notificationBoxRight" v-if="!state.inRoom">Reply</div>
     </div>
   </div>
 </template>

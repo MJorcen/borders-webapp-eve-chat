@@ -70,7 +70,7 @@
         <van-list
           v-model:loading="loading"
           :finished="state.finished"
-          finished-text="Noting More"
+          finished-text="Nothing More"
           loading-text="Loading..."
           @load="onLoad"
           v-if="state.list.length"
@@ -110,8 +110,21 @@
                 <div class="bottmBox2">
                   <div
                     class="yuan"
-                    v-if="item.user.inCall === 0 && item.user.active === 1"
+                    v-if="
+                      item.user.inCall === 0 &&
+                      item.user.active === 1 &&
+                      !item.user?.hasVideoStream
+                    "
                   ></div>
+                  <img
+                    class="liveSmallImg"
+                    src="./assets/Group14669@2x.webp"
+                    v-if="
+                      item.user.inCall === 0 &&
+                      item.user.active === 1 &&
+                      item.user?.hasVideoStream
+                    "
+                  />
                   <div class="yuan2" v-if="item.user.active === 0"></div>
                   <div
                     class="yuan3"
@@ -120,9 +133,23 @@
 
                   <div
                     class="online"
-                    v-if="item.user.inCall === 0 && item.user.active === 1"
+                    v-if="
+                      item.user.inCall === 0 &&
+                      item.user.active === 1 &&
+                      !item.user?.hasVideoStream
+                    "
                   >
                     Online
+                  </div>
+                  <div
+                    class="online"
+                    v-if="
+                      item.user.inCall === 0 &&
+                      item.user.active === 1 &&
+                      item.user?.hasVideoStream
+                    "
+                  >
+                    Live
                   </div>
                   <div
                     class="online"
@@ -210,7 +237,7 @@
           v-if="state.followList.length"
           v-model:loading="loadingTwo"
           :finished="state.finishedTwo"
-          finished-text="Noting More"
+          finished-text="Nothing More"
           loading-text="Loading..."
           @load="onLoad"
         >
@@ -293,19 +320,45 @@
               <div class="bottmBox2">
                 <div
                   class="yuan"
-                  v-if="item.inCall === 0 && item.active === 1"
+                  v-if="
+                    item.inCall === 0 &&
+                    item.active === 1 &&
+                    !item?.hasVideoStream
+                  "
                 ></div>
+                <img
+                  class="liveSmallImg"
+                  src="./assets/Group14669@2x.webp"
+                  v-if="
+                    item.inCall === 0 &&
+                    item.active === 1 &&
+                    item?.hasVideoStream
+                  "
+                />
                 <div class="yuan2" v-if="item.active === 0"></div>
                 <div
                   class="yuan3"
                   v-if="item.inCall === 1 && item.active === 1"
                 ></div>
-
                 <div
                   class="online"
-                  v-if="item.inCall === 0 && item.active === 1"
+                  v-if="
+                    item.inCall === 0 &&
+                    item.active === 1 &&
+                    !item?.hasVideoStream
+                  "
                 >
                   Online
+                </div>
+                <div
+                  class="online"
+                  v-if="
+                    item.inCall === 0 &&
+                    item.active === 1 &&
+                    item?.hasVideoStream
+                  "
+                >
+                  Live
                 </div>
                 <div
                   class="online"
@@ -651,8 +704,8 @@ const onLoad = () => {
       .liveImg {
         width: 100%;
         height: 498px;
-
-        // object-fit: cover;
+        object-fit: cover;
+        border-radius: 10px 10px 10px 10px;
       }
       .itemImg {
         width: 100%;
@@ -745,6 +798,11 @@ const onLoad = () => {
           margin-right: 8px;
           border-radius: 50%;
           background-color: #00e397;
+        }
+        .liveSmallImg {
+          width: 15px;
+          height: 20px;
+          margin-right: 8px;
         }
         .yuan2 {
           width: 16px;

@@ -34,7 +34,7 @@
         <van-list
           v-model:loading="loading"
           :finished="state.finished"
-          finished-text="Noting More"
+          finished-text="Nothing More"
           loading-text="Loading..."
           @load="getList()"
         >

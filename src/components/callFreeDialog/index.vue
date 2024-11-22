@@ -42,12 +42,12 @@
                   class="countryImg"
                 />
               </div>
-              <div class="nameBoxBottom">
+              <!-- <div class="nameBoxBottom">
                 <img src="./assets/coin_300@2x.png" class="goldIcon" alt="" />
                 <div class="goldNum">
                   {{ props?.wsData?.call?.goldPrice }}/min
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@
           />
 
           <div class="sendBox" @click="state.showVipPopup = true">
-            <div class="inputBox">Say somethig...</div>
+            <div class="inputBox">Say something...</div>
             <!-- <input
               :disabled="true"
               class="inputBox"
@@ -224,7 +224,7 @@
               class="inputBox"
               v-model="state.inputValue"
               type="text"
-              placeholder="Say somethig..."
+              placeholder="Say something..."
               @keyup.center="handleSendMsg"
             />
             <img

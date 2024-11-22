@@ -108,7 +108,7 @@ export const giftlist = () => {
 // 获取其他用户信息
 export const userdetail = () => {
   return useRequest({
-    url: "/user/detail",
+    url: "/user/detailV2",
     method: "get",
   });
 };

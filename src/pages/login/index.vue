@@ -154,7 +154,7 @@ const router = useRouter();
 // 登录
 const handleLogin = async () => {
   showLoadingToast({
-    message: "Loding...",
+    message: "Loading...",
     forbidClick: true,
     duration: 0,
   });

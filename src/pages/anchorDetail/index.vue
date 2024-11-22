@@ -11,6 +11,67 @@
       class="sandian"
       @click.stop="state.showPopup = true"
     />
+    <div class="liveSmallBox" v-if="data?.anchorVideoStreamUrl !== ''">
+      <img src="./assets/Group14669@2x.webp" class="liveSmallImg" />
+      <div class="liveSmallBoxText">Live</div>
+    </div>
+    <div
+      class="liveBox"
+      v-if="data?.anchorVideoStreamUrl !== ''"
+      @click.stop="
+        () => {
+          handleGo(data).then((res) => {
+            if (!res) {
+              if (user?.user?.vipLevel === 0) {
+                state.showVipPopup = true;
+              } else {
+                state.showRechargePopup = true;
+              }
+            }
+          });
+        }
+      "
+    >
+      <video
+        v-if="data?.videoStreamType === 2"
+        :id="`videoElement`"
+        ref="videoElement"
+        class="videoPlayer"
+        autoplay
+        x5-video-player-type="h5"
+        :webkit-playsinline="true"
+        :playsinline="true"
+        :controls="false"
+      ></video>
+      <video
+        v-if="data?.videoStreamType === 1"
+        :id="`videoElement`"
+        class="videoPlayer"
+        :src="data?.anchorVideoStreamUrl"
+        autoplay
+        muted
+        :controls="false"
+        loop
+      ></video>
+    </div>
+    <div
+      class="mengceng"
+      v-if="state.mengceng"
+      @click.stop="
+        () => {
+          handleGo(data).then((res) => {
+            if (!res) {
+              if (user?.user?.vipLevel === 0) {
+                state.showVipPopup = true;
+              } else {
+                state.showRechargePopup = true;
+              }
+            }
+          });
+        }
+      "
+    ></div>
+
     <van-skeleton
       avatar
       :avatar-size="400"
@@ -463,7 +524,8 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import BigNumber from "bignumber.js";
-
+import flvjs from "flv.js";
+import { convertRtmpToFlv } from "@/common/utils";
 const { vipConfigData } = useVipConfigStore();
 
 const { fetchData: albumConfigFetch, data: albumConfigData } =
@@ -496,6 +558,7 @@ const state = reactive({
   showPaidPopup: false,
   picUrl: "",
   paidObj: {},
+  mengceng: false,
 });
 const {
   fetchData: blockFetch,
@@ -565,9 +628,59 @@ const { fetchData: postFetch, data: postData } = postuser();
 
 const route = useRoute();
 
+const flvPlayer = ref<any>(null);
+
 const getUserDetail = async () => {
   await fetchData({ id: route.query.id });
   await postFetch({ userId: route.query.id, offset: 0 });
+  if (flvjs.isSupported() && data.value.videoStreamType === 2) {
+    var videoElement = document.getElementById(`videoElement`);
+
+    flvPlayer.value = flvjs.createPlayer({
+      type: "flv",
+      url: convertRtmpToFlv(data.value?.anchorVideoStreamUrl),
+      isLive: true,
+      hasAudio: false,
+    });
+
+    flvPlayer.value.attachMediaElement(videoElement);
+    flvPlayer.value.load();
+
+    flvPlayer.value.play();
+    flvPlayer.value.on(flvjs.Events.MEDIA_INFO, () => {
+      // closeToast();
+    });
+    //处理视频播放错误的语法
+    flvPlayer.value.on("error", () => {
+      showToast(`Error`);
+      return false;
+    });
+  }
+  if (data.value.videoStreamType === 1) {
+    const video: any = document.getElementById("videoElement");
+    const videoSrc = data.value?.anchorVideoStreamUrl;
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      // 对于支持 HLS 的浏览器（如 Safari）
+      video.src = videoSrc;
+      video.addEventListener("loadedmetadata", () => {
+        video.play();
+      });
+    } else {
+      console.error("HLS is not supported on this browser.");
+    }
+  }
+  if (data.value.videoStreamType === 1) {
+    setTimeout(() => {
+      state.mengceng = true;
+    }, 15000);
+  }
 };
 
 const getReciveGifs = async () => {
@@ -698,6 +811,59 @@ const onChange = (index: number) => {
   position: relative;
   overflow-x: hidden;
   // padding-bottom: 200px;
+  .liveSmallBox {
+    width: 80px;
+    height: 34px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 28px 28px 28px 28px;
+    position: absolute;
+    top: 200px;
+    right: 120px;
+    z-index: 21;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .liveSmallImg {
+      width: 15px;
+      height: 20px;
+      margin-right: 6px;
+    }
+    .liveSmallBoxText {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      color: #ffffff;
+    }
+  }
+  .liveBox {
+    width: 180px;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 200px;
+    right: 30px;
+    z-index: 19;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+
+    .videoPlayer {
+      border-radius: 10px;
+    }
+  }
+  .mengceng {
+    width: 180px;
+    height: 320px;
+    border-radius: 10px;
+    position: absolute;
+    top: 180px;
+    right: 30px;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px); /* 模糊效果，数值越大模糊程度越高 */
+    -webkit-backdrop-filter: blur(10px); /* 对于Safari的支持 */
+  }
   .backBtn {
     position: absolute;
     top: 20px;

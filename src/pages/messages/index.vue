@@ -13,11 +13,18 @@
             <div class="line" v-if="item.active"></div>
           </div>
         </div>
-        <img
-          @click="handleClear"
-          src="./assets/clear123.webp"
-          class="deleteImg"
-        />
+        <div class="flex items-center">
+          <img
+            @click="router.push('/notification')"
+            src="./assets/xiaoxi1@2x.webp"
+            class="noticeImg"
+          />
+          <img
+            @click="handleClear"
+            src="./assets/clear123.webp"
+            class="deleteImg"
+          />
+        </div>
       </div>
       <!-- <div class="scollTop" v-if="active === 0 && state.messageList.length">
         <div
@@ -71,7 +78,7 @@
       <!-- live流入口 -->
 
       <!-- 系统消息 -->
-      <div class="noticeTopBoxBig" v-if="active === 0">
+      <!-- <div class="noticeTopBoxBig" v-if="active === 0">
         <div class="noticeTopBox" @click="router.push('/notification')">
           <img src="./assets/noticeNew.png" class="noticeTopImg" />
           <div class="noticeTopBoxRight">
@@ -86,7 +93,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- 系统消息 -->
       <!-- 访客 -->
       <div
@@ -237,7 +244,7 @@
       <van-list
         v-model:loading="loading"
         :finished="state.finished"
-        finished-text="Noting More"
+        finished-text="Nothing More"
         loading-text="Loading..."
         @load="getList"
         v-if="active === 1"
@@ -754,6 +761,11 @@ const handleClick = (index: number) => {
     .deleteImg {
       width: 48px;
       height: 48px;
+    }
+    .noticeImg {
+      width: 48px;
+      height: 48px;
+      margin-right: 30px;
     }
   }
 

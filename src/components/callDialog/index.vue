@@ -51,7 +51,7 @@
                     class="countryImg"
                   />
                 </div>
-                <div class="nameBoxBottom">
+                <!-- <div class="nameBoxBottom">
                   <img
                     src="./assets/image110@2x.webp"
                     class="goldIcon"
@@ -60,7 +60,7 @@
                   <div class="goldNum">
                     {{ props?.wsData?.call?.goldPrice }}/min
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -305,7 +305,7 @@
               class="inputBox"
               v-model="state.inputValue"
               type="text"
-              placeholder="Say somethig..."
+              placeholder="Say something..."
               @keyup.center="handleSendMsg"
             />
             <img
@@ -473,6 +473,8 @@ const timerId = ref(null);
 const { fetchData: userGiftListFetch, data: userGiftListData } =
   usergiftmalelist();
 
+let toastVisible = ref<any>(null);
+
 watch(
   () => props.modelValue,
 
@@ -489,6 +491,7 @@ watch(
 
       toggleBodyScroll(newValue);
     } else {
+      clearInterval(toastVisible.value);
       toggleBodyScroll(false);
     }
   },
@@ -595,6 +598,18 @@ const handleChangeCamera = () => {
   }
 };
 
+const startInterval = () => {
+  toastVisible.value = setInterval(() => {
+    showToast({
+      message:
+        "If anyone asks to add contact information or transfer money privately, please report it immediately to avoid being deceived.",
+      duration: 4000, // Toast 显示时长
+      position: "bottom",
+      zIndex: 9999,
+    });
+  }, 120000); // 每 120 秒触发
+};
+
 // 被动接听逻辑
 const handleLoginRoom = async (
   roomID: string,
@@ -610,7 +625,16 @@ const handleLoginRoom = async (
       // let localStream: any;
       roomUpdate();
       startTimer();
-
+      setTimeout(() => {
+        showToast({
+          message:
+            "If anyone asks to add contact information or transfer money privately, please report it immediately to avoid being deceived.",
+          duration: 4000, // Toast 显示时长
+          position: "bottom",
+          zIndex: 9999,
+        });
+      });
+      startInterval();
       try {
         localStream.value = await zg.createZegoStream();
       } catch (e) {
