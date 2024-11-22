@@ -15,6 +15,7 @@
         :controls="false"
         loop
       ></video>
+      <div class="mengceng"></div>
       <div class="closeBox" @click="emit('update:modelValue', false)">
         <van-icon name="close" size="36" color="#ffffff" />
       </div>
@@ -50,14 +51,12 @@
       <div class="btn" @click="state.showVipPopup = true">Continue</div>
     </div>
   </van-popup>
-  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
 import { showLoadingToast, showToast } from "vant";
 import { ref, reactive } from "vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
-import VipPopup from "@/components/vipPopup/index.vue";
 
 const emit = defineEmits(["update:modelValue", "handleOpen"]);
 
@@ -95,6 +94,19 @@ const state = reactive({
     height: 684px;
     object-fit: cover;
   }
+  .mengceng {
+    width: 100%;
+    height: 694px;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+
+    background: rgba(109, 39, 122, 0.5);
+    backdrop-filter: blur(10px); /* 模糊效果，数值越大模糊程度越高 */
+    -webkit-backdrop-filter: blur(10px); /* 对于Safari的支持 */
+  }
   .closeBox {
     // width: 76px;
     // height: 76px;
@@ -123,8 +135,10 @@ const state = reactive({
     display: flex;
     align-items: center;
     padding-left: 18px;
+    z-index: 3;
   }
   .secondTitleBox {
+    z-index: 3;
     position: absolute;
     top: 380px;
     left: 36px;
@@ -158,6 +172,8 @@ const state = reactive({
     }
   }
   .bottomBox1 {
+    z-index: 3;
+
     position: absolute;
     top: 500px;
     left: 122px;
@@ -175,6 +191,8 @@ const state = reactive({
     }
   }
   .bottomBox2 {
+    z-index: 3;
+
     position: absolute;
     top: 540px;
     left: 122px;
@@ -193,6 +211,8 @@ const state = reactive({
     }
   }
   .bottomBox3 {
+    z-index: 3;
+
     position: absolute;
     top: 600px;
     left: 122px;
@@ -210,6 +230,8 @@ const state = reactive({
     }
   }
   .bottomBox4 {
+    z-index: 3;
+
     position: absolute;
     top: 640px;
     left: 122px;

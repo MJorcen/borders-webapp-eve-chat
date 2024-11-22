@@ -293,11 +293,11 @@
   </transition>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
-  <FirstVipPromptPopup
+  <!-- <FirstVipPromptPopup
     :video-url="configData.firstVipPromptVideo"
     v-model="state.showFirstVipPromptPopup"
   >
-  </FirstVipPromptPopup>
+  </FirstVipPromptPopup> -->
 </template>
 
 <script setup lang="ts">
@@ -466,7 +466,7 @@ const {
 const { fetchData: configFetch, data: configData } = userconfig();
 
 const handleCallPickUp = async () => {
-  await configFetch();
+  // await configFetch();
 
   showLoadingToast({
     message: "Please wait...",
@@ -489,9 +489,9 @@ const handleCallPickUp = async () => {
       } else {
         state.showRechargePopup = true;
       }
-      if (configData?.value?.showFirstVipPrompt) {
-        state.showFirstVipPromptPopup = true;
-      }
+      // if (configData?.value?.showFirstVipPrompt) {
+      //   state.showFirstVipPromptPopup = true;
+      // }
     }
     emit("handleCallPickUp");
     showToast(pickUpMsg.value);

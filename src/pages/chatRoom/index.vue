@@ -575,11 +575,11 @@
     ></giftPopup>
     <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
     <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
-    <FirstVipPromptPopup
+    <!-- <FirstVipPromptPopup
       :video-url="configData.firstVipPromptVideo"
       v-model="state.showFirstVipPromptPopup"
     >
-    </FirstVipPromptPopup>
+    </FirstVipPromptPopup> -->
   </div>
 </template>
 
@@ -630,7 +630,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import GoogleMap from "@/components/googleMap/index.vue";
-import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+// import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -947,8 +947,8 @@ async function sendMsgDone(error: any, msg: any) {
       ", id=" +
       msg.idClient
   );
-  await configFetch();
- 
+  // await configFetch();
+
   if (error) {
     showToast(error);
   } else {

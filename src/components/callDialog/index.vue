@@ -328,11 +328,11 @@
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
-  <FirstVipPromptPopup
+  <!-- <FirstVipPromptPopup
     :video-url="configData.firstVipPromptVideo"
     v-model="state.showFirstVipPromptPopup"
   >
-  </FirstVipPromptPopup>
+  </FirstVipPromptPopup> -->
 </template>
 
 <script setup lang="ts">
@@ -369,7 +369,7 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import SvgaShow from "@/components/svgaShow/index.vue";
-import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+// import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -564,7 +564,7 @@ const {
 const { fetchData: configFetch, data: configData } = userconfig();
 
 const handleCallPickUp = async () => {
-  await configFetch();
+  // await configFetch();
   showLoadingToast({
     message: "Please wait...",
     forbidClick: true,
@@ -591,9 +591,9 @@ const handleCallPickUp = async () => {
       } else {
         state.showRechargePopup = true;
       }
-      if (configData?.value?.showFirstVipPrompt) {
-        state.showFirstVipPromptPopup = true;
-      }
+      // if (configData?.value?.showFirstVipPrompt) {
+      //   state.showFirstVipPromptPopup = true;
+      // }
     }
     showToast(callpickUpMsg.value);
   }

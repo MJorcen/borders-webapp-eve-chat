@@ -17,10 +17,10 @@ const { fetchData: configFetch, data: configData } = userconfig();
 
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
-    await configFetch();
-    if (configData?.value?.showFirstVipPrompt) {
-      evenBus.emit("showFirstVipPrompt", configData.value);
-    }
+    // await configFetch();
+    // if (configData?.value?.showFirstVipPrompt) {
+    //   evenBus.emit("showFirstVipPrompt", configData.value);
+    // }
     if (item.user.inCall === 0 && item.user.active === 0) {
       return showToast("Not Online");
     }

@@ -63,11 +63,11 @@
   </audio>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
-  <FirstVipPromptPopup
+  <!-- <FirstVipPromptPopup
     :video-url="configData.firstVipPromptVideo"
     v-model="state.showFirstVipPromptPopup"
   >
-  </FirstVipPromptPopup>
+  </FirstVipPromptPopup> -->
   <Tabbar></Tabbar>
 </template>
 
@@ -89,7 +89,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
-import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+// import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const route = useRoute();
 
@@ -143,7 +143,7 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
-  await configFetch();
+  // await configFetch();
   await fetchMatchStart({
     type,
   });
