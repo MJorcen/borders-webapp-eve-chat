@@ -4,7 +4,9 @@
     position="bottom"
     @click-overlay="
       emit('update:modelValue', false);
-      state.showFirstVipPromptPopup = true;
+      if (configData?.showFirstVipPrompt) {
+        state.showFirstVipPromptPopup = true;
+      }
     "
     round
   >
