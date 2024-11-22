@@ -2,7 +2,10 @@
   <van-popup
     v-model:show="props.modelValue"
     position="bottom"
-    @click-overlay="emit('update:modelValue', false)"
+    @click-overlay="
+      emit('update:modelValue', false);
+      state.showFirstVipPromptPopup = true;
+    "
     round
   >
     <div class="popupBox">
@@ -88,13 +91,19 @@
       </div>
     </div>
   </van-popup>
+  <FirstVipPromptPopup
+    :video-url="configData.firstVipPromptVideo"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from "vue";
-import { vippriceList, vipbuy } from "@/api/allApi";
+import { vippriceList, vipbuy, userconfig } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import router from "@/router";
+import FirstVipPromptPopup from "../firstVipPromptPopup/index.vue";
 
 interface Prop {
   modelValue: boolean;
@@ -108,10 +117,13 @@ const props = withDefaults(defineProps<Prop>(), {
 
 const emit = defineEmits(["update:modelValue"]);
 
+const { fetchData: configFetch, data: configData } = userconfig();
+
 const state = reactive<any>({
   channelData: [],
   payUrl: "",
   showLink: false,
+  showFirstVipPromptPopup: false,
 });
 
 watch(
@@ -119,6 +131,7 @@ watch(
   async () => {
     if (props.modelValue) {
       await channelFetchData();
+      await configFetch();
       state.channelData = channelData.value?.list?.[0]?.channelList;
       state.showLink = false;
     }

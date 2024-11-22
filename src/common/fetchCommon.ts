@@ -2,7 +2,6 @@ import { calldial, userconfig } from "@/api/allApi";
 import evenBus from "./evenBus";
 import { showToast } from "vant";
 import { useRouter } from "vue-router";
-import { getLocalUserDetail } from "./utils";
 
 const router = useRouter();
 
@@ -18,11 +17,9 @@ const { fetchData: configFetch, data: configData } = userconfig();
 
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
-    const userInfo = getLocalUserDetail();
-    // if (
-    //   userInfo?.user?.vipLevel === 0 &&
-    //   configData?.value?.showFirstVipPrompt
-    // ) {
+    // await configFetch();
+    // if (configData?.value?.showFirstVipPrompt) {
+    //   evenBus.emit("showFirstVipPrompt", configData.value);
     // }
     if (item.user.inCall === 0 && item.user.active === 0) {
       return showToast("Not Online");

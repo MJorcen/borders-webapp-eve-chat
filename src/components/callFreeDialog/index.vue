@@ -293,6 +293,11 @@
   </transition>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <!-- <FirstVipPromptPopup
+    :video-url="configData.firstVipPromptVideo"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup> -->
 </template>
 
 <script setup lang="ts">
@@ -312,6 +317,7 @@ import {
   giftsend,
   userwallet,
   usergiftmalelist,
+  userconfig,
 } from "@/api/allApi";
 import { useUserStore } from "@/stores/user";
 import RechargePopup from "@/components/rechargePopup/index.vue";
@@ -358,6 +364,7 @@ const state = reactive({
   insetData: {},
   isPick: false,
   showVipPopup: false,
+  showFirstVipPromptPopup: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -456,7 +463,11 @@ const {
   code,
 } = freeCallpickUp();
 
+const { fetchData: configFetch, data: configData } = userconfig();
+
 const handleCallPickUp = async () => {
+  // await configFetch();
+
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
@@ -478,6 +489,9 @@ const handleCallPickUp = async () => {
       } else {
         state.showRechargePopup = true;
       }
+      // if (configData?.value?.showFirstVipPrompt) {
+      //   state.showFirstVipPromptPopup = true;
+      // }
     }
     emit("handleCallPickUp");
     showToast(pickUpMsg.value);

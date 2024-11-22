@@ -978,7 +978,9 @@ const getCountryImg = (item: any) => {
       width: 252px;
       height: 112px;
       background: none;
-      box-shadow: inset 0px 0px 180px 0px rgba(255, 255, 255, 0.2);
+      background-color: none;
+
+      //   box-shadow: inset 0px 0px 180px 0px rgba(255, 255, 255, 0.2);
       border-radius: 80px 80px 80px 80px;
       //   border: 2px solid;
 
