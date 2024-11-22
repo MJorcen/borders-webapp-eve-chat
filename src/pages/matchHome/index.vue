@@ -63,6 +63,11 @@
   </audio>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <FirstVipPromptPopup
+    :video-url="configData.firstVipPromptVideo"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup>
   <Tabbar></Tabbar>
 </template>
 
@@ -70,7 +75,13 @@
 import { ref, reactive, onMounted, nextTick, onActivated } from "vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import { useRoute } from "vue-router";
-import { matchprice, matchstart, matchstop, vipconfig } from "@/api/allApi";
+import {
+  matchprice,
+  matchstart,
+  matchstop,
+  vipconfig,
+  userconfig,
+} from "@/api/allApi";
 import { showToast } from "vant";
 import evenBus from "@/common/evenBus";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -78,6 +89,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const route = useRoute();
 
@@ -85,6 +97,7 @@ const state = reactive({
   showBottomFixedBox: false,
   showRechargePopup: false,
   showVipPopup: false,
+  showFirstVipPromptPopup: false,
 });
 
 const { vipConfigData } = useVipConfigStore();
@@ -94,6 +107,9 @@ const audioMatchRef: any = ref(null);
 const { userDetail }: any = useUserDetailStore();
 
 const { fetchData: fetchMatchPrice, data: matchPriceData } = matchprice();
+
+const { fetchData: configFetch, data: configData } = userconfig();
+
 const {
   fetchData: fetchMatchStart,
   success: matchStartSuccess,
@@ -127,6 +143,7 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
+  await configFetch();
   await fetchMatchStart({
     type,
   });
@@ -144,6 +161,9 @@ const handleMatch = async (type: number) => {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
+      }
+      if (configData?.value?.showFirstVipPrompt) {
+        state.showFirstVipPromptPopup = true;
       }
 
       audioMatchRef.value.pause();

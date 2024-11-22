@@ -575,6 +575,11 @@
     ></giftPopup>
     <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
     <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+    <FirstVipPromptPopup
+      :video-url="configData.firstVipPromptVideo"
+      v-model="state.showFirstVipPromptPopup"
+    >
+    </FirstVipPromptPopup>
   </div>
 </template>
 
@@ -625,6 +630,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import GoogleMap from "@/components/googleMap/index.vue";
+import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -664,6 +670,7 @@ const state = reactive<any>({
   isInput: true,
   showRechargePopup: false,
   showVipPopup: false,
+  showFirstVipPromptPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
@@ -927,7 +934,7 @@ const handleSend = async () => {
 };
 
 // 发送消息回调
-function sendMsgDone(error: any, msg: any) {
+async function sendMsgDone(error: any, msg: any) {
   console.log(error);
   console.log(msg);
   console.log(
@@ -940,6 +947,8 @@ function sendMsgDone(error: any, msg: any) {
       ", id=" +
       msg.idClient
   );
+  await configFetch();
+ 
   if (error) {
     showToast(error);
   } else {
@@ -949,6 +958,9 @@ function sendMsgDone(error: any, msg: any) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
+      }
+      if (configData?.value?.showFirstVipPrompt) {
+        state.showFirstVipPromptPopup = true;
       }
     }
     // if (state.messageList.length) {

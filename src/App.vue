@@ -49,6 +49,12 @@
     v-model="state.showNotification"
     :wsData="state.notificationData"
   ></TopNotification>
+  <!-- vip首冲视频弹窗引导充值 -->
+  <FirstVipPromptPopup
+    :video-url="state.vipVideoUrl"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup>
   <!-- 音频铃声 -->
   <audio style="display: none" controls loop muted ref="audioRef">
     <source src="./assets/call.mp3" />
@@ -77,6 +83,8 @@ import {
 } from "./common/utils";
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
 import TopNotification from "@/components/topNotification/index.vue";
+import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+
 import { useRouter } from "vue-router";
 
 const { setUser, user }: any = useUserDetailStore();
@@ -91,6 +99,13 @@ const state = reactive<any>({
   showCallFreeDetail: false,
   notificationData: {},
   showNotification: false,
+  showFirstVipPromptPopup: false,
+  vipVideoUrl: "",
+});
+
+evenBus.on("showFirstVipPrompt", (data: any) => {
+  state.vipVideoUrl = data.firstVipPromptVideo;
+  state.showFirstVipPromptPopup = true;
 });
 
 const audioRef = ref<any>(null);
