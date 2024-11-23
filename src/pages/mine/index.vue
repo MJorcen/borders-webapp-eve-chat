@@ -179,7 +179,7 @@
       </div>
     </div>
     <!-- v-if="environmentVariable !== 'prod'" -->
-    <div class="settingBox" v-if="environmentVariable !== 'prod'">
+    <!-- <div class="settingBox" v-if="environmentVariable !== 'prod'">
       <div class="itemBox" @click="(event) => handleClearStoranage(event)">
         <div class="flex items-center">
           <img :src="img3" class="iconImg" />
@@ -187,7 +187,7 @@
         </div>
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- v-if="environmentVariable === 'development'" -->
   <!-- <a
