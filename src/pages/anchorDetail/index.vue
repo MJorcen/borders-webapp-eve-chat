@@ -1,7 +1,7 @@
 <template>
   <div class="bigBox">
     <img
-      @click.stop="router.go(-1)"
+      @click.stop="handleBack()"
       src="./assets/Slice90@2x.webp"
       class="backBtn"
       v-if="!state.showPaidPopup"
@@ -503,7 +503,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick } from "vue";
+import { ref, reactive, onMounted, nextTick, onUnmounted } from "vue";
 import {
   userdetail,
   userfollow,
@@ -527,6 +527,7 @@ import BigNumber from "bignumber.js";
 import flvjs from "flv.js";
 import { convertRtmpToFlv } from "@/common/utils";
 const { vipConfigData } = useVipConfigStore();
+import Cookies from "js-cookie";
 
 const { fetchData: albumConfigFetch, data: albumConfigData } =
   userpaidalbumconfig();
@@ -658,29 +659,40 @@ const getUserDetail = async () => {
   }
   if (data.value.videoStreamType === 1) {
     const video: any = document.getElementById("videoElement");
-    const videoSrc = data.value?.anchorVideoStreamUrl;
-    if (Hls.isSupported()) {
+    const mediaUrl = data.value?.anchorVideoStreamUrl;
+
+    if (mediaUrl.endsWith(".m3u8") && Hls.isSupported()) {
       const hls = new Hls();
-      hls.loadSource(videoSrc);
+      hls.loadSource(mediaUrl);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         video.play();
-      });
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      // 对于支持 HLS 的浏览器（如 Safari）
-      video.src = videoSrc;
-      video.addEventListener("loadedmetadata", () => {
-        video.play();
+        setTimeout(() => {
+          state.mengceng = true;
+        }, 15000);
       });
     } else {
-      console.error("HLS is not supported on this browser.");
+      video.src = mediaUrl; // 如果是 MP4 或 MP3 文件，直接赋值播放
+      video.play();
+      setTimeout(() => {
+        state.mengceng = true;
+      }, 15000);
+    }
+
+    const isMengCeng = Cookies.get(`${route.query.id}`);
+
+    if (isMengCeng) {
+      state.mengceng = true;
     }
   }
-  if (data.value.videoStreamType === 1) {
-    setTimeout(() => {
-      state.mengceng = true;
-    }, 15000);
+};
+
+const handleBack = () => {
+  const isMengCeng = Cookies.get(`${route.query.id}`);
+  if (!isMengCeng) {
+    Cookies.set(`${route.query.id}`, true, { expires: 1 });
   }
+  router.go(-1);
 };
 
 const getReciveGifs = async () => {
@@ -860,7 +872,7 @@ const onChange = (index: number) => {
     top: 180px;
     right: 30px;
     z-index: 20;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px); /* 模糊效果，数值越大模糊程度越高 */
     -webkit-backdrop-filter: blur(10px); /* 对于Safari的支持 */
   }
