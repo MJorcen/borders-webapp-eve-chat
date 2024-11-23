@@ -14,6 +14,7 @@
         v-model="showCallDialog"
         v-model:wsData="state.wsData"
       ></CallDialog>
+
       <!-- 正常通话详情 -->
       <CallDetail
         :wsData="state.wsData"
@@ -42,6 +43,11 @@
           }
         "
       ></CallFreeDialog>
+      <!-- 假视频流通话弹窗 -->
+      <LiveCallDialog
+        v-model="state.showLiveCallDialog"
+        v-model:wsData="state.wsData"
+      ></LiveCallDialog>
     </div>
   </div>
   <!-- 顶部通知消息 -->
@@ -65,6 +71,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
 import CallDialog from "@/components/callDialog/index.vue";
+import LiveCallDialog from "@/components/liveCallDialog/index.vue";
 import evenBus from "@/common/evenBus";
 import { useZego } from "@/hook/useZego";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -100,6 +107,7 @@ const state = reactive<any>({
   showNotification: false,
   showCallDownLoadPopup: false,
   showAppUserDownLoadPopup: false,
+  showLiveCallDialog: false,
 });
 
 const audioRef = ref<any>(null);
@@ -143,10 +151,15 @@ evenBus.on("inviteCall", async (data: any) => {
     if (isPlaying) return;
     // 判断是否已在通话中
     const isCall = localStorage.getItem("isCall");
+
     if (isCall === "true") {
       return;
     }
+    const isLiveCall = localStorage.getItem("isLiveCall");
 
+    if (isLiveCall === "true") {
+      return;
+    }
     // audioRef.value.play();
     audioRef.value.muted = false;
 
@@ -163,13 +176,42 @@ evenBus.on("inviteCall", async (data: any) => {
 
     // callDialogRef.value.state.isReactive = false;
     // showCallDialog.value = true;
-    evenBus.emit("activeCall", { ...data[0].body.data, type: "call/dial" });
+    const isLiveCall = localStorage.getItem("isLiveCall");
+
+    if (isLiveCall === "true") {
+      evenBus.emit("activeCallLiveCall", {
+        ...data[0].body.data,
+        type: "call/dial",
+      });
+    } else {
+      evenBus.emit("activeCall", { ...data[0].body.data, type: "call/dial" });
+    }
     //匹配接听后传值过去隐藏停止匹配按钮
     evenBus.emit("matchDone");
   }
   //开始收费的通知
   if (data[0].body.type === "call/data") {
     audioRef.value.muted = true;
+  }
+  // 视频流通话
+  if (data[0].body.type === "live/call") {
+    if (isPlaying) return;
+    const isFreeCalling = localStorage.getItem("isFreeCalling");
+    const isCall = localStorage.getItem("isCall");
+    if (isFreeCalling === "true") {
+      return;
+    }
+    if (isCall === "true") {
+      return;
+    }
+    const isLiveCall = localStorage.getItem("isLiveCall");
+
+    if (isLiveCall === "true") {
+      return;
+    }
+    evenBus.emit("byeCall");
+    state.showLiveCallDialog = true;
+    state.wsData = data[0].body.data;
   }
   // 免费通话
   if (data[0].body.type === "freeCall/dial") {
@@ -178,6 +220,11 @@ evenBus.on("inviteCall", async (data: any) => {
     // alert("免费通话");
     const isFreeCalling = localStorage.getItem("isFreeCalling");
     if (isFreeCalling === "true") {
+      return;
+    }
+    const isLiveCall = localStorage.getItem("isLiveCall");
+
+    if (isLiveCall === "true") {
       return;
     }
     state.wsData = data[0].body.data;
@@ -190,7 +237,7 @@ evenBus.on("inviteCall", async (data: any) => {
     zg.logoutRoom(data[0].body.data.call.id);
     audioRef.value.muted = true;
     showCallDialog.value = false;
-
+    state.showLiveCallDialog = false;
     if (data[0].body.data.call.duration > 0) {
       state.showCallDetail = true;
     }
