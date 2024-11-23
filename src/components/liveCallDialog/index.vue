@@ -1045,7 +1045,7 @@ defineExpose({
   height: 100vh;
   left: 0px;
   z-index: 3;
-  background: rgba(109, 39, 122, 0.5);
+  background: rgba(109, 39, 122, 0.9);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px); /* 对于Safari的支持 */
 }
