@@ -161,7 +161,7 @@
                 !it.text.includes('md5') &&
                 !it.text.includes('anchorUserId') &&
                 !it.text.includes('ext') &&
-                !it.text.includes('locationLat')
+                !it.text.includes('displayName')
               "
             >
               {{ it.text }}
@@ -182,7 +182,7 @@
             <!-- 文字 -->
             <!-- 位置 -->
             <div
-              v-if="it?.text?.includes('locationLat') || it?.geo"
+              v-if="it?.text?.includes('displayName') || it?.geo"
               :class="
                 it.to !== roomUserId
                   ? 'userLeftBoxContentDis'
@@ -192,13 +192,17 @@
               <div v-if="it.to !== roomUserId">
                 {{ JSON.parse(it?.text)?.name }}
               </div>
-              <div class="locationBox" v-if="it.to !== roomUserId">
+              <!-- <div class="locationBox" v-if="it.to !== roomUserId">
                 {{ JSON.parse(it?.text)?.vicinity }}
-              </div>
-              <GoogleMap
+              </div> -->
+              <img
+                :src="JSON.parse(it?.text)?.mapUrl"
+                style="width: 300px; height: 250px"
+              />
+              <!-- <GoogleMap
                 :position="getDistance(it)"
                 v-if="it?.type === 'geo' || it?.text?.includes('locationLat')"
-              ></GoogleMap>
+              ></GoogleMap> -->
             </div>
             <!-- 位置 -->
 
@@ -242,11 +246,12 @@
               radius="8"
               style="min-width: 80px"
               v-if="
-                it.type === 'image' ||
-                it.text.includes('png') ||
-                it.text.includes('jpg') ||
-                it.text.includes('jpeg') ||
-                it.text.includes('jfif')
+                (it.type === 'image' ||
+                  it.text.includes('png') ||
+                  it.text.includes('jpg') ||
+                  it.text.includes('jpeg') ||
+                  it.text.includes('jfif')) &&
+                !it.text.includes('displayName')
               "
               :src="it.file?.url || JSON.parse(it?.text)?.url"
               @click.stop="
@@ -532,11 +537,11 @@
             :url="'https://fs.duome.live/app/animation/call_animation_color.svga'"
           ></SvgaShow>
         </div>
-        <img
+        <!-- <img
           class="disImg"
           src="./assets/dis3.webp"
           @click.stop="handleSendDistance"
-        />
+        /> -->
 
         <img
           class="toolsImg"

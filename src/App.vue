@@ -79,7 +79,7 @@ import CallDetail from "@/components/callDetail/index.vue";
 import CallFreeDialog from "@/components/callFreeDialog/index.vue";
 import CallFreeDetail from "@/components/callFreeDetail/index.vue";
 import Cookies from "js-cookie";
-import { userDetail } from "@/api/allApi";
+import { userDetail, userlocation } from "@/api/allApi";
 import {
   generateRandomString,
   getLocalMsgList,
@@ -280,19 +280,23 @@ evenBus.on("inviteCall", async (data: any) => {
     data[0].body?.type === "im/p2p/msg/insert" &&
     data[0].body?.data?.type === "maps"
   ) {
-    const resPosition: any = await getPositionObj(data);
+    // const resPosition: any = await getPositionObj(data);
 
     const fromArrMsg: any = await getLocalMsgList(data);
     const idClient = generateRandomString(10);
+    const resObj = JSON.parse(data[0].body.data.bodyString);
+
+    // debugger;
     const insetObj = {
       unread: fromArrMsg.length,
       bodyString: "[Maps]",
-      name: resPosition?.[0]?.name,
-      position: {
-        lat: resPosition?.[0]?.geometry?.location?.lat(),
-        lng: resPosition?.[0]?.geometry?.location?.lng(),
-      },
-      vicinity: resPosition?.[0]?.vicinity,
+      name: resObj.displayName,
+      mapUrl: resObj.staticMapsUri,
+      // position: {
+      //   lat: resPosition?.[0]?.geometry?.location?.lat(),
+      //   lng: resPosition?.[0]?.geometry?.location?.lng(),
+      // },
+      vicinity: resObj.formattedAddress,
       cusstomMsg: JSON.stringify(data[0].body.data),
       ts: new Date().getTime(),
       time: new Date().getTime(),
@@ -468,6 +472,8 @@ const dataObj = {
   id: generateRandomString(10),
 };
 
+const { fetchData: localFetchData } = userlocation();
+
 const handleVisibilityChange = async () => {
   console.log(`我重新进来了`, document.visibilityState);
   if (document.visibilityState === "hidden") {
@@ -479,6 +485,20 @@ const handleVisibilityChange = async () => {
     await connectWebSocket(true);
     await fetchData();
     setUser(data.value);
+
+    await fetch("https://ipapi.co/json/")
+      .then(function (response) {
+        return response.json();
+      })
+      .then(async function (data) {
+        await localFetchData({
+          latitude: data.latitude,
+          longitude: data.longitude,
+        });
+      })
+      .catch(function (error) {
+        console.log("Error fetching API: ", error);
+      });
   }
 };
 

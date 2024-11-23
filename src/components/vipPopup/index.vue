@@ -94,6 +94,7 @@
     </div>
   </van-popup>
   <FirstVipPromptPopup
+    @handleOpen="emit('update:modelValue', true)"
     :video-url="configData.firstVipPromptVideo"
     v-model="state.showFirstVipPromptPopup"
   >

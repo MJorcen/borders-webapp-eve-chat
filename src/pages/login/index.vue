@@ -63,6 +63,7 @@ import {
   deviceactivate,
   userfillInfo,
   webconfig,
+  userlocation,
 } from "@/api/allApi";
 import { v4 as uuidv4 } from "uuid";
 import Cookies from "js-cookie";
@@ -151,6 +152,11 @@ const {
 
 const router = useRouter();
 
+const { fetchData: localFetchData } = userlocation();
+
+const latitude = ref<any>("");
+const longitude = ref<any>("");
+
 // 登录
 const handleLogin = async () => {
   showLoadingToast({
@@ -169,6 +175,8 @@ const handleLogin = async () => {
       console.log(data.country_name); // 输出国家名称，如 'United States'
       localStorage.setItem("region", data.country_code_iso3);
       localStorage.setItem("country", data.country);
+      latitude.value = data.latitude;
+      longitude.value = data.longitude;
     })
     .catch(function (error) {
       console.log("Error fetching API: ", error);
@@ -268,6 +276,10 @@ const handleLogin = async () => {
         birthDate: dayjs().format("YYYY-MM-DD"),
       });
       if (userSuccess.value) {
+        await localFetchData({
+          latitude: latitude.value,
+          longitude: longitude.value,
+        });
         showToast("Success");
         // closeToast();
         router.push({ name: "HostList" });

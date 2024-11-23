@@ -66,7 +66,6 @@ const useWebSocketHeartbeat = () => {
       // 监听WebSocket消息接收事件
       ws.value.addEventListener("message", (event) => {
         console.log("收到WebSocket消息:", JSON.parse(event.data));
-        eventBus.emit("inviteCall", JSON.parse(event?.data || {}));
 
         const data = JSON.parse(event.data);
 
@@ -82,6 +81,7 @@ const useWebSocketHeartbeat = () => {
             console.log(e);
           }
           newWsMsgArr.push(data[0].body.data);
+          localStorage.setItem("wsMsgArr", JSON.stringify(newWsMsgArr));
 
           let mapMsgArr: any = [];
           if (data[0].body.data.type === "maps") {
@@ -93,8 +93,6 @@ const useWebSocketHeartbeat = () => {
               console.log(e);
             }
           }
-
-          localStorage.setItem("wsMsgArr", JSON.stringify(newWsMsgArr));
         }
         if (
           data[0].body.type === "im/p2p/msg/insert" &&
@@ -109,6 +107,7 @@ const useWebSocketHeartbeat = () => {
         //   eventBus.emit("liveEnd", data[0].body.data);
         // }
         eventBus.emit("onSendMsg", data);
+        eventBus.emit("inviteCall", JSON.parse(event?.data || {}));
       });
 
       // 监听WebSocket连接关闭事件

@@ -186,7 +186,7 @@
                         ? "[Gift]"
                         : item?.lastMsg?.type === "geo"
                         ? "[Map]"
-                        : item?.lastMsg?.text?.includes("locationLat")
+                        : item?.lastMsg?.text?.includes("displayName")
                         ? "[Map]"
                         : item?.lastMsg?.text
                     }}
@@ -196,7 +196,7 @@
                       item?.localCustom?.cusstomMsg?.includes?.("ext")
                         ? "[Picture]"
                         : item?.localCustom?.cusstomMsg?.includes?.(
-                            "locationLat"
+                            "displayName"
                           )
                         ? "[Map]"
                         : item?.localCustom?.cusstomMsg

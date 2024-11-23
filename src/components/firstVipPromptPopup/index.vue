@@ -48,7 +48,7 @@
         <img class="gou" src="./assets/Group427320792@2x.webp" />
         Recharge 15% OFF
       </div>
-      <div class="btn" @click="state.showVipPopup = true">Continue</div>
+      <div class="btn" @click="emit('handleOpen')">Continue</div>
     </div>
   </van-popup>
 </template>

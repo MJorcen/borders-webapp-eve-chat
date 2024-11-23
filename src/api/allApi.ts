@@ -548,3 +548,10 @@ export const livelist = () => {
     method: "get",
   });
 };
+
+export const userlocation = () => {
+  return useRequest({
+    url: "/user/location",
+    method: "post",
+  });
+};

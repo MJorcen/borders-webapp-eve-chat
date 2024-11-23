@@ -62,7 +62,7 @@
               {{
                 props?.wsData?.localCustom?.includes?.("ext")
                   ? "[Picture]"
-                  : props?.wsData?.localCustom?.includes?.("locationLat")
+                  : props?.wsData?.localCustom?.includes?.("displayName")
                   ? "[Map]"
                   : JSON.parse(props?.wsData?.localCustom).cusstomMsg
               }}
