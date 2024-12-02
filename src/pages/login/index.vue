@@ -70,7 +70,11 @@ import Cookies from "js-cookie";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
-import { generateRandomString, getCurrentQueryParams } from "@/common/utils";
+import {
+  generateRandomString,
+  getCurrentQueryParams,
+  getFilterData,
+} from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import { useImHook } from "@/hook/useIm";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -232,15 +236,16 @@ const handleLogin = async () => {
     // ...state.urlData,
   });
   localStorage.setItem("link_id", state.linkId);
-  await activateFetch({
-    brand: "XIAOMI",
-    model: "MI 10",
-    userAgent: "cs",
-    androidId: "123456",
-    referrer: JSON.stringify(state.urlData),
-
-    // ...res,
-  });
+  await activateFetch(
+    getFilterData({
+      brand: "XIAOMI",
+      model: "MI 10",
+      userAgent: "cs",
+      androidId: "123456",
+      referrer: JSON.stringify(state.urlData),
+      imei: link_id,
+    })
+  );
   if (activateSuccess.value) {
     await fetchData({ deviceId: deviceId });
     if (success.value) {
