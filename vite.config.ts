@@ -32,6 +32,14 @@ function getOutputDir(buildCommand) {
       return "dist-vidLink";
     case "build:vidChat":
       return "dist-vidChat";
+    case "build:SoulChat":
+      return "dist-SoulChat";
+    case "build:SpicyChat":
+      return "dist-SpicyChat";
+    case "build:strangers":
+      return "dist-strangers";
+    case "build:SexyChat":
+      return "dist-SexyChat";
     default:
       return "dist"; // 默认构建输出目录
   }

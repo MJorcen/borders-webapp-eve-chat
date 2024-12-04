@@ -17,6 +17,10 @@ dist-vidHub
 dist-vidBuzz
 dist-vidLink
 dist-vidChat
+dist-SoulChat
+dist-SpicyChat
+dist-strangers
+dist-SexyChat
 dist-ssr
 *.local
 .history
