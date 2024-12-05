@@ -199,6 +199,12 @@
                 :src="JSON.parse(it?.text)?.mapUrl"
                 style="width: 300px; height: 250px"
               />
+              <div class="mapFont" v-if="JSON.parse(it?.text)?.name === ''">
+                Allow location access to view the message
+              </div>
+              <div class="allowBig">
+                <div class="allowBtn" @click.stop="handleAllow">Allow</div>
+              </div>
               <!-- <GoogleMap
                 :position="getDistance(it)"
                 v-if="it?.type === 'geo' || it?.text?.includes('locationLat')"
@@ -638,6 +644,7 @@ import {
   datatranslate,
   userunfollow,
   userconfig,
+  userlocation,
 } from "@/api/allApi";
 import { handleGo } from "@/common/fetchCommon";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -1352,6 +1359,26 @@ const handleSendDistance = async () => {
   // });
 };
 
+const { fetchData: localFetchData } = userlocation();
+
+// 授权定位信息
+const handleAllow = async () => {
+  showLoadingToast({
+    duration: 0,
+    message: "Please wait...",
+    forbidClick: true,
+  });
+  navigator.geolocation.getCurrentPosition(async function (position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    await localFetchData({
+      latitude: latitude,
+      longitude: longitude,
+    });
+    showToast("Success");
+  });
+};
+
 const getDistance = (it: any) => {
   if (it?.geo) {
     const position = {
@@ -1724,6 +1751,32 @@ const handleSetCash = () => {
           font-size: 24px;
           font-family: "Inter", sans-serif;
           font-weight: 400;
+        }
+        .mapFont {
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 28px;
+          color: #112437;
+          line-height: 40px;
+        }
+        .allowBig {
+          margin-top: 32px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .allowBtn {
+            width: 228px;
+            height: 57px;
+            background: #eb6300;
+            border-radius: 1200px 1200px 1200px 1200px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 20px;
+            color: #ffffff;
+            text-align: center;
+            line-height: 57px;
+          }
         }
       }
       .yuan {
