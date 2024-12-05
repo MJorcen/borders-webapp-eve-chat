@@ -439,13 +439,13 @@ function onChatroomMsgs(msgs: any) {
 }
 
 onUnmounted(() => {
-  chatroom?.destroy({
-    done: function (err: any) {
-      handleExitWatch(state.currentSwiperIndex);
+  // chatroom?.destroy?.({
+  //   done: function (err: any) {
 
-      console.log("实例已被完全清除");
-    },
-  });
+  //     console.log("实例已被完全清除");
+  //   },
+  // });
+  handleExitWatch(state.currentSwiperIndex);
 });
 
 const state = reactive<any>({
@@ -673,7 +673,6 @@ const getCountryImg = (item: any) => {
   );
   return path || "";
 };
-
 </script>
 <style lang="scss" scoped>
 .bigBox {
