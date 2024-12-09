@@ -209,6 +209,43 @@ const routes: any = [
     },
     component: async () => await import("@/pages/liveRoom/index.vue"),
   },
+  {
+    path: "/matchNew",
+    name: "MatchNew",
+    meta: {
+      // 付费前匹配
+      title: "",
+    },
+    component: async () => await import("@/pages/matchNew/index.vue"),
+  },
+  {
+    path: "/matchDetail",
+    name: "MatchDetail",
+    meta: {
+      // 匹配详情
+      title: "",
+    },
+    component: async () => await import("@/pages/matchDetail/index.vue"),
+  },
+  {
+    path: "/nearby",
+    name: "Nearby",
+    meta: {
+      // 附近
+      title: "",
+    },
+    component: async () => await import("@/pages/nearby/index.vue"),
+  },
+  {
+    path: "/membership",
+    name: "Membership",
+    meta: {
+      // 会员权益
+      title: "",
+    },
+    component: async () => await import("@/pages/membership/index.vue"),
+  },
+  
 ];
 
 export default routes;

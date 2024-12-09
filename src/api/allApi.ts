@@ -555,3 +555,43 @@ export const userlocation = () => {
     method: "post",
   });
 };
+
+// 付费前匹配
+export const matchbeforePaymentstart = () => {
+  return useRequest({
+    url: "/match/beforePayment/start",
+    method: "post",
+  });
+};
+
+// 随机获取主播
+export const matchbeforePaymentlistAnchors = () => {
+  return useRequest({
+    url: "/anchor/random/fetch",
+    method: "get",
+  });
+};
+
+// 付费前匹配配置
+export const matchbeforePaymentconfig = () => {
+  return useRequest({
+    url: "/match/beforePayment/config",
+    method: "get",
+  });
+};
+
+// 价格列表
+export const vipMultipriceList = () => {
+  return useRequest({
+    url: "/vipMulti/priceList",
+    method: "get",
+  });
+};
+
+// 购买VIP（三方支付）
+export const vipMultisubmit = () => {
+  return useRequest({
+    url: "/vipMulti/submit",
+    method: "post",
+  });
+};

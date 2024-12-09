@@ -1,6 +1,6 @@
 <template>
   <div class="bigBox">
-    <van-tabbar v-model="props.tabsCurrent" :border="false">
+    <van-tabbar z-index="8" v-model="props.tabsCurrent" :border="false">
       <van-tabbar-item
         v-for="(item, index) in tabsList"
         :key="index"
@@ -15,7 +15,13 @@
       >
         <template #icon>
           <img
-            :class="index === 1 ? 'imgClassXin' : 'imgClass'"
+            :class="
+              index === 1
+                ? 'imgClassXin'
+                : item?.name === 'Nearby'
+                ? 'fujinClass'
+                : 'imgClass'
+            "
             :src="item.active ? item.activeImg : item.img"
           />
         </template>
@@ -45,8 +51,11 @@ import img5 from "../../assets/img5.webp";
 import img6 from "../../assets/img6.webp";
 import img7 from "../../assets/img7.webp";
 import img8 from "../../assets/img8.webp";
+import img9 from "../../assets/img9.webp";
+import img10 from "../../assets/img10.webp";
 import evenBus from "@/common/evenBus";
 import { useImHook } from "@/hook/useIm";
+import { userconfig } from "@/api/allApi";
 
 export interface Props {
   tabsCurrent: number;
@@ -136,13 +145,45 @@ const router = useRouter();
 //   nim = data;
 // });
 
-onMounted(() => {
+const { fetchData: configFetch, data: configData } = userconfig();
+
+onMounted(async () => {
+  await configFetch();
+
   const currentTab = getCurrentTab();
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
   });
 
   emits("update:tabsCurrent", currentTab);
+
+  if (!configData.value?.hasPayment) {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchNew";
+        item.img = imgMatch;
+        item.activeImg = imgMatchActive;
+      }
+      if (i === 2) {
+        item.name = "Nearby";
+        item.img = img9;
+        item.activeImg = img10;
+      }
+      return item;
+    });
+  } else {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchHome";
+      }
+      if (i === 2) {
+        item.name = "Dynamic";
+        item.img = img3;
+        item.activeImg = img4;
+      }
+      return item;
+    });
+  }
 
   if (currentTab === 0) {
     tabsList[0].active = true;
@@ -177,12 +218,41 @@ onMounted(() => {
   }
 });
 
-onActivated(() => {
+onActivated(async () => {
+  await configFetch();
   const currentTab = getCurrentTab();
 
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
   });
+
+  if (!configData.value?.hasPayment) {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchNew";
+      }
+      if (i === 2) {
+        item.name = "Nearby";
+        item.img = img9;
+        item.activeImg = img10;
+      }
+      return item;
+    });
+  } else {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchHome";
+        item.img = imgMatch;
+        item.activeImg = imgMatchActive;
+      }
+      if (i === 2) {
+        item.name = "Dynamic";
+        item.img = img3;
+        item.activeImg = img4;
+      }
+      return item;
+    });
+  }
 
   emits("update:tabsCurrent", currentTab);
 
@@ -220,25 +290,40 @@ onActivated(() => {
 });
 
 const getCurrentTab = () => {
-  switch (router?.currentRoute?.value?.name) {
-    case "HostList":
-      return 0;
-    case "Messages":
-      return 3;
-    case "Dynamic":
-      return 2;
-    case "MatchHome":
-      return 1;
-    case "Mine":
-      return 4;
+  if (configData.value?.hasPayment) {
+    switch (router?.currentRoute?.value?.name) {
+      case "HostList":
+        return 0;
+      case "Messages":
+        return 3;
+      case "Dynamic":
+        return 2;
+      case "MatchHome":
+        return 1;
+      case "Mine":
+        return 4;
+    }
+  } else {
+    switch (router?.currentRoute?.value?.name) {
+      case "HostList":
+        return 0;
+      case "Messages":
+        return 3;
+      case "Nearby":
+        return 2;
+      case "MatchNew":
+        return 1;
+      case "Mine":
+        return 4;
+    }
   }
 };
 
-const tabsList: any = reactive([
+let tabsList: any = reactive([
   {
     img: img1,
     activeImg: img2,
-    active: true,
+    active: false,
     name: "HostList",
   },
   {
@@ -302,5 +387,9 @@ defineExpose({
 .imgClassXin {
   width: 60px;
   height: 50px;
+}
+.fujinClass {
+  width: 46px;
+  height: 58px;
 }
 </style>

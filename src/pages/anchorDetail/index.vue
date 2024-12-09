@@ -11,13 +11,16 @@
       class="sandian"
       @click.stop="state.showPopup = true"
     />
-    <div class="liveSmallBox" v-if="data?.anchorVideoStreamUrl !== ''">
+    <div
+      class="liveSmallBox"
+      v-if="data?.anchorVideoStreamUrl !== '' && data?.anchorVideoStreamUrl"
+    >
       <img src="./assets/Group14669@2x.webp" class="liveSmallImg" />
       <div class="liveSmallBoxText">Live</div>
     </div>
     <div
       class="liveBox"
-      v-if="data?.anchorVideoStreamUrl !== ''"
+      v-if="data?.anchorVideoStreamUrl !== '' && data?.anchorVideoStreamUrl"
       @click.stop="
         () => {
           handleGo(data).then((res) => {
@@ -405,7 +408,10 @@
           }
         "
       >
-        <div class="noVipBox" v-if="user?.user?.vipLevel === 0">
+        <div
+          class="noVipBox"
+          v-if="user?.user?.vipLevel === 0 && configDataUser?.hasPayment"
+        >
           <img class="vipIcon" src="./assets/Group1000004778@2x.webp" />
           <img class="caiIcon" src="./assets/Rectangle34625288@2x.webp" />
           <div class="fontFlexBox">
@@ -425,14 +431,21 @@
         <div class="bottomBoxLeftBox">
           <div class="bottomBoxLeftBoxTop">video call</div>
           <div class="bottomBoxLeftBoxBottom">
-            <img src="./assets/image10@2x.webp" class="moneyImg" />
+            <img
+              src="./assets/image10@2x.webp"
+              class="moneyImg"
+              v-if="configDataUser?.hasPayment"
+            />
             <div
               class="bottomBoxLeftBoxBottomFont"
               v-if="user?.user?.vipLevel > 0"
             >
               {{ data?.user?.videoCallPrice || 0 }}
             </div>
-            <div class="bottomBoxLeftBoxBottomFontTwo">
+            <div
+              class="bottomBoxLeftBoxBottomFontTwo"
+              v-if="configDataUser?.hasPayment"
+            >
               {{
                 user?.user?.vipLevel === 0
                   ? data?.user?.videoCallPrice || 0
@@ -521,6 +534,7 @@ import {
   userpaidalbumlistAnchorAlbum,
   userpaidalbumconfig,
   userpaidalbumunlock,
+  userconfig,
 } from "@/api/allApi";
 import { useRoute, useRouter } from "vue-router";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
@@ -542,12 +556,15 @@ import Cookies from "js-cookie";
 const { fetchData: albumConfigFetch, data: albumConfigData } =
   userpaidalbumconfig();
 
+const { fetchData: configFetchUser, data: configDataUser } = userconfig();
+
 onMounted(async () => {
   state.showPopup = false;
   getUserDetail();
   getReciveGifs();
   getPaidPic();
   await albumConfigFetch();
+  await configFetchUser();
   document.body.style.overflow = "auto";
   nextTick(() => {
     window.scroll({ top: 0 });
@@ -646,7 +663,12 @@ const flvPlayer = ref<any>(null);
 const getUserDetail = async () => {
   await fetchData({ id: route.query.id });
   await postFetch({ userId: route.query.id, offset: 0 });
-  if (flvjs.isSupported() && data.value.videoStreamType === 2) {
+
+  if (
+    flvjs.isSupported() &&
+    data.value.videoStreamType === 2 &&
+    data.value?.anchorVideoStreamUrl
+  ) {
     var videoElement = document.getElementById(`videoElement`);
 
     flvPlayer.value = flvjs.createPlayer({
@@ -669,7 +691,7 @@ const getUserDetail = async () => {
       return false;
     });
   }
-  if (data.value.videoStreamType === 1) {
+  if (data.value.videoStreamType === 1 && data.value?.anchorVideoStreamUrl) {
     const video: any = document.getElementById("videoElement");
     const mediaUrl = data.value?.anchorVideoStreamUrl;
 

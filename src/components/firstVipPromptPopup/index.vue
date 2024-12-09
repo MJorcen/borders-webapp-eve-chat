@@ -29,7 +29,9 @@
       <div class="secondTitleBox">
         <img src="./assets/image926@2x.webp" class="vipIcon" />
         <div class="vipFont">VIP</div>
-        <div class="moneyBox">{{ vipConfigData.firstMonthPrice }}/month</div>
+        <div class="moneyBox">
+          {{ state.list[1]?.channelList?.[0]?.price?.money }}/month
+        </div>
       </div>
       <div class="bottomBox1">
         <img class="gou" src="./assets/Group427320792@2x.webp" />
@@ -48,15 +50,69 @@
         <img class="gou" src="./assets/Group427320792@2x.webp" />
         Recharge 15% OFF
       </div>
-      <div class="btn" @click="emit('handleOpen')">Continue</div>
+      <div
+        class="btn"
+        @click="
+          () => {
+            state.showLink = false;
+            state.showPopup = true;
+            state.channelData = state.channelData.map((item) => {
+              item.selected = false;
+              return item;
+            });
+          }
+        "
+      >
+        Continue
+      </div>
+    </div>
+  </van-popup>
+  <van-popup v-model:show="state.showPopup" position="bottom" round>
+    <div class="popupBoxTwo">
+      <div class="popupBoxTop">VIP 1 month</div>
+      <div class="itemBig">
+        <div
+          class="itemBox"
+          @click="handleSelect(item)"
+          v-for="(item, index) in state.channelData"
+          :key="index"
+        >
+          <div class="itemBoxLeft">
+            <img
+              src="./assets/ic_select@2x.png"
+              v-if="item.selected"
+              class="choseBoxImg"
+            />
+            <img
+              src="./assets/ic_select@2x (1).png"
+              v-else
+              class="choseBoxImg"
+            />
+            <img :src="item.channel.icon" class="activeSelectImg" alt="" />
+            <div class="activeSelectText">{{ item.channel.displayName }}</div>
+            <div class="activeSelectText">
+              {{ item.channel.discountText }}
+            </div>
+          </div>
+          <div class="itemBoxRight">
+            {{ item.price.symbol }}{{ item.price.money }}
+          </div>
+        </div>
+      </div>
+      <div class="btnBig" v-if="state.showLink">
+        <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
+          <div class="btnBox2">Submit</div>
+        </a>
+      </div>
     </div>
   </van-popup>
 </template>
 
 <script setup lang="ts">
-import { showLoadingToast, showToast } from "vant";
-import { ref, reactive } from "vue";
+import { closeToast, showLoadingToast, showToast } from "vant";
+import { ref, reactive, watch } from "vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import { vipMultipriceList, vipMultisubmit } from "@/api/allApi";
 
 const emit = defineEmits(["update:modelValue", "handleOpen"]);
 
@@ -73,9 +129,66 @@ const props = withDefaults(defineProps<Prop>(), {
     "http://fs.duome.live/alpha/img/240522/7730710ae1904a4e338b2fff5acfb9cd.mp4",
 });
 
-const state = reactive({
+const { fetchData, data } = vipMultipriceList();
+
+const state = reactive<any>({
   showVipPopup: false,
+  showPopup: false,
+  payData: {},
+  channelData: [],
+  list: [],
+  showLink: false,
+  payUrl: "",
 });
+
+watch(
+  () => props.modelValue,
+  async () => {
+    if (props.modelValue) {
+      await fetchData();
+      state.list = data.value.list;
+      state.payData = state.list[1];
+      state.channelData = state.list[1].channelList;
+    }
+  },
+  { immediate: true }
+);
+
+const {
+  fetchData: buyFetchedData,
+  success: buySuccess,
+  msg: buyMsg,
+  data: buyData,
+} = vipMultisubmit();
+
+const handleSelect = async (item: any) => {
+  state.channelData = state.channelData.map((i: any) => {
+    if (item.channel.id === i.channel.id) {
+      i.selected = true;
+    } else {
+      i.selected = false;
+    }
+    return i;
+  });
+  showLoadingToast({
+    message: "Please wait...",
+    duration: 0,
+    forbidClick: true,
+  });
+  await buyFetchedData({
+    priceId: state.payData.id,
+    channelId: item.channel.id,
+    deeplink: false,
+  });
+  if (buySuccess.value) {
+    state.payUrl = buyData.value.data.payInfo;
+
+    state.showLink = true;
+    closeToast();
+  } else {
+    showToast(buyMsg.value);
+  }
+};
 </script>
 <style lang="scss" scoped>
 .van-popup {
@@ -262,6 +375,100 @@ const state = reactive({
     color: #fefefe;
     line-height: 100px;
     text-align: center;
+  }
+}
+.popupBoxTwo {
+  height: 928px;
+  border-radius: 16px 16px 0px 0px;
+  background-color: #f2f2f2;
+  padding-top: 20px;
+  .popupBoxTop {
+    display: flex;
+    align-items: center;
+    padding-left: 32px;
+    margin-bottom: 20px;
+    .rightImg {
+      width: 48px;
+      height: 48px;
+    }
+    .myWalletFont {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      color: #1a1a1a;
+    }
+  }
+  .itemBig {
+    padding-left: 32px;
+    padding-right: 32px;
+    background-color: #f2f2f2;
+    padding-bottom: 150px;
+
+    .itemBox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 140px;
+      background: #ffffff;
+      border-radius: 24px 24px 24px 24px;
+      padding-left: 32px;
+      padding-right: 32px;
+      margin-bottom: 20px;
+      .itemBoxLeft {
+        display: flex;
+        align-items: center;
+        .choseBoxImg {
+          width: 32px;
+          height: 32px;
+          margin-right: 8px;
+        }
+        .activeSelectImg {
+          min-width: 32px;
+          height: 32px;
+          margin-right: 8px;
+        }
+        .activeSelectText {
+          margin-right: 8px;
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: 400;
+          font-size: 28px;
+          color: #1a1a1a;
+        }
+      }
+      .itemBoxRight {
+        // width: 160px;
+        // height: 64px;
+        padding: 7px;
+        background: #eb6300;
+        // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+        border-radius: 40px 40px 40px 40px;
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: bold;
+        font-size: 32px;
+        color: #ffffff;
+        line-height: 64px;
+        text-align: center;
+      }
+    }
+  }
+  .btnBig {
+    position: fixed;
+    width: 100%;
+    bottom: 10px;
+    padding-left: 32px;
+    padding-right: 32px;
+    .btnBox2 {
+      height: 100px;
+      background: #eb6300;
+      //background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      border-radius: 16px 16px 16px 16px;
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #ffffff;
+      line-height: 100px;
+      text-align: center;
+    }
   }
 }
 </style>

@@ -2,7 +2,15 @@
   <div class="appBox">
     <router-view v-slot="{ Component, route }">
       <transition :name="route.meta.transition">
-        <keep-alive :include="['HostList', 'Messages', 'Dynamic', 'MatchHome']">
+        <keep-alive
+          :include="[
+            'HostList',
+            'Messages',
+            'Dynamic',
+            'MatchHome',
+            'MatchNew',
+          ]"
+        >
           <component :is="Component" :key="route.path"> </component>
         </keep-alive>
       </transition>
@@ -144,19 +152,25 @@ evenBus.on("updateTopNotification", (data: any) => {
 
 evenBus.on("inviteCall", async (data: any) => {
   const isPlaying = localStorage.getItem("isPlayingGame");
+  const isLiveCall = localStorage.getItem("isLiveCall");
+  const isCall = localStorage.getItem("isCall");
+  const isFreeCalling = localStorage.getItem("isFreeCalling");
+  const isMatch = localStorage.getItem("isMatch");
+
   // 被呼叫时
   if (data[0].body.type === "call/dial") {
     // state.showCallDownLoadPopup = true;
     // return;
     if (isPlaying) return;
     // 判断是否已在通话中
-    const isCall = localStorage.getItem("isCall");
 
     if (isCall === "true") {
       return;
     }
-    const isLiveCall = localStorage.getItem("isLiveCall");
 
+    if (isMatch === "true") {
+      return;
+    }
     if (isLiveCall === "true") {
       return;
     }
@@ -173,10 +187,11 @@ evenBus.on("inviteCall", async (data: any) => {
     // state.showCallDownLoadPopup = true;
     // return;
     if (isPlaying) return;
-
+    if (isMatch === "true") {
+      return;
+    }
     // callDialogRef.value.state.isReactive = false;
     // showCallDialog.value = true;
-    const isLiveCall = localStorage.getItem("isLiveCall");
 
     if (isLiveCall === "true") {
       evenBus.emit("activeCallLiveCall", {
@@ -196,15 +211,15 @@ evenBus.on("inviteCall", async (data: any) => {
   // 视频流通话
   if (data[0].body.type === "live/call") {
     if (isPlaying) return;
-    const isFreeCalling = localStorage.getItem("isFreeCalling");
-    const isCall = localStorage.getItem("isCall");
     if (isFreeCalling === "true") {
+      return;
+    }
+    if (isMatch === "true") {
       return;
     }
     if (isCall === "true") {
       return;
     }
-    const isLiveCall = localStorage.getItem("isLiveCall");
 
     if (isLiveCall === "true") {
       return;
@@ -217,12 +232,13 @@ evenBus.on("inviteCall", async (data: any) => {
   if (data[0].body.type === "freeCall/dial") {
     if (isPlaying) return;
 
+    if (isMatch === "true") {
+      return;
+    }
     // alert("免费通话");
-    const isFreeCalling = localStorage.getItem("isFreeCalling");
     if (isFreeCalling === "true") {
       return;
     }
-    const isLiveCall = localStorage.getItem("isLiveCall");
 
     if (isLiveCall === "true") {
       return;
@@ -491,10 +507,12 @@ const handleVisibilityChange = async () => {
         return response.json();
       })
       .then(async function (data) {
-        await localFetchData({
-          latitude: data.latitude,
-          longitude: data.longitude,
-        });
+        if (data) {
+          await localFetchData({
+            latitude: data.latitude,
+            longitude: data.longitude,
+          });
+        }
       })
       .catch(function (error) {
         console.log("Error fetching API: ", error);

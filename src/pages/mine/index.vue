@@ -123,7 +123,7 @@
         />
       </div>
     </div>
-    <div class="vipBox" v-else @click="state.showVipPopup = true">
+    <div class="vipBox" v-else @click="router.push('/membership')">
       <img class="vipBoxLeft" src="./assets/image922@2x.webp" />
       <div class="becomeVipBoxFont1" v-if="data?.user?.vipLevel === 0">
         Become <span style="color: #ffec93">VIP</span>
@@ -149,7 +149,11 @@
         />
       </div>
     </div>
-    <div class="coinsBox" @click="router.push('/wallect')">
+    <div
+      class="coinsBox"
+      v-if="configDataUser?.hasPayment"
+      @click="router.push('/wallect')"
+    >
       <img src="./assets/gold-8@2x.webp" class="coinImg" />
       <div>
         <div class="coinsBoxLeft">My coins:</div>
@@ -215,6 +219,7 @@ import {
   vipconfig,
   checkInvip,
   webdownload,
+  userconfig,
 } from "@/api/allApi";
 import { showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -227,6 +232,7 @@ const { fetchData, data } = userDetail();
 const { fetchData: wollectFetch, data: walletData } = userwallet();
 const { fetchData: configFetch, data: configData } = vipconfig();
 const { fetchData: downConfig, data: downData } = webdownload();
+const { fetchData: configFetchUser, data: configDataUser } = userconfig();
 
 const {
   fetchData: signFetch,
@@ -252,7 +258,12 @@ const state = reactive({
 const { setUser }: any = useUserDetailStore();
 
 const getUserDetail = async () => {
-  await Promise.all([fetchData(), wollectFetch(), configFetch()]);
+  await Promise.all([
+    fetchData(),
+    wollectFetch(),
+    configFetch(),
+    configFetchUser(),
+  ]);
 
   // await downConfig({
   //   userId: data.value.user.id,

@@ -821,7 +821,7 @@ const getChatMsgList = (msgList: any, from: string) => {
   // state.messageList = groupMessagesByDay(state.messageList);
   state.messageList = groupMessagesByDay(msgList);
   nextTick(() => {
-    window.scroll({ top: 100000000, behavior: "instant" });
+    // window.scroll({ top: 100000000, behavior: "instant" });
     closeToast();
   });
   console.log(state.messageList, "最终获取的数据");
@@ -1377,6 +1377,7 @@ const {
   data: sendGiftData,
   success: giftSuccess,
   msg: giftMsg,
+  code: giftCode,
 } = giftsend();
 
 const giftPopupRef = ref<any>();
@@ -1400,6 +1401,13 @@ const handleGive = async (item: any) => {
     giftPopupRef.value.wollectFetch();
   } else {
     showToast(giftMsg.value);
+    if (giftCode.value === 402) {
+      if (userDetail?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showAppUserDownLoadPopup = true;
+      }
+    }
   }
 };
 
