@@ -20,7 +20,7 @@
 
         <div class="topBoxLeftContent">
           <div class="topBoxLeftContentTop">
-            <div class="name">{{ data?.user?.nickname }}</div>
+            <div class="name" id="notranslate">{{ data?.user?.nickname }}</div>
             <img src="./assets/Group4414@2x.webp" class="sex" />
           </div>
           <div class="topBoxLeftContentBottom">
@@ -179,7 +179,7 @@
           />
           <div class="itemBoxLeft">{{ item.name }}</div>
         </div>
-        <van-icon name="arrow" color="#cccccc" size="20" />
+        <van-icon name="arrow-left" color="#cccccc" size="20" />
       </div>
     </div>
     <!-- v-if="environmentVariable !== 'prod'" -->
@@ -340,7 +340,7 @@ const handleClearStoranage = (e) => {
   .editImg {
     position: absolute;
     top: 30px;
-    right: 48px;
+    left: 48px;
     width: 60px;
     height: 60px;
   }
@@ -368,7 +368,7 @@ const handleClearStoranage = (e) => {
         .guoImg {
           position: absolute;
           bottom: 20px;
-          right: 10px;
+          left: 10px;
           z-index: 10;
           width: 48px;
           height: 48px;
@@ -492,7 +492,7 @@ const handleClearStoranage = (e) => {
       width: 230px;
       height: 236px;
       position: absolute;
-      right: 0;
+      left: 0;
       bottom: 0;
     }
   }
@@ -518,7 +518,7 @@ const handleClearStoranage = (e) => {
       font-size: 28px;
       color: #ffffff;
       top: 20px;
-      right: 154px;
+      left: 154px;
     }
     .becomeVipBoxFont2 {
       position: absolute;
@@ -527,7 +527,7 @@ const handleClearStoranage = (e) => {
       font-size: 28px;
       color: #ffffff;
       bottom: 18px;
-      right: 162px;
+      left: 162px;
     }
     .vipBoxLeft {
       width: 214px;

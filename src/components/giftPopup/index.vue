@@ -38,7 +38,7 @@
           <div class="giftBottomBoxLeftNums">
             {{ walletData?.wallet?.gold }}
           </div>
-          <van-icon name="arrow" color="#fff" size="16px" />
+          <van-icon name="arrow-left" color="#fff" size="16px" />
         </div>
         <div class="giftBottomBoxRight" @click.stop="handleGive">Give</div>
       </div>

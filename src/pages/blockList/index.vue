@@ -129,6 +129,7 @@ const handleUnBlock = async (id: number) => {
   if (fetchDataNoSuccess.value) {
     showToast("Success");
     state.offset = 0;
+    state.list = [];
     getList();
   } else {
     showToast(fetchDataNoMsg.value);

@@ -147,7 +147,13 @@
             <div class="noticeTopBoxRight">
               <van-skeleton title :row="4" :loading="loadingSkeleton">
                 <div class="noticeTopBoxRightTop">
-                  <div class="noticeTopBoxRightTopLeft">{{ item?.nick }}</div>
+                  <div
+                    class="noticeTopBoxRightTopLeft"
+                    style="direction: ltr"
+                    id="notranslate"
+                  >
+                    {{ item?.nick }}
+                  </div>
                   <div
                     class="noticeTopBoxRightTopRight"
                     v-if="
@@ -167,6 +173,8 @@
                 <div class="noticeTopBoxRightBottomFlex">
                   <!-- !item.localCustom?.cusstomMsg -->
                   <div
+                    style="direction: ltr"
+                    id="notranslate"
                     class="noticeTopBoxRightBottomFlexFont"
                     v-if="
                       (!item?.localCustom && !item?.localCustom?.cusstomMsg) ||
@@ -191,7 +199,12 @@
                         : item?.lastMsg?.text
                     }}
                   </div>
-                  <div v-else class="noticeTopBoxRightBottomFlexFont">
+                  <div
+                    style="direction: ltr"
+                    id="notranslate"
+                    v-else
+                    class="noticeTopBoxRightBottomFlexFont"
+                  >
                     {{
                       item?.localCustom?.cusstomMsg?.includes?.("ext")
                         ? "[Picture]"
@@ -362,7 +375,7 @@ import Tabbar from "@/components/Tabbar/index.vue";
 import Empty from "@/components/Empty.vue";
 import dayjs from "dayjs";
 import { useImHook } from "@/hook/useIm";
-import { callrecordlist, notiflist,livelist, userconfig } from "@/api/allApi";
+import { callrecordlist, notiflist, livelist, userconfig } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import msgImg from "./assets/ic_video@2x (1).png";
 import videoImg from "./assets/ic_video@2x.png";
@@ -504,9 +517,9 @@ onMounted(async () => {
   // await getMsgList(hooksState.messageList);
 
   document.body.style.overflow = "auto";
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
 });
 
 onActivated(async () => {
@@ -523,9 +536,9 @@ onActivated(async () => {
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  // getLocalSessions().then((sessions: any) => {
-  //   getMsgList(sessions);
-  // });
+  getLocalSessions().then((sessions: any) => {
+    getMsgList(sessions);
+  });
   document.body.style.overflow = "auto";
 
   closeToast();
@@ -574,6 +587,7 @@ function getCompareTime(item: any) {
 const now = Date.now();
 const getMsgList = async (data: any) => {
   state.messageList = data;
+
   for (let i = 0; i < state.messageList.length; i++) {
     if (state.messageList[i]?.lastMsg) {
       nim.getUser({

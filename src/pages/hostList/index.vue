@@ -196,10 +196,12 @@
                     }
                   "
                 />
-                <div class="hostName">{{ item.user.nickname }}</div>
+                <div id="notranslate" class="hostName">
+                  {{ item.user.nickname }}
+                </div>
                 <div class="bottmBox3">
                   <img class="contry" :src="getCountryImg(item.user)" alt="" />
-                  <div class="contryName">
+                  <div class="contryName" id="notranslate">
                     {{ item?.user?.region }}·{{ item?.user?.age }}
                   </div>
                 </div>
@@ -368,8 +370,8 @@
                 </div>
                 <div class="online" v-if="item.active === 0">Offline</div>
               </div>
-              <div class="hostName">{{ item.nickname }}</div>
-              <div class="bottmBox3">
+              <div id="notranslate" class="hostName">{{ item.nickname }}</div>
+              <div class="bottmBox3" id="notranslate">
                 <img class="contry" :src="getCountryImg(item)" alt="" />
                 <div class="contryName">{{ item?.region }}·{{ item?.age }}</div>
               </div>
@@ -629,6 +631,7 @@ const onLoad = () => {
     z-index: 19;
     background-color: #2c1a1a;
     border-bottom: 2px solid #585050;
+
     .tabs {
       font-family: "Inter", sans-serif;
       font-weight: bold;
@@ -648,6 +651,7 @@ const onLoad = () => {
       justify-content: center;
       align-items: center;
       flex-direction: column;
+
       .line {
         width: 100%;
         min-height: 4px;
@@ -718,7 +722,7 @@ const onLoad = () => {
         width: 88px;
         height: 88px;
         position: absolute;
-        right: 18px;
+        left: 18px;
         bottom: 16px;
         border-radius: 50%;
         background-color: #f9577e;
@@ -727,8 +731,9 @@ const onLoad = () => {
         position: absolute;
         display: flex;
         align-items: center;
-        left: 24px;
+        right: 24px;
         bottom: 14px;
+
         .bottmBox1LeftBox {
           display: flex;
           align-items: center;
@@ -760,7 +765,7 @@ const onLoad = () => {
         position: absolute;
         display: flex;
         align-items: center;
-        left: 20px;
+        right: 20px;
         bottom: 98px;
         // width: 100px;
         padding: 10px;
@@ -786,13 +791,14 @@ const onLoad = () => {
         position: absolute;
         display: flex;
         align-items: center;
-        left: 20px;
+        right: 20px;
         top: 20px;
         // width: 104px;
         height: 40px;
         background: rgba(0, 0, 0, 0.3);
         border-radius: 28px 28px 28px 28px;
         padding: 10px;
+
         .yuan {
           width: 16px;
           height: 16px;
@@ -840,7 +846,7 @@ const onLoad = () => {
       .hostName {
         position: absolute;
         bottom: 50px;
-        left: 24px;
+        right: 24px;
         font-family: "Inter", sans-serif;
         font-weight: 400;
         font-size: 28px;
@@ -853,9 +859,10 @@ const onLoad = () => {
       .bottmBox3 {
         position: absolute;
         bottom: 14px;
-        left: 24px;
+        right: 24px;
         display: flex;
         align-items: center;
+
         .contry {
           width: 20px;
           height: 20px;

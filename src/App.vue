@@ -469,7 +469,7 @@ onMounted(async () => {
   // 监听是否重新返回程序
   document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用
-  (window as any)?.translate?.changeLanguage("english");
+  (window as any)?.translate?.changeLanguage("arabic");
 });
 
 onUnmounted(() => {

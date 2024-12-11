@@ -23,11 +23,18 @@
               <div class="nameBoxTop">
                 <div
                   class="name"
+                  id="notranslate"
+                  style="direction: ltr"
                   v-if="props?.wsData?.fromUser?.id !== user?.user?.id"
                 >
                   {{ props?.wsData?.fromUser?.nickname }}
                 </div>
-                <div class="name" v-else>
+                <div
+                  class="name"
+                  id="notranslate"
+                  style="direction: ltr"
+                  v-else
+                >
                   {{ props?.wsData?.toUser?.nickname }}
                 </div>
                 <img
@@ -242,36 +249,12 @@
           class="hostImg"
           fit="cover"
         />
-        <!-- <div class="closeImg" @click="handleCallHangUp">
-          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
-        </div> -->
+
         <div class="closeImgMq" @click="handleCallHangUp">
           <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
         </div>
         <div class="bottomBoxConnect">
           <div class="bottomBoxInvite">
-            <!-- <img
-              src="./assets/ic_phone-hangup@2x.png"
-              alt=""
-              class="bottomBoxInviteGua"
-              @click.stop="handleCallHangUp"
-            />
-            <div class="bottomBoxInviteRecive">
-              <img
-                src="./assets/ic_phone-answer_l@2x.png"
-                alt=""
-                class="bottomBoxInviteReciveImg"
-                @click="handleCallPickUp"
-              />
-              <div class="posBox" v-if="props?.wsData?.call?.freeCount > 0">
-                <div class="posBoxOne">
-                  Free
-                  <div class="posBoxOneImgBox">
-                    {{ props?.wsData?.call?.freeCount }}
-                  </div>
-                </div>
-              </div>
-            </div> -->
             <div class="inviteBox" @click="handleCallPickUp">
               <SvgaShow
                 :divId="`demo${props?.wsData?.fromUser?.id}`"
@@ -324,7 +307,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import GiftPopup from "@/components/giftPopup/index.vue";
 import { useZego } from "@/hook/useZego";
 import evenBus from "@/common/evenBus";
-import { generateRandomString } from "@/common/utils";
+import { generateRandomString, getLocalUserDetail } from "@/common/utils";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -484,7 +467,8 @@ const handleCallPickUp = async () => {
     // localStorage.setItem("isFreeCalling", "true");
   } else {
     if (code.value === 402) {
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
@@ -710,7 +694,7 @@ const getCountryImg = (item: any) => {
     justify-content: center;
     position: absolute;
     top: 130px;
-    right: 20px;
+    left: 20px;
     height: 96px;
     z-index: 20;
     .closeImgNei {
@@ -1081,7 +1065,7 @@ const getCountryImg = (item: any) => {
     justify-content: center;
     position: absolute;
     top: 130px;
-    right: 20px;
+    left: 20px;
     height: 96px;
     z-index: 20;
     .closeImgNei {

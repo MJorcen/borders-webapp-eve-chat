@@ -7,10 +7,10 @@
       fixed
       :border="false"
     >
-      <template #left>
+      <template #right>
         <van-icon
           @click="router.back()"
-          name="arrow-left"
+          name="arrow"
           size="18"
           color="#ffffff"
         />
@@ -82,7 +82,7 @@
         <van-icon
           @click="router.back()"
           class="backIcon"
-          name="arrow-left"
+          name="arrow"
           size="28"
           color="#ffffff"
         />
@@ -220,7 +220,7 @@ const getList = async () => {
 .backIcon {
   position: absolute;
   top: 20px;
-  left: 20px;
+  right: 20px;
   cursor: pointer;
   z-index: 100;
 }

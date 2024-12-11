@@ -2,22 +2,27 @@
   <div class="bigBox">
     <van-nav-bar
       style="background-color: #2c1a1a; color: #fff"
-      :title="data?.nickname || ''"
+      title=""
       left-text=""
       fixed
       :border="false"
     >
-      <template #left>
+      <template #title>
+        <div id="notranslate" class="titleNick">
+          {{ data?.nickname || "" }}
+        </div>
+      </template>
+      <template #right>
         <div class="topLeftBox">
           <van-icon
-            name="arrow-left"
+            name="arrow"
             size="18"
             color="#fff"
             @click="router.go(-1)"
           />
         </div>
       </template>
-      <template #right>
+      <template #left>
         <img
           @click="
             () => {
@@ -35,7 +40,7 @@
         />
       </template>
     </van-nav-bar>
-    <div class="titleBox" v-html="data?.intro"></div>
+    <div class="titleBox" id="notranslate" v-html="data?.intro"></div>
     <div class="matchScan">
       <video
         :id="`videoElement`"
@@ -292,6 +297,7 @@ watch(
 </script>
 <style lang="scss" scoped>
 ::v-deep(.van-nav-bar__title) {
+  direction: ltr !important;
   color: #fff !important;
   font-family: "ABeeZee", sans-serif !important;
   font-weight: 400 !important;
@@ -302,6 +308,12 @@ watch(
     width: 48px;
     height: 48px;
   }
+  .toptop {
+    direction: ltr;
+  }
+  .titleNick {
+    direction: ltr !important;
+  }
   padding-top: 150px;
   .titleBox {
     padding-left: 36px;
@@ -311,6 +323,7 @@ watch(
     font-size: 36px;
     color: #ffffff;
     margin-bottom: 30px;
+    direction: ltr;
   }
   .matchScan {
     display: flex;

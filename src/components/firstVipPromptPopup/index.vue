@@ -254,7 +254,7 @@ const handleSelect = async (item: any) => {
     z-index: 3;
     position: absolute;
     top: 380px;
-    left: 36px;
+    right: 36px;
     display: flex;
     align-items: center;
     .vipIcon {
@@ -264,9 +264,9 @@ const handleSelect = async (item: any) => {
     .vipFont {
       font-family: "Inter", sans-serif;
       font-weight: normal;
-      font-size: 100px;
+      font-size: 30px;
       color: #ffffff;
-      margin-right: 20px;
+      // margin-right: 20px;
     }
     .moneyBox {
       display: flex;

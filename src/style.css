@@ -35,4 +35,10 @@ body {
   margin: 0px;
   overscroll-behavior-y: contain;
   user-select: none;
+  /* transform: scaleX(-1); */
+  /* text-align: right;
+  direction: rtl; */
+  direction: rtl;
+  text-align: right;
+  /* unicode-bidi: bidi-override; */
 }

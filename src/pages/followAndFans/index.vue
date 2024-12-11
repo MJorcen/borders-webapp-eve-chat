@@ -7,9 +7,9 @@
       z-index="20"
       style="background-color: #2c1a1a"
     >
-      <template #left>
+      <template #right>
         <van-icon
-          name="arrow-left"
+          name="arrow"
           size="18"
           color="#ffffff"
           @click="

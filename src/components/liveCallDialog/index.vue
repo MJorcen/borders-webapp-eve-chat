@@ -48,7 +48,7 @@
               ></van-image>
               <div class="nameBox">
                 <div class="nameBoxTop">
-                  <div class="name">
+                  <div class="name" id="notranslate" style="direction: ltr">
                     {{ props?.wsData?.nickname }}
                   </div>
                   <img
@@ -85,11 +85,18 @@
                 <div class="nameBoxTop">
                   <div
                     class="name"
+                    id="notranslate"
+                    style="direction: ltr"
                     v-if="props?.wsData?.fromUser?.id !== user?.user?.id"
                   >
                     {{ props?.wsData?.fromUser?.nickname }}
                   </div>
-                  <div class="name" v-else>
+                  <div
+                    class="name"
+                    id="notranslate"
+                    v-else
+                    style="direction: ltr"
+                  >
                     {{ props?.wsData?.toUser?.nickname }}
                   </div>
                   <img
@@ -167,7 +174,11 @@
           <!-- 挂断 -->
           <!-- 邀请接听 -->
           <div class="bottomBoxInvite" v-if="!state.isReactive">
-            <div class="inviteBox" @click="handleCallPickUp" v-if="!state.isTimeOut">
+            <div
+              class="inviteBox"
+              @click="handleCallPickUp"
+              v-if="!state.isTimeOut"
+            >
               <SvgaShow
                 :divId="`demo${props?.wsData?.fromUser?.id}`"
                 :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
@@ -210,7 +221,7 @@
         <!-- 自己的视频推流 -->
 
         <!-- 聊天框 -->
-        <div class="msgBox" v-if="state.isReactive">
+        <div class="msgBox" v-if="state.isReactive" id="notranslate">
           <div
             class="msgBoxItem"
             v-for="(item, index) in state.msgList"
@@ -431,7 +442,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import SvgaShow from "@/components/svgaShow/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import flvjs from "flv.js";
-import { convertRtmpToFlv } from "@/common/utils";
+import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -740,7 +751,8 @@ const handleCallPickUp = async () => {
   } else {
     if (callCode.value === 402) {
       emit("update:modelValue", false);
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
@@ -1090,6 +1102,7 @@ defineExpose({
           font-size: 32px;
           color: #ffffff;
           margin-right: 8px;
+          direction: ltr;
         }
         .countryImg {
           width: 40px;
@@ -1192,7 +1205,7 @@ defineExpose({
       justify-content: center;
       align-items: center;
     }
-    .callingImg{
+    .callingImg {
       width: 272px;
       height: 272px;
     }
@@ -1462,7 +1475,7 @@ defineExpose({
 .bottomBoxPushStream {
   position: absolute;
   top: 368px;
-  right: 32px;
+  left: 32px;
   width: 224px;
   height: 300px;
   border-radius: 40px 40px 40px 40px;

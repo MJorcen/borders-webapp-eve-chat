@@ -40,6 +40,8 @@ function getOutputDir(buildCommand) {
       return "dist-strangers";
     case "build:SexyChat":
       return "dist-SexyChat";
+    case "build:PornHub":
+      return "dist-PornHub";
     default:
       return "dist"; // 默认构建输出目录
   }
