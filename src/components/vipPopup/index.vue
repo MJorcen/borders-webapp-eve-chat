@@ -685,8 +685,8 @@ const handleSelect = async (item: any) => {
           margin-right: 8px;
         }
         .activeSelectImg {
-          min-width: 32px;
-          height: 32px;
+          min-width: 48px;
+          height: 48px;
           margin-right: 8px;
         }
         .activeSelectText {
