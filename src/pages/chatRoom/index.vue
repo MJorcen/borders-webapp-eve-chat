@@ -1,9 +1,10 @@
 <template>
   <div class="bigBox">
     <van-nav-bar title="" left-text="" fixed>
-      <template #left>
+      <template #right>
         <div
           class="topLeftBox"
+          id="notranslate"
           @click="
             () => {
               router.push({
@@ -56,7 +57,7 @@
           </div>
         </div>
       </template>
-      <template #right>
+      <template #left>
         <div class="flex items-center">
           <div
             v-if="data?.user?.liked === 0"
@@ -74,7 +75,7 @@
     </van-nav-bar>
     <div class="chatBox">
       <van-skeleton :loading="loading" title :row="3">
-        <div class="hostBox">
+        <div class="hostBox" id="notranslate">
           <div
             class="hostBoxTop"
             @click="
@@ -191,7 +192,18 @@
                 !it.text.includes('displayName')
               "
             >
-              {{ it.text }}
+              <div v-if="it.to === roomUserId" id="notranslate">
+                {{ it.text }}
+              </div>
+              <!-- <div id="notranslate" style="direction: ltr">{{ it.text }}</div> -->
+              <div
+                v-else
+                id="notranslate"
+                :style="{ direction: isArabicLang ? 'rtl' : 'ltr' }"
+              >
+                {{ getLangMsg(it.text) }}
+              </div>
+
               <div
                 class="transBox"
                 v-if="it.type === 'text' && it.to !== roomUserId"
@@ -201,7 +213,7 @@
                   src="./assets/Slice130@2x.webp"
                   class="w-[20px] h-[20px] mr-[8px]"
                 />
-                <div>See translation</div>
+                <div id="notranslate">See translation</div>
               </div>
             </div>
 
@@ -1439,6 +1451,20 @@ const {
 
 const giftPopupRef = ref<any>();
 
+const isArabicLang = ref(false);
+
+const getLangMsg = (msg: string) => {
+  const isArabic = /[\u0600-\u06FF]/.test(msg);
+
+  if (isArabic) {
+    isArabicLang.value = true;
+    return msg;
+  } else {
+    isArabicLang.value = false;
+    return msg;
+  }
+};
+
 const handleGive = async (item: any) => {
   await giftFetch({
     backpack: 0,
@@ -1495,10 +1521,12 @@ const handleSetCash = () => {
     font-weight: 400;
     font-size: 32px;
     color: #554c5f;
+    direction: ltr;
   }
   .onlineBox {
     width: 104px;
     height: 32px;
+    // padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1520,8 +1548,10 @@ const handleSetCash = () => {
     }
   }
   .offlineBox {
-    width: 104px;
-    height: 32px;
+    // width: 104px;
+    // height: 32px;
+    padding: 10px;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1636,6 +1666,7 @@ const handleSetCash = () => {
             font-size: 32px;
             color: #1a1a1a;
             margin-right: 4px;
+            direction: ltr;
           }
           .age {
             width: 32px;
@@ -1712,6 +1743,7 @@ const handleSetCash = () => {
         height: 80px;
         border-radius: 50%;
         margin-right: 16px;
+        margin-inline-end: 16px;
       }
       .audioBoxUserLeft {
         max-width: 494px;
@@ -1767,7 +1799,7 @@ const handleSetCash = () => {
           position: absolute;
           bottom: -60px;
           width: 230px;
-          left: -10px;
+          right: -10px;
           font-family: "Inter", sans-serif;
           font-weight: 500;
           font-size: 24px;
@@ -1906,6 +1938,7 @@ const handleSetCash = () => {
         height: 80px;
         border-radius: 50%;
         margin-left: 16px;
+        margin-inline-start: 16px;
       }
       .audioBoxUserRight {
         max-width: 494px;

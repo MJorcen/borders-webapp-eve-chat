@@ -494,6 +494,13 @@ onMounted(async () => {
   //   window?.fbq?.("track", "PageView");
   // };
   // document.head.appendChild(script);
+  (window as any)?.translate?.changeLanguage("arabic");
+});
+
+onUnmounted(() => {
+  window.removeEventListener("touchmove", () => {
+    audioRef?.value?.pause();
+  });
 });
 
 const dataObj = {

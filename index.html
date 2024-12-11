@@ -59,15 +59,15 @@
     <!-- 谷歌支付 -->
     <!-- <script src="https://pay.google.com/gp/p/js/pay.js" async></script> -->
     <!-- 3.0版本的翻译库 -->
-    <!-- <script src="https://cdn.staticfile.net/translate.js/3.2.1/translate.js"></script> -->
-    <!-- <script>
+    <script src="https://cdn.staticfile.net/translate.js/3.2.1/translate.js"></script>
+    <script>
       translate.language.setLocal("english"); //设置本地语种（当前网页的语种）。如果不设置，默认自动识别当前网页显示文字的语种。 可填写如 'english'、'chinese_simplified' 等，具体参见文档下方关于此的说明。
       translate.listener.start(); //开启html页面变化的监控，对变化部分会进行自动翻译。 具体参考
       translate.request.listener.start();
       translate.service.use("client.edge"); //设置机器翻译服务通道，直接客户端本身，不依赖服务端 。相关说明参考 http://translate.zvo.cn/43086.html
       translate.selectLanguageTag.show = false; // 隐藏语言选择框
-
+      translate.ignore.id.push("notranslate");
       // translate.execute(); //进行翻译
-    </script> -->
+    </script>
   </body>
 </html>

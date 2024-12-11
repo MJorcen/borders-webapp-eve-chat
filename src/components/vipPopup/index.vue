@@ -13,8 +13,13 @@
     round
   >
     <div class="popupBoxBig">
-      <div class="swiperBox">
-        <van-swipe class="myswipe" :autoplay="3000" indicator-color="white">
+      <div class="swiperBox" style="direction: ltr">
+        <van-swipe
+          :height="300"
+          class="myswipe"
+          :autoplay="3000"
+          indicator-color="white"
+        >
           <van-swipe-item>
             <div class="swiperItem">
               <img src="./assets/vip3.webp" class="icon" />
@@ -75,14 +80,15 @@
               <div class="monthfont">Months</div>
               <div
                 class="font1"
+                id="notranslate"
+                style="direction: ltr"
                 v-if="item?.channelList?.[0]?.price?.vipMonthlyMoney > 0"
               >
-                {{ item?.channelList?.[0]?.price?.currency
-                }}{{ item?.channelList?.[0]?.price?.vipMonthlyMoney }}/mo.
+                {{ item?.channelList?.[0]?.price?.vipMonthlyMoney }}/mo.
               </div>
               <div class="font2">{{ item?.discountInfo }}</div>
             </div>
-            <div class="font3">
+            <div class="font3" id="notranslate">
               {{ item?.channelList?.[0]?.price?.symbol
               }}{{ item?.channelList?.[0]?.price?.money }}
             </div>
@@ -92,7 +98,7 @@
           <van-count-down :time="time">
             <template #default="timeData">
               <div class="cutdownFont">
-                offer ends in {{ timeData.hours }}:{{ timeData.minutes }}:{{
+                العرض ينتهي في {{ timeData.hours }}:{{ timeData.minutes }}:{{
                   timeData.seconds
                 }}
               </div>
@@ -132,7 +138,9 @@
     round
   >
     <div class="popupBox">
-      <div class="popupBoxTop">VIP {{ state.month }} month</div>
+      <div class="popupBoxTop" id="notranslate">
+        VIP {{ state.month }} month
+      </div>
       <div class="itemBig">
         <div
           class="itemBox"
@@ -152,12 +160,22 @@
               class="choseBoxImg"
             />
             <img :src="item.channel.icon" class="activeSelectImg" alt="" />
-            <div class="activeSelectText">{{ item.channel.displayName }}</div>
-            <div class="activeSelectText" style="color: #c50205">
+            <div
+              class="activeSelectText"
+              id="notranslate"
+              style="direction: ltr"
+            >
+              {{ item.channel.displayName }}
+            </div>
+            <div
+              class="activeSelectText"
+              id="notranslate"
+              style="direction: ltr; color: #c50205"
+            >
               {{ item.channel.discountText }}
             </div>
           </div>
-          <div class="itemBoxRight">
+          <div class="itemBoxRight" id="notranslate">
             {{ item.price.symbol }}{{ item.price.money }}
           </div>
         </div>
@@ -456,12 +474,14 @@ const handleSelect = async (item: any) => {
             font-weight: 400;
             font-size: 32px;
             color: #929292;
+            text-align: center;
           }
           .font2 {
             font-family: "Inter", sans-serif;
             font-weight: 500;
             font-size: 28px;
             color: #ec6776;
+            text-align: center;
           }
         }
         .font3 {
@@ -507,7 +527,7 @@ const handleSelect = async (item: any) => {
         .monthBox {
           margin-top: -10px;
           width: 178px;
-          height: 234px;
+          height: 284px;
           background: #ffffff;
           border-radius: 20px 20px 20px 20px;
           display: flex;
@@ -534,12 +554,14 @@ const handleSelect = async (item: any) => {
             font-weight: 400;
             font-size: 32px;
             color: #929292;
+            text-align: center;
           }
           .font2 {
             font-family: "Inter", sans-serif;
             font-weight: 500;
             font-size: 28px;
             color: #ec6776;
+            text-align: center;
           }
         }
         .font3 {

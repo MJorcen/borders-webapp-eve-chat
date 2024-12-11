@@ -8,6 +8,12 @@
   >
     <div class="popupBox">
       <div class="popupTitle">
+        <!-- Open VIP now and get (<span style="color: #ff0000">{{
+          props.money
+        }}</span
+        >) coins and 7 privileges immediately -->
+      </div>
+      <div class="popupTitle1">
         Open VIP now and get (<span style="color: #ff0000">{{
           props.money
         }}</span
@@ -56,6 +62,7 @@ const props = withDefaults(defineProps<Prop>(), {
 }
 .popupBox {
   background-image: url("./assets/20241008-132128.png");
+  transform: scaleX(-1);
   background-repeat: no-repeat;
   background-size: cover;
   margin-left: 34px;
@@ -63,6 +70,7 @@ const props = withDefaults(defineProps<Prop>(), {
   min-width: 640px;
   max-width: 640px;
   height: 568px;
+  position: relative;
   .popupTitle {
     padding-top: 80px;
     width: 420px;
@@ -71,7 +79,24 @@ const props = withDefaults(defineProps<Prop>(), {
     font-size: 36px;
     color: #ffffff;
     line-height: 42px;
-    padding-left: 30px;
+    // transform: scaleX(1);
+    direction: rtl;
+    text-align: left;
+    // padding-left: 30px;
+    padding-inline-start: 30px;
+    height: 200px;
+  }
+
+  .popupTitle1 {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 36px;
+    color: #ffffff;
+    line-height: 42px;
+    position: absolute;
+    width: 420px;
+    top: 50px;
+    left: 0;
   }
   .contentBox {
     width: 100%;

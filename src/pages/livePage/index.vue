@@ -10,9 +10,9 @@
       <template #title>
         <div class="titleName">Live streaming</div>
       </template>
-      <template #left>
+      <template #right>
         <van-icon
-          name="arrow-left"
+          name="arrow"
           size="18"
           color="#ffffff"
           @click="
@@ -113,10 +113,12 @@
               <img class="liveImg" src="./assets/Group14669@2x.webp" />
               <div class="online">Live</div>
             </div>
-            <div class="hostName">{{ item?.nickname }}</div>
+            <div class="hostName" id="notranslate">{{ item?.nickname }}</div>
             <div class="bottmBox3">
               <img class="contry" :src="getCountryImg(item)" alt="" />
-              <div class="contryName">{{ item?.region }}·{{ item?.age }}</div>
+              <div class="contryName" id="notranslate">
+                {{ item?.region }}·{{ item?.age }}
+              </div>
             </div>
           </div>
         </div>
@@ -224,7 +226,7 @@ const getCountryImg = (item: any) => {
         width: 88px;
         height: 88px;
         position: absolute;
-        right: 18px;
+        left: 18px;
         bottom: 16px;
         border-radius: 50%;
         background-color: #f9577e;
@@ -292,7 +294,7 @@ const getCountryImg = (item: any) => {
         position: absolute;
         display: flex;
         align-items: center;
-        left: 20px;
+        right: 20px;
         top: 20px;
         // width: 104px;
         height: 40px;
@@ -339,7 +341,7 @@ const getCountryImg = (item: any) => {
       .hostName {
         position: absolute;
         bottom: 50px;
-        left: 24px;
+        right: 24px;
         font-family: "Inter", sans-serif;
         font-weight: 400;
         font-size: 28px;
@@ -348,11 +350,12 @@ const getCountryImg = (item: any) => {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+        direction: ltr;
       }
       .bottmBox3 {
         position: absolute;
         bottom: 14px;
-        left: 24px;
+        right: 24px;
         display: flex;
         align-items: center;
         .contry {

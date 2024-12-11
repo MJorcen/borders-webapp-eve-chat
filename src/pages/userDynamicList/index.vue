@@ -6,9 +6,9 @@
     fixed
     :border="false"
   >
-    <template #left>
+    <template #right>
       <van-icon
-        name="arrow-left"
+        name="arrow"
         size="18"
         color="#ffffff"
         @click="

@@ -10,9 +10,9 @@
       <template #title>
         <div class="titleName">Live streaming</div>
       </template>
-      <template #left>
+      <template #right>
         <van-icon
-          name="arrow-left"
+          name="arrow"
           size="18"
           color="#ffffff"
           @click="
@@ -48,7 +48,13 @@
             <img class="contry" :src="getCountryImg(item)" alt="" />
           </div>
           <div class="topUserBoxRight">
-            <div class="topUserBoxRightName">{{ item?.nickname }}</div>
+            <div
+              class="topUserBoxRightName"
+              style="direction: ltr"
+              id="notranslate"
+            >
+              {{ item?.nickname }}
+            </div>
             <div class="topUserBoxRightBottom">
               <div class="topUserBoxRightBottomLeft">
                 <img
@@ -86,7 +92,7 @@
       <img :src="state.fromGiftObj?.gift.icon" class="toGIftImg" alt="" />
       <div class="fromName">x1</div>
     </div>
-    <div class="msgBox">
+    <div class="msgBox" id="notranslate">
       <div
         :class="item.type === 'me' ? 'msgItemMe' : 'msgItem'"
         v-for="(item, index) in state.msgList"
@@ -810,7 +816,7 @@ const getCountryImg = (item: any) => {
   .msgBox {
     position: absolute;
     bottom: 240px;
-    left: 32px;
+    right: 32px;
     max-width: 480px;
     height: 376px;
     overflow-y: auto;
@@ -869,7 +875,7 @@ const getCountryImg = (item: any) => {
   .privateBox {
     position: absolute;
     bottom: 370px;
-    right: 16px;
+    left: 16px;
     background-image: url("./assets/Group1000004779@2x.webp");
     width: 160px;
     height: 88px;
@@ -887,7 +893,7 @@ const getCountryImg = (item: any) => {
   .callBox {
     position: absolute;
     bottom: 200px;
-    right: 16px;
+    left: 16px;
     width: 160px;
     height: 160px;
     background: #f9577e;

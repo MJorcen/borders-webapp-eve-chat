@@ -7,15 +7,15 @@
       fixed
       :border="false"
     >
-      <template #left>
+      <template #right>
         <van-icon
           @click="router.go(-1)"
-          name="arrow-left"
+          name="arrow"
           size="18"
           color="#fff"
         />
       </template>
-      <template #right>
+      <template #left>
         <div class="rightBtn" @click="handleSave">Save</div>
       </template>
     </van-nav-bar>

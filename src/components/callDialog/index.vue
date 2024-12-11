@@ -31,12 +31,19 @@
               <div class="nameBox">
                 <div class="nameBoxTop">
                   <div
+                    id="notranslate"
                     class="name"
+                    style="direction: ltr"
                     v-if="props?.wsData?.fromUser?.id !== user?.user?.id"
                   >
                     {{ props?.wsData?.fromUser?.nickname }}
                   </div>
-                  <div class="name" v-else>
+                  <div
+                    class="name"
+                    style="direction: ltr"
+                    id="notranslate"
+                    v-else
+                  >
                     {{ props?.wsData?.toUser?.nickname }}
                   </div>
                   <img
@@ -159,7 +166,7 @@
         <!-- 自己的视频推流 -->
 
         <!-- 聊天框 -->
-        <div class="msgBox" v-if="state.isReactive">
+        <div class="msgBox" v-if="state.isReactive" id="notranslate">
           <div
             class="msgBoxItem"
             v-for="(item, index) in state.msgList"

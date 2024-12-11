@@ -7,9 +7,9 @@
       fixed
       :border="false"
     >
-      <template #left>
+      <template #right>
         <van-icon
-          name="arrow-left"
+          name="arrow"
           size="18"
           color="#fff"
           @click="
@@ -19,7 +19,7 @@
           "
         />
       </template>
-      <template #right>
+      <template #left>
         <div class="rightBtn" @click="state.showVipPopup = true">Renew</div>
       </template>
     </van-nav-bar>

@@ -37,12 +37,13 @@
     </div>
     <div class="inputBoxBig">
       <div class="inputBox">
-        <div class="inputBoxLeft">Nickname</div>
         <input
           class="inputClass"
           v-model="state.nickname"
           placeholder="Enter your nickname"
         />
+        <div class="inputBoxLeft">Nickname</div>
+
       </div>
     </div>
     <!-- || fileObj?.content === '' -->
@@ -365,6 +366,7 @@ const handleLogin = async () => {
   margin-bottom: 160px;
   .inputBox {
     display: flex;
+    flex-direction: row-reverse; /* 主轴反转 */
     justify-content: space-between;
     align-items: center;
     height: 120px;
@@ -378,7 +380,7 @@ const handleLogin = async () => {
       color: #fff;
     }
     .inputClass {
-      text-align: right;
+      text-align: left;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 400;
       font-size: 40px;

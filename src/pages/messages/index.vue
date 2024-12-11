@@ -147,7 +147,13 @@
             <div class="noticeTopBoxRight">
               <van-skeleton title :row="4" :loading="loadingSkeleton">
                 <div class="noticeTopBoxRightTop">
-                  <div class="noticeTopBoxRightTopLeft">{{ item?.nick }}</div>
+                  <div
+                    class="noticeTopBoxRightTopLeft"
+                    style="direction: ltr"
+                    id="notranslate"
+                  >
+                    {{ item?.nick }}
+                  </div>
                   <div
                     class="noticeTopBoxRightTopRight"
                     v-if="
@@ -167,6 +173,8 @@
                 <div class="noticeTopBoxRightBottomFlex">
                   <!-- !item.localCustom?.cusstomMsg -->
                   <div
+                    style="direction: ltr"
+                    id="notranslate"
                     class="noticeTopBoxRightBottomFlexFont"
                     v-if="
                       (!item?.localCustom && !item?.localCustom?.cusstomMsg) ||
@@ -191,7 +199,12 @@
                         : item?.lastMsg?.text
                     }}
                   </div>
-                  <div v-else class="noticeTopBoxRightBottomFlexFont">
+                  <div
+                    style="direction: ltr"
+                    id="notranslate"
+                    v-else
+                    class="noticeTopBoxRightBottomFlexFont"
+                  >
                     {{
                       item?.localCustom?.cusstomMsg?.includes?.("ext")
                         ? "[Picture]"
@@ -512,6 +525,9 @@ onMounted(async () => {
     });
     getMsgList(sessions);
   });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
 });
 
 onActivated(async () => {
@@ -528,9 +544,9 @@ onActivated(async () => {
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  // getLocalSessions().then((sessions: any) => {
-  //   getMsgList(sessions);
-  // });
+  getLocalSessions().then((sessions: any) => {
+    getMsgList(sessions);
+  });
   document.body.style.overflow = "auto";
 
   closeToast();

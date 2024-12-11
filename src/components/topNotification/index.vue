@@ -22,7 +22,9 @@
           class="hostImg"
         ></van-image>
         <div class="contentBox">
-          <div class="name">{{ props?.wsData?.nick }}</div>
+          <div class="name" id="notranslate" style="direction: ltr">
+            {{ props?.wsData?.nick }}
+          </div>
           <div class="contentBoxFlex">
             <!-- <div class="nums">
               {{
@@ -35,6 +37,8 @@
               }}
             </div> -->
             <div
+              id="notranslate"
+              style="direction: ltr"
               class="text"
               v-if="
                 (!props?.wsData?.localCustom &&
@@ -58,7 +62,7 @@
                   : props?.wsData?.lastMsg?.text
               }}
             </div>
-            <div v-else class="text">
+            <div id="notranslate" style="direction: ltr" v-else class="text">
               {{
                 props?.wsData?.localCustom?.includes?.("ext")
                   ? "[Picture]"

@@ -166,7 +166,7 @@
         <div class="infoBoxTop">
           <div class="infoBoxTopLeft">
             <div class="infoBoxTopLeftTop">
-              <div class="name">
+              <div class="name" id="notranslate">
                 {{ data?.user?.nickname }}
               </div>
               <div
@@ -229,8 +229,12 @@
             </div>
           </div>
         </div>
-        <div class="infoBoxBottom" v-html="data?.user?.intro"></div>
-        <div class="infoBottom">
+        <div
+          class="infoBoxBottom"
+          id="notranslate"
+          v-html="data?.user?.intro"
+        ></div>
+        <div class="infoBottom" id="notranslate">
           <div class="infoBottomItem">
             <div class="infoBottomItemTop">Gender</div>
             <div class="infoBottomItemBottom">
@@ -892,7 +896,7 @@ const onChange = (index: number) => {
     border-radius: 28px 28px 28px 28px;
     position: absolute;
     top: 200px;
-    right: 120px;
+    left: 120px;
     z-index: 21;
     display: flex;
     align-items: center;
@@ -917,7 +921,7 @@ const onChange = (index: number) => {
     justify-content: center;
     position: absolute;
     top: 200px;
-    right: 30px;
+    left: 30px;
     z-index: 19;
     background-color: #f5f5f5;
     border-radius: 10px;
@@ -935,7 +939,7 @@ const onChange = (index: number) => {
     align-items: center;
     justify-content: center;
     top: 180px;
-    right: 30px;
+    left: 30px;
     z-index: 20;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px); /* 模糊效果，数值越大模糊程度越高 */
@@ -951,15 +955,16 @@ const onChange = (index: number) => {
   .backBtn {
     position: absolute;
     top: 20px;
-    left: 18px;
+    right: 18px;
     z-index: 20;
     width: 104px;
     height: 104px;
+    transform: rotate(180deg);
   }
   .sandian {
     position: absolute;
     top: 20px;
-    right: 18px;
+    left: 18px;
     z-index: 20;
     width: 104px;
     height: 104px;
@@ -973,7 +978,7 @@ const onChange = (index: number) => {
       position: absolute;
       bottom: 80px;
       // left: 324px;
-      left: 20px;
+      right: 20px;
       // width: 400px;
       width: 90%;
       padding-right: 20px;
@@ -1000,7 +1005,7 @@ const onChange = (index: number) => {
     .followImg {
       position: absolute;
       bottom: 86px;
-      right: 34px;
+      left: 34px;
       width: 140px;
       height: 60px;
     }
@@ -1035,6 +1040,7 @@ const onChange = (index: number) => {
               font-size: 40px;
               color: #ffffff;
               margin-right: 10px;
+              direction: ltr;
             }
             .yuan {
               width: 20px;
@@ -1138,6 +1144,7 @@ const onChange = (index: number) => {
         font-size: 28px;
         color: #ffffff;
         margin-bottom: 72px;
+        direction: ltr;
       }
       .infoBottom {
         display: flex;
