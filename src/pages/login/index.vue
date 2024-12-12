@@ -282,10 +282,14 @@ const handleLogin = async () => {
         birthDate: dayjs().format("YYYY-MM-DD"),
       });
       if (userSuccess.value) {
-        await localFetchData({
-          latitude: latitude.value,
-          longitude: longitude.value,
-        });
+        if (latitude.value) {
+          await localFetchData(
+            getFilterData({
+              latitude: latitude.value,
+              longitude: longitude.value,
+            })
+          );
+        }
         showToast("Success");
         // closeToast();
         router.push({ name: "HostList" });

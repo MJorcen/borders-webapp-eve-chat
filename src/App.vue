@@ -36,7 +36,7 @@
       ></CallFreeDetail>
       <!-- 免费通话弹窗 -->
       <CallFreeDialog
-        :wsData="state.wsData"
+        :wsData="state.freeWsData"
         v-model="state.showFreeDialog"
         @handleCallHangUp="audioRef.muted = true"
         @handleCallPickUp="audioRef.muted = true"
@@ -115,6 +115,7 @@ const { fetchData, data } = userDetail();
 
 const state = reactive<any>({
   wsData: {},
+  freeWsData: {},
   showCallDetail: false,
   showFreeDialog: false,
   callFreeWsData: {},
@@ -260,7 +261,7 @@ evenBus.on("inviteCall", async (data: any) => {
     if (isLiveCall === "true") {
       return;
     }
-    state.wsData = data[0].body.data;
+    state.freeWsData = data[0].body.data;
     state.showFreeDialog = true;
   }
   // 挂断通话
