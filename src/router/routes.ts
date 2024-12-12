@@ -16,6 +16,14 @@ const routes: any = [
     component: async () => await import("@/pages/login/index.vue"),
   },
   {
+    path: "/test",
+    name: "Test",
+    meta: {
+      title: "",
+    },
+    component: async () => await import("@/pages/test.vue"),
+  },
+  {
     path: "/home",
     name: "Home",
     meta: {
@@ -245,7 +253,6 @@ const routes: any = [
     },
     component: async () => await import("@/pages/membership/index.vue"),
   },
-  
 ];
 
 export default routes;
