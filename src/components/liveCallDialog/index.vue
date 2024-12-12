@@ -431,7 +431,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import SvgaShow from "@/components/svgaShow/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import flvjs from "flv.js";
-import { convertRtmpToFlv } from "@/common/utils";
+import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -740,7 +740,8 @@ const handleCallPickUp = async () => {
   } else {
     if (callCode.value === 402) {
       emit("update:modelValue", false);
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail()
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;

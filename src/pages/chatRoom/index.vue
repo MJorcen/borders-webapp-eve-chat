@@ -1410,6 +1410,9 @@ const {
 const giftPopupRef = ref<any>();
 
 const handleGive = async (item: any) => {
+  if (!item?.id) {
+    return;
+  }
   await giftFetch({
     backpack: 0,
     toUserId: data.value.user.id,

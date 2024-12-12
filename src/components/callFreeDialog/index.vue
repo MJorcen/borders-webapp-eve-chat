@@ -324,7 +324,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import GiftPopup from "@/components/giftPopup/index.vue";
 import { useZego } from "@/hook/useZego";
 import evenBus from "@/common/evenBus";
-import { generateRandomString } from "@/common/utils";
+import { generateRandomString, getLocalUserDetail } from "@/common/utils";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -484,7 +484,8 @@ const handleCallPickUp = async () => {
     // localStorage.setItem("isFreeCalling", "true");
   } else {
     if (code.value === 402) {
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail()
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
