@@ -16,6 +16,7 @@
     "build:justVidTest": "vite build --mode justVidTest",
     "build:vidHub": "vite build --mode vidHub",
     "build:vidBuzz": "vite build --mode vidBuzz",
+    "build:vidChat": "vite build --mode vidChat",
     "build:vidLink": "vite build --mode vidLink",
     "build:SoulChat": "vite build --mode SoulChat",
     "build:SpicyChat": "vite build --mode SpicyChat",
