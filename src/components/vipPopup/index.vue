@@ -107,10 +107,12 @@
             () => {
               state.showLink = false;
               state.showPopup = true;
+              state.channelData = state.list[state.choseIndex].channelList;
               state.channelData = state.channelData.map((item) => {
                 item.selected = false;
                 return item;
               });
+              state.showMore = true;
             }
           "
         >
@@ -161,7 +163,12 @@
             {{ item.price.symbol }}{{ item.price.money }}
           </div>
         </div>
+        <div class="moreBox" @click="handleShowMore" v-if="state.showMore">
+          <div>More</div>
+          <van-icon name="arrow-down" size="30px" />
+        </div>
       </div>
+
       <div class="btnBig" v-if="state.showLink">
         <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
           <div class="btnBox2">Submit</div>
@@ -173,7 +180,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch, computed } from "vue";
-import { vipMultipriceList, userconfig, vipMultisubmit } from "@/api/allApi";
+import {
+  vipMultipriceList,
+  userconfig,
+  vipMultisubmit,
+  paymentchannellistMore,
+} from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import router from "@/router";
 import FirstVipPromptPopup from "../firstVipPromptPopup/index.vue";
@@ -218,6 +230,9 @@ const state = reactive<any>({
   payData: {},
   month: "",
   showFirstVipPromptPopup: false,
+  showMore: true,
+  moreChannelParmas: 0,
+  choseIndex: 1,
 });
 
 const { fetchData, data } = vipMultipriceList();
@@ -240,6 +255,7 @@ watch(
       state.payData = state.list[1];
       state.channelData = state.list[1].channelList;
       state.month = state.list[1].month;
+      state.moreChannelParmas = state.list[1].money;
     }
   },
   { immediate: true }
@@ -289,6 +305,8 @@ const handleActive = async (item: any, index: number) => {
   state.channelData = item.channelList;
   state.payData = item;
   state.month = item.month;
+  state.choseIndex = index;
+  state.moreChannelParmas = item.money;
 };
 
 const handleSelect = async (item: any) => {
@@ -318,6 +336,19 @@ const handleSelect = async (item: any) => {
   } else {
     showToast(buyMsg.value);
   }
+};
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannellistMore();
+
+const handleShowMore = async () => {
+  state.showMore = false;
+  await moreChannelFetch({
+    scene: "multi_vip",
+    money: state.moreChannelParmas,
+    vipMonths: state.month,
+  });
+  state.channelData = [...state.channelData, ...moreChannelData.value?.list];
 };
 </script>
 <style lang="scss" scoped>
@@ -694,7 +725,18 @@ const handleSelect = async (item: any) => {
         text-align: center;
       }
     }
+    .moreBox {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
   }
+
   .btnBig {
     position: fixed;
     width: 100%;

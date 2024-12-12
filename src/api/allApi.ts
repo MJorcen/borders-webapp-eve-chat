@@ -324,7 +324,7 @@ export const checkInvipget = () => {
 // 充值价格列表（V2）
 export const rechargeV2priceList = () => {
   return useRequest({
-    url: "/rechargeV2/priceList",
+    url: "/rechargeV2/priceListV2",
     method: "get",
   });
 };
@@ -593,5 +593,13 @@ export const vipMultisubmit = () => {
   return useRequest({
     url: "/vipMulti/submit",
     method: "post",
+  });
+};
+
+// 获取更多充值渠道
+export const paymentchannellistMore = () => {
+  return useRequest({
+    url: "/payment/channel/listMore",
+    method: "get",
   });
 };

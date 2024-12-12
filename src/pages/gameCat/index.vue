@@ -5,7 +5,9 @@
       ref="iframeRef"
       class="iframe"
       :src="
-        isDev === 'development' ? 'http://localhost:8008/greedy-cat.html#/' : token.url
+        isDev === 'development'
+          ? 'http://localhost:8008/greedy-cat.html#/'
+          : token.url
       "
       width="100%"
       height="1000px"

@@ -207,6 +207,8 @@
             state.payData = item;
             state.showLink = false;
             state.channelData = item.channelList;
+            state.showMore = true;
+            state.moreChannelParmas = item.money;
           }
         "
       >
@@ -267,6 +269,10 @@
               {{ item.price.symbol }}{{ item.price.money }}
             </div>
           </div>
+          <div class="moreBox" @click="handleShowMore" v-if="state.showMore">
+            <div>More</div>
+            <van-icon name="arrow-down" size="30px" />
+          </div>
         </div>
         <div class="btnBig" v-if="state.showLink">
           <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
@@ -286,6 +292,7 @@ import {
   rechargeV2priceList,
   rechargeV2pricesubmit,
   userwallet,
+  paymentchannellistMore,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import { useVipConfigStore } from "@/stores/vipConfig";
@@ -316,6 +323,8 @@ const state = reactive<any>({
   payUrl: "",
   channelData: [],
   showVipPopup: false,
+  showMore: true,
+  moreChannelParmas: 0,
 });
 
 const getRemainingMilliseconds = () => {
@@ -371,6 +380,18 @@ const handleSelect = async (item: any) => {
 };
 
 const router = useRouter();
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannellistMore();
+
+const handleShowMore = async () => {
+  state.showMore = false;
+  await moreChannelFetch({
+    scene: "recharge",
+    money: state.moreChannelParmas,
+  });
+  state.channelData = [...state.channelData, ...moreChannelData.value?.list];
+};
 </script>
 <style lang="scss" scoped>
 ::v-deep(.van-nav-bar__title) {
@@ -775,6 +796,16 @@ const router = useRouter();
         line-height: 64px;
         text-align: center;
       }
+    }
+    .moreBox {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
   }
   .btnBig {
