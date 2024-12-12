@@ -45,6 +45,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^4.5.2",
+    "archiver": "^7.0.1",
     "axios": "^1.6.8",
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
