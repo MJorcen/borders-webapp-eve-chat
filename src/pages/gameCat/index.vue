@@ -5,7 +5,9 @@
       ref="iframeRef"
       class="iframe"
       :src="
-        isDev !== 'prod' ? 'http://localhost:8008/greedy-cat.html#/' : token.url
+        isDev === 'development'
+          ? 'http://localhost:8008/greedy-cat.html#/'
+          : token.url
       "
       width="100%"
       height="1000px"
@@ -64,7 +66,7 @@ const onIframeLoad = async () => {
     };
     iframeRef.value.contentWindow.postMessage(
       message,
-      isDev !== "prod"
+      isDev === "development"
         ? "http://localhost:8008/greedy-cat.html#/"
         : token.value.url
     );

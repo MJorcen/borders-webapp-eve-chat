@@ -134,6 +134,12 @@
           () => {
             state.showLink = false;
             state.showPopup = true;
+            state.channelData = state.list[state.choseIndex].channelList;
+            state.channelData = state.channelData.map((item) => {
+              item.selected = false;
+              return item;
+            });
+            state.showMore = true;
           }
         "
       >
@@ -191,6 +197,10 @@
               {{ item.price.symbol }}{{ item.price.money }}
             </div>
           </div>
+          <div class="moreBox" @click="handleShowMore" v-if="state.showMore">
+            <div>More</div>
+            <van-icon name="arrow-down" size="30px" />
+          </div>
         </div>
         <div class="btnBig" v-if="state.showLink">
           <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
@@ -212,6 +222,7 @@ import {
   vipMultipriceList,
   matchbeforePaymentlistAnchors,
   vipMultisubmit,
+  paymentchannellistMore,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 const { vipConfigData } = useVipConfigStore();
@@ -241,6 +252,9 @@ const state = reactive<any>({
   channelData: [],
   payData: {},
   month: "",
+  showMore: true,
+  moreChannelParmas: 0,
+  choseIndex: 1,
 });
 
 const { fetchData, data } = vipMultipriceList();
@@ -267,6 +281,7 @@ onMounted(async () => {
   state.payData = state.list[1];
   state.channelData = state.list[1].channelList;
   state.month = state.list[1].month;
+  state.moreChannelParmas = state.list[1].money;
 });
 
 const getRemainingMilliseconds = () => {
@@ -311,8 +326,10 @@ const handleActive = async (item: any, index: number) => {
     return it;
   });
   state.channelData = item.channelList;
+  state.choseIndex = index;
   state.payData = item;
   state.month = item.month;
+  state.moreChannelParmas = item.money;
 };
 
 const handleSelect = async (item: any) => {
@@ -342,6 +359,19 @@ const handleSelect = async (item: any) => {
   } else {
     showToast(buyMsg.value);
   }
+};
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannellistMore();
+
+const handleShowMore = async () => {
+  state.showMore = false;
+  await moreChannelFetch({
+    scene: "multi_vip",
+    money: state.moreChannelParmas,
+    vipMonths: state.month,
+  });
+  state.channelData = [...state.channelData, ...moreChannelData.value?.list];
 };
 </script>
 <style lang="scss" scoped>
@@ -664,6 +694,16 @@ const handleSelect = async (item: any) => {
       }
     }
     .itemBig {
+      .moreBox {
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: 500;
+        font-size: 40px;
+        color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
       padding-left: 32px;
       padding-right: 32px;
       background-color: #f2f2f2;

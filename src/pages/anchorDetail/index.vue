@@ -394,8 +394,9 @@
         @click.stop="
           () => {
             handleGo(data).then((res) => {
+              const userDetails = getLocalUserDetail();
               if (!res) {
-                if (user?.user?.vipLevel === 0) {
+                if (userDetails?.user?.vipLevel === 0) {
                   state.showVipPopup = true;
                 } else {
                   // state.showRechargePopup = true;
@@ -546,7 +547,7 @@ import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import BigNumber from "bignumber.js";
 import flvjs from "flv.js";
-import { convertRtmpToFlv } from "@/common/utils";
+import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 

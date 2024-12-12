@@ -167,8 +167,9 @@
                   @click.stop="
                     () => {
                       handleGo(item).then((res) => {
+                        const userDetails = getLocalUserDetail();
                         if (!res) {
-                          if (userDetail?.user?.vipLevel === 0) {
+                          if (userDetails?.user?.vipLevel === 0) {
                             state.showVipPopup = true;
                           } else {
                             state.showRechargePopup = true;
@@ -282,8 +283,10 @@
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
+
                       if (!res) {
-                        if (userDetail?.user?.vipLevel === 0) {
+                        if (userDetails?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
                           state.showRechargePopup = true;
@@ -441,6 +444,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import FloatIconGame from "@/components/floatIconGame/index.vue";
 const { userDetail }: any = useUserDetailStore();
 import BigNumber from "bignumber.js";
+import { getLocalUserDetail } from "@/common/utils";
 
 const active = ref(0);
 
