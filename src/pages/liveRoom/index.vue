@@ -121,8 +121,10 @@
               id: state.userObj?.id,
             },
           }).then((res) => {
+            const userDetails = getLocalUserDetail();
+
             if (!res) {
-              if (userDetail?.user?.vipLevel === 0) {
+              if (userDetails?.user?.vipLevel === 0) {
                 state.showVipPopup = true;
               } else {
                 // state.showRechargePopup = true;
@@ -228,7 +230,8 @@
                     },
                   }).then((res) => {
                     if (!res) {
-                      if (userDetail?.user?.vipLevel === 0) {
+                      const userDetails = getLocalUserDetail();
+                      if (userDetails?.user?.vipLevel === 0) {
                         state.showVipPopup = true;
                       } else {
                         // state.showRechargePopup = true;
@@ -269,7 +272,7 @@ import {
 import SvgaDialog from "@/components/svgaDialog/index.vue";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import flvjs from "flv.js";
-import { convertRtmpToFlv } from "@/common/utils";
+import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
 import SDK from "@yxim/nim-web-sdk";
 import evenBus from "@/common/evenBus";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
