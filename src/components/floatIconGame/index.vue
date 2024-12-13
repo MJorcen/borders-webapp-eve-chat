@@ -1,7 +1,7 @@
 <template>
   <van-floating-bubble
     @click.stop="router.push('/gameCat')"
-    axis="xy"
+    axis="y"
     icon="chat"
     magnetic="x"
     v-model:offset="offsetPover"
@@ -23,7 +23,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const offsetPover = ref({
-  x: -138,
+  x: 0,
   y: 500,
 });
 </script>
