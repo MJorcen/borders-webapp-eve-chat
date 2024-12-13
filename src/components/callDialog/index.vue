@@ -393,6 +393,7 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 import HangupPopup from "@/components/hangupPopup/index.vue";
@@ -644,7 +645,8 @@ const handleCallPickUp = async () => {
     closeToast();
   } else {
     if (code.value === 402) {
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail()
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;

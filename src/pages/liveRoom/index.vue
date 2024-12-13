@@ -122,8 +122,10 @@
               id: state.userObj?.id,
             },
           }).then((res) => {
+            const userDetails = getLocalUserDetail();
+
             if (!res) {
-              if (userDetail?.user?.vipLevel === 0) {
+              if (userDetails?.user?.vipLevel === 0) {
                 state.showVipPopup = true;
               } else {
                 // state.showRechargePopup = true;
@@ -229,7 +231,8 @@
                     },
                   }).then((res) => {
                     if (!res) {
-                      if (userDetail?.user?.vipLevel === 0) {
+                      const userDetails = getLocalUserDetail();
+                      if (userDetails?.user?.vipLevel === 0) {
                         state.showVipPopup = true;
                       } else {
                         // state.showRechargePopup = true;

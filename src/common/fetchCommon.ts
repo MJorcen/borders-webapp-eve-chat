@@ -7,7 +7,7 @@ import {
   userlocation,
 } from "@/api/allApi";
 import evenBus from "./evenBus";
-import { showToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useImHook } from "@/hook/useIm";
@@ -37,6 +37,11 @@ const {
 
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
+    showLoadingToast({
+      message: "Please wait...",
+      duration: 0,
+      forbidClick: true,
+    });
     let flag = false;
     let mapMsgArr: any = [];
 

@@ -198,7 +198,8 @@
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        if (userDetail?.user?.vipLevel === 0) {
+                        const userDetails = getLocalUserDetail();
+                        if (userDetails?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
                           // state.showRechargePopup = true;
@@ -304,6 +305,7 @@ const { userDetail }: any = useUserDetailStore();
 import SvgaShow from "@/components/svgaShow/index.vue";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
 
 const scrollY = ref<any>(window.pageYOffset);
 
