@@ -296,8 +296,10 @@
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
+
                       if (!res) {
-                        if (userDetail?.user?.vipLevel === 0) {
+                        if (userDetails?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
                           // state.showRechargePopup = true;

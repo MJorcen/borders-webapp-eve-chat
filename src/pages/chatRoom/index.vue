@@ -523,8 +523,10 @@
           @click.stop="
             () => {
               handleGo(data).then((res) => {
+                const userDetails = getLocalUserDetail();
+
                 if (!res) {
-                  if (userDetail?.user?.vipLevel === 0) {
+                  if (userDetails?.user?.vipLevel === 0) {
                     state.showVipPopup = true;
                   } else {
                     // state.showRechargePopup = true;
@@ -631,6 +633,7 @@ import {
   groupMessagesByDay,
   groupMessagesByDayNoReverse,
   formatSecondsToTime,
+  getLocalUserDetail,
 } from "@/common/utils";
 import dayjs from "dayjs";
 import Recorder from "recorder-core"; //注意如果未引用Recorder变量，可能编译时会被优化删除（如vue3 tree-shaking），请改成 import 'recorder-core'，或随便调用一下 Recorder.a=1 保证强引用
@@ -993,7 +996,8 @@ async function sendMsgDone(error: any, msg: any) {
   } else {
     if (msg.callbackExt) {
       // state.showVipPopup = true;
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
@@ -1131,7 +1135,9 @@ const isInside = ref<any>(false);
 
 const onTouchStart = (event: any) => {
   if (!configData.value?.hasPayment) {
-    if (userDetail?.user?.vipLevel === 0) {
+    const userDetails = getLocalUserDetail();
+
+    if (userDetails?.user?.vipLevel === 0) {
       state.showVipPopup = true;
     } else {
       // state.showRechargePopup = true;
@@ -1432,7 +1438,8 @@ const handleGive = async (item: any) => {
   } else {
     showToast(giftMsg.value);
     if (giftCode.value === 402) {
-      if (userDetail?.user?.vipLevel === 0) {
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showAppUserDownLoadPopup = true;

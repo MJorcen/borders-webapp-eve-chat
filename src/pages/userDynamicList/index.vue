@@ -222,8 +222,9 @@
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
                       if (!res) {
-                        if (userDetail?.user?.vipLevel === 0) {
+                        if (userDetails?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
                           // state.showRechargePopup = true;
@@ -292,6 +293,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 import { useUserStore } from "@/stores/user";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
 
 const { user }: any = useUserStore();
 

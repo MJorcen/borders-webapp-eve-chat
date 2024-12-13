@@ -1,6 +1,6 @@
 import { calldial, userconfig } from "@/api/allApi";
 import evenBus from "./evenBus";
-import { showToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -21,6 +21,11 @@ const {
 
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
+    showLoadingToast({
+      message: "Please wait...",
+      duration: 0,
+      forbidClick: true,
+    });
     let flag = false;
     let mapMsgArr: any = [];
 
@@ -46,6 +51,7 @@ export const handleGo = async (item: any) => {
       // }
 
       if (configSuccess.value) {
+        closeToast();
         if (configData.value?.hasPayment && flag) {
           resolve(true);
         } else {

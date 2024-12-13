@@ -89,6 +89,7 @@ import RechargePopup from "@/components/rechargePopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const route = useRoute();
@@ -156,8 +157,9 @@ const handleMatch = async (type: number) => {
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
+      const userDetails = getLocalUserDetail();
 
-      if (userDetail?.user?.vipLevel === 0) {
+      if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
         state.showRechargePopup = true;
