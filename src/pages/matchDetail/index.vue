@@ -174,6 +174,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
   localStorage.setItem("isMatch", "false");
+
+  matchTimeouts.forEach((timeoutId: any) => clearTimeout(timeoutId));
+  matchTimeouts = []; 
+  clearInterval(progressTimer.value);
 });
 
 const { fetchData, success, data, code, msg } = matchbeforePaymentstart();
