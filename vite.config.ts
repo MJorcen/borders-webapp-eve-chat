@@ -42,6 +42,14 @@ function getOutputDir(buildCommand) {
       return "dist-SexyChat";
     case "build:PornHub":
       return "dist-PornHub";
+    case "build:hdsexyhub":
+      return "dist-hdsexyhub";
+    case "build:pornlive":
+      return "dist-pornlive";
+    case "build:pornmate":
+      return "dist-pornmate";
+    case "build:pornclub":
+      return "dist-pornclub";
     default:
       return "dist"; // 默认构建输出目录
   }

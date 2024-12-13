@@ -22,6 +22,11 @@
     "build:strangers": "vite build --mode strangers",
     "build:SexyChat": "vite build --mode SexyChat",
     "build:PornHub": "vite build --mode PornHub",
+    "build:hdsexyhub": "vite build --mode hdsexyhub",
+    "build:pornlive": "vite build --mode pornlive",
+    "build:pornmate": "vite build --mode pornmate",
+    "build:pornclub": "vite build --mode pornclub",
+
     "preview": "vite preview"
   },
   "dependencies": {
