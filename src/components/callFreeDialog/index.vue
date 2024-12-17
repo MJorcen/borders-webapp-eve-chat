@@ -92,7 +92,14 @@
         >
           您的浏览器不支持视频标签。
         </video>
-        <div class="closeImgMq" @click="handleCallHangUp">
+        <div
+          class="closeImgMq"
+          @click="
+            () => {
+              state.showHangupPopup = true;
+            }
+          "
+        >
           <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
         </div>
         <div class="timerDisplay">
@@ -245,7 +252,14 @@
         <!-- <div class="closeImg" @click="handleCallHangUp">
           <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
         </div> -->
-        <div class="closeImgMq" @click="handleCallHangUp">
+        <div
+          class="closeImgMq"
+          @click="
+            () => {
+              state.showHangupPopup = true;
+            }
+          "
+        >
           <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
         </div>
         <div class="bottomBoxConnect">
@@ -298,6 +312,11 @@
     v-model="state.showFirstVipPromptPopup"
   >
   </FirstVipPromptPopup> -->
+  <HangupPopup v-model="state.showHangupPopup" @handle-sure="handleCallHangUp">
+  </HangupPopup>
+  <audio style="display: none" controls loop muted ref="audioRef">
+    <source src="../../assets/call.mp3" />
+  </audio>
 </template>
 
 <script setup lang="ts">
@@ -328,6 +347,7 @@ import { generateRandomString, getLocalUserDetail } from "@/common/utils";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
+import HangupPopup from "@/components/hangupPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -365,6 +385,7 @@ const state = reactive({
   isPick: false,
   showVipPopup: false,
   showFirstVipPromptPopup: false,
+  showHangupPopup: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -477,6 +498,10 @@ const handleCallPickUp = async () => {
     callId: props.wsData.call?.id,
   });
   if (pickUpSuccess.value) {
+    nextTick(() => {
+      audioRef.value.muted = true;
+      audioRef.value.pause();
+    });
     state.showVideo = true;
     showToast("Success");
     emit("handleCallPickUp");
@@ -484,7 +509,7 @@ const handleCallPickUp = async () => {
     // localStorage.setItem("isFreeCalling", "true");
   } else {
     if (code.value === 402) {
-      const userDetails = getLocalUserDetail()
+      const userDetails = getLocalUserDetail();
       if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
       } else {
@@ -507,38 +532,38 @@ const {
 } = freeCallhangUp();
 
 const handleCallHangUp = async () => {
-  showConfirmDialog({
-    title: "",
-    message: "Are you sure hang up?",
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-  })
-    .then(async () => {
-      showLoadingToast({
-        message: "Please wait...",
-        duration: 0,
-        forbidClick: true,
-      });
-      await hangUpFetch({
-        callId: props.wsData.call?.id,
-      });
-      if (hangUpSuccess.value) {
-        showToast("Success");
-        emit("update:modelValue", false);
-        emit("handleCallHangUp");
-        // localStorage.setItem("isFreeCalling", "false");
-        emit("handleCallFrend", props.wsData, currentTime.value);
-        state.isPick = false;
-      } else {
-        emit("update:modelValue", false);
-        emit("handleCallHangUp");
-        showToast(hangUpMsg.value);
-        state.isPick = false;
-      }
-    })
-    .catch(() => {
-      // on cancel
-    });
+  // showConfirmDialog({
+  //   title: "",
+  //   message: "Are you sure hang up?",
+  //   confirmButtonText: "Yes",
+  //   cancelButtonText: "No",
+  // })
+  //   .then(async () => {
+  showLoadingToast({
+    message: "Please wait...",
+    duration: 0,
+    forbidClick: true,
+  });
+  await hangUpFetch({
+    callId: props.wsData.call?.id,
+  });
+  if (hangUpSuccess.value) {
+    showToast("Success");
+    emit("update:modelValue", false);
+    emit("handleCallHangUp");
+    // localStorage.setItem("isFreeCalling", "false");
+    emit("handleCallFrend", props.wsData, currentTime.value);
+    state.isPick = false;
+  } else {
+    emit("update:modelValue", false);
+    emit("handleCallHangUp");
+    showToast(hangUpMsg.value);
+    state.isPick = false;
+  }
+  // })
+  // .catch(() => {
+  //   // on cancel
+  // });
 };
 
 const onVideoEnded = () => {
@@ -570,6 +595,8 @@ const startTimer = () => {
   }, 1000);
 };
 
+const audioRef = ref<any>(null);
+
 watch(
   () => props.modelValue,
   async (newValue) => {
@@ -577,10 +604,19 @@ watch(
     state.msgList = [];
     toggleBodyScroll(newValue);
     if (newValue) {
+      nextTick(() => {
+        audioRef.value.muted = false;
+        audioRef.value.play();
+      });
+
       await wollectFetch();
       await userGiftListFetch();
       localStorage.setItem("isFreeCalling", "true");
     } else {
+      nextTick(() => {
+        audioRef.value.muted = true;
+        audioRef.value.pause();
+      });
       localStorage.setItem("isFreeCalling", "false");
       toggleBodyScroll(false);
     }
@@ -808,6 +844,7 @@ const getCountryImg = (item: any) => {
       position: relative;
       .mineVideo {
         border-radius: 40px 40px 40px 40px;
+        transform: scaleX(-1);
       }
       .camera {
         position: absolute;

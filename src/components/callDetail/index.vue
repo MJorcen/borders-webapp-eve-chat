@@ -33,7 +33,7 @@
         </div>
         <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
           <div class="vipFont">
-            Get VIP for
+            <!-- Get VIP for
             <span style="color: #e405ff">{{
               configData?.monthlyGoldBonus
             }}</span>
@@ -41,7 +41,8 @@
             <span style="color: #e405ff">{{
               configData?.monthlyCheckInGoldValue
             }}</span>
-            coins!!!
+            coins!!! -->
+            Get VIP and enjoy unlimited video chats
           </div>
           <div class="getBtn" @click="state.showVipPopup = true">Get</div>
         </div>
