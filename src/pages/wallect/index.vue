@@ -259,7 +259,7 @@
               />
               <img :src="item.channel.icon" class="activeSelectImg" alt="" />
               <div class="activeSelectText">{{ item.channel.displayName }}</div>
-              <div class="activeSelectText">
+              <div class="activeSelectText" style="color: #c50205">
                 {{ item.channel.discountText }}
               </div>
             </div>

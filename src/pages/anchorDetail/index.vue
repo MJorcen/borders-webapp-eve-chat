@@ -24,8 +24,9 @@
       @click.stop="
         () => {
           handleGo(data).then((res) => {
+            const userDetails = getLocalUserDetail();
             if (!res) {
-              if (user?.user?.vipLevel === 0) {
+              if (userDetails?.user?.vipLevel === 0) {
                 state.showVipPopup = true;
               } else {
                 state.showRechargePopup = true;
@@ -45,6 +46,7 @@
         :webkit-playsinline="true"
         :playsinline="true"
         :controls="false"
+        preload="auto"
       ></video>
       <video
         v-if="data?.videoStreamType === 1"
@@ -55,6 +57,7 @@
         muted
         :controls="false"
         loop
+        preload="auto"
       ></video>
     </div>
     <div
@@ -63,8 +66,9 @@
       @click.stop="
         () => {
           handleGo(data).then((res) => {
+            const userDetails = getLocalUserDetail();
             if (!res) {
-              if (user?.user?.vipLevel === 0) {
+              if (userDetails?.user?.vipLevel === 0) {
                 state.showVipPopup = true;
               } else {
                 state.showRechargePopup = true;
@@ -73,7 +77,30 @@
           });
         }
       "
-    ></div>
+    >
+      <div
+        class="caozuo"
+        @click.stop="
+          () => {
+            handleGo(data).then((res) => {
+              const userDetails = getLocalUserDetail();
+              if (!res) {
+                if (userDetails?.user?.vipLevel === 0) {
+                  state.showVipPopup = true;
+                } else {
+                  state.showRechargePopup = true;
+                }
+              }
+            });
+          }
+        "
+      >
+        <SvgaShow
+          :divId="`demosdasdwq`"
+          :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+        ></SvgaShow>
+      </div>
+    </div>
 
     <van-skeleton
       avatar
@@ -398,8 +425,9 @@
         @click.stop="
           () => {
             handleGo(data).then((res) => {
+              const userDetails = getLocalUserDetail();
               if (!res) {
-                if (user?.user?.vipLevel === 0) {
+                if (userDetails?.user?.vipLevel === 0) {
                   state.showVipPopup = true;
                 } else {
                   // state.showRechargePopup = true;
@@ -550,7 +578,7 @@ import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import BigNumber from "bignumber.js";
 import flvjs from "flv.js";
-import { convertRtmpToFlv } from "@/common/utils";
+import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
 
@@ -910,12 +938,22 @@ const onChange = (index: number) => {
     height: 320px;
     border-radius: 10px;
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 180px;
     left: 30px;
     z-index: 20;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px); /* 模糊效果，数值越大模糊程度越高 */
     -webkit-backdrop-filter: blur(10px); /* 对于Safari的支持 */
+    .caozuo {
+      width: 88px;
+      height: 88px;
+      bottom: 16px;
+      border-radius: 50%;
+      background-color: #f9577e;
+    }
   }
   .backBtn {
     position: absolute;

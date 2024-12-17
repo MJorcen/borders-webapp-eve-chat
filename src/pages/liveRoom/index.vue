@@ -80,6 +80,7 @@
           :webkit-playsinline="true"
           :playsinline="true"
           :controls="false"
+          preload="auto"
         ></video>
       </van-swipe-item>
     </van-swipe>
@@ -475,6 +476,11 @@ const state = reactive<any>({
 const inputRef = ref<any>(null);
 
 const handleShowInput = () => {
+  const usersDetails = getLocalUserDetail();
+  if (usersDetails?.user?.vipLevel === 0) {
+    state.showVipPopup = true;
+    return;
+  }
   state.showInput = true;
   nextTick(() => {
     inputRef.value.focus();

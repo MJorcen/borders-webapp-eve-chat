@@ -522,6 +522,14 @@ onMounted(async () => {
   // getLocalSessions().then((sessions: any) => {
   //   getMsgList(sessions);
   // });
+  getLocalSessions().then((sessions: any) => {
+    showLoadingToast({
+      duration: 0,
+      message: "Loading...",
+      forbidClick: true,
+    });
+    getMsgList(sessions);
+  });
 });
 
 onActivated(async () => {
@@ -538,9 +546,9 @@ onActivated(async () => {
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
   document.body.style.overflow = "auto";
 
   closeToast();
@@ -586,28 +594,44 @@ function getCompareTime(item: any) {
   return item.updateTime || 0;
 }
 
-const now = Date.now();
 const getMsgList = async (data: any) => {
   state.messageList = data;
+  console.time("getMsgList耗时"); // 开始计时
+
+  // 创建一个数组用于存放所有的 Promise
+  const promises = [];
 
   for (let i = 0; i < state.messageList.length; i++) {
     if (state.messageList[i]?.lastMsg) {
-      nim.getUser({
-        account:
-          state.messageList[i].to ===
-          `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
-            ? state.messageList[i].lastMsg.from
-            : state.messageList[i].to,
-        done: (error: any, user: any) => getUserDone(error, user),
+      const userPromise = new Promise((resolve, reject) => {
+        nim.getUser({
+          account:
+            state.messageList[i].to ===
+            `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
+              ? state.messageList[i].lastMsg.from
+              : state.messageList[i].to,
+          done: (error: any, user: any) => {
+            getUserDone(error, user);
+            if (error) {
+              reject(error); // 如果失败，reject
+            } else {
+              resolve(user); // 如果成功，resolve
+            }
+          },
+        });
       });
+
+      promises.push(userPromise); // 将每个Promise放入数组
     }
   }
 
-  // state.messageList = state.messageList.reverse();
-  setTimeout(() => {
-    loadingSkeleton.value = false;
-  }, 300);
-  closeToast();
+  try {
+    await Promise.all(promises); // 等待所有请求完成
+    console.timeEnd("getMsgList耗时"); // 结束计时并输出
+    loadingSkeleton.value = false; // 关闭loading效果
+  } catch (error) {
+    console.error("获取用户资料时出错:", error);
+  }
 };
 
 const getUserDone = (error: any, user: any) => {

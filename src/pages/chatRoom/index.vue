@@ -14,10 +14,9 @@
             }
           "
         >
-          <van-icon
-            name="arrow"
-            size="18"
-            color="#eb6300"
+          <img
+            src="./assets/Slice90@2x.webp"
+            class="backImg"
             @click.stop="
               () => {
                 nim.resetSessionUnread(`p2p-${preFix}${data?.user?.id}`);
@@ -77,7 +76,17 @@
     <div class="chatBox">
       <van-skeleton :loading="loading" title :row="3">
         <div class="hostBox" id="notranslate">
-          <div class="hostBoxTop">
+          <div
+            class="hostBoxTop"
+            @click="
+              () => {
+                router.push({
+                  name: 'AnchorDetail',
+                  query: { id: data?.user?.id },
+                });
+              }
+            "
+          >
             <van-image
               round
               fit="cover"
@@ -141,6 +150,14 @@
         <div v-for="(it, inx) in item.messages" :key="inx">
           <div :class="it.to !== roomUserId ? 'userLeftBox' : 'userRightBox'">
             <van-image
+              @click="
+                () => {
+                  router.push({
+                    name: 'AnchorDetail',
+                    query: { id: data?.user?.id },
+                  });
+                }
+              "
               fit="cover"
               radius="50"
               :src="
@@ -278,6 +295,7 @@
                   it.text.includes('png') ||
                   it.text.includes('jpg') ||
                   it.text.includes('jpeg') ||
+                  it.text.includes('webp') ||
                   it.text.includes('jfif')) &&
                 !it.text.includes('displayName')
               "
@@ -732,13 +750,12 @@ onMounted(async () => {
   await configFetch();
   nextTick(() => {
     // var height = document.body.clientHeight;
-    window.scroll({ top: 100000000, behavior: "instant" });
+    window.scrollTo({ top: 100000000, behavior: "instant" });
   });
   // 初始化组件时确保浏览器支持 MediaDevices.getUserMedia
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     console.error("getUserMedia not supported in this browser.");
   }
-  // useBetterScroll(".bigBox");
 });
 
 onUnmounted(() => {
@@ -792,16 +809,14 @@ onUnmounted(() => {
       }
     },
   });
-  window.scroll({ top: 0 });
+  // window.scrollTo({ top: 0, behavior: "instant" });
 });
 
 watch(
   () => state.messageList,
   () => {
     nextTick(() => {
-      // if (route.name === "chatRoom") {
-      window.scroll({ top: 100000000, behavior: "instant" });
-      // }
+      window.scrollTo({ top: 100000000, behavior: "instant" });
     });
   },
   { immediate: true, deep: true }
@@ -1117,13 +1132,6 @@ const getNowMsgList = (msg: any) => {
   if (flag) {
     state.messageList = [...state.messageList].reverse();
   }
-
-  nextTick(() => {
-    if (route.name === "chatRoom") {
-      window.scroll({ top: 100000000, behavior: "instant" });
-      closeToast();
-    }
-  });
 };
 
 const isRecording = ref(false);
@@ -1499,6 +1507,10 @@ const handleSetCash = () => {
 .topLeftBox {
   display: flex;
   align-items: center;
+  .backImg {
+    width: 64px;
+    height: 64px;
+  }
   .hostImg {
     width: 64px;
     height: 64px;

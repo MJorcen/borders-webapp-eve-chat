@@ -130,7 +130,6 @@ export const useImHook = () => {
     evenBus.emit("updateSession", session);
     evenBus.emit("updateSessionChatRoom", session);
     evenBus.emit("updateTopNotification", session);
-    closeToast();
   }
 
   // function onUpdateUser(user: any) {
@@ -139,7 +138,8 @@ export const useImHook = () => {
 
   function onSyncDone() {
     console.log("同步完成");
-    // debugger;
+    closeToast();
+
     const webToken = localStorage.getItem("web_token");
     // if (!webToken) {
     //   connectWebSocket();
@@ -169,7 +169,6 @@ export const useImHook = () => {
         done: (error: any, obj: any) => {
           if (error) {
             reject(error);
-            // closeToast();
           } else {
             msgHistoryArr = obj.msgs || [];
             console.log(`output->`, obj.msgs);

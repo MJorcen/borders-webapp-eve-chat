@@ -78,14 +78,22 @@
               user?.user?.id !== props?.wsData?.fromUser?.id &&
               !state.isReactive
             "
-            @click="handleClosePopup"
+            @click="
+              () => {
+                state.showHangupPopup = true;
+              }
+            "
           >
             <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
           </div>
           <div
             class="closeImg"
             v-if="state.isReactive"
-            @click="handleClosePopup"
+            @click="
+              () => {
+                state.showHangupPopup = true;
+              }
+            "
           >
             <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
           </div>
@@ -340,6 +348,11 @@
     v-model="state.showFirstVipPromptPopup"
   >
   </FirstVipPromptPopup> -->
+  <HangupPopup v-model="state.showHangupPopup" @handle-sure="handleClosePopup">
+  </HangupPopup>
+  <audio style="display: none" controls loop muted ref="audioRef">
+    <source src="../../assets/call.mp3" />
+  </audio>
 </template>
 
 <script setup lang="ts">
@@ -378,6 +391,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import SvgaShow from "@/components/svgaShow/index.vue";
 import { getLocalUserDetail } from "@/common/utils";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+import HangupPopup from "@/components/hangupPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -426,6 +440,7 @@ const state: any = reactive({
   askForGiftData: {},
   showAskForGift: false,
   showFirstVipPromptPopup: false,
+  showHangupPopup: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -484,6 +499,8 @@ const { fetchData: userGiftListFetch, data: userGiftListData } =
 
 let toastVisible = ref<any>(null);
 
+const audioRef = ref<any>(null);
+
 watch(
   () => props.modelValue,
 
@@ -504,11 +521,23 @@ watch(
         console.log("error::", e);
       }
       await userGiftListFetch();
-
+      nextTick(() => {
+        const localUserDetail = getLocalUserDetail();
+        if (localUserDetail?.user?.id !== props?.wsData?.fromUser?.id) {
+          audioRef.value.muted = false;
+          audioRef.value.play();
+        }
+      });
       toggleBodyScroll(newValue);
+      localStorage.setItem("isCall", "true");
     } else {
+      nextTick(() => {
+        audioRef.value.muted = true;
+        audioRef.value.pause();
+      });
       clearInterval(toastVisible.value);
       toggleBodyScroll(false);
+      localStorage.setItem("isCall", "false");
     }
   },
   { immediate: true }
@@ -519,19 +548,21 @@ watch(
 const showGiftPopup = ref(false);
 
 const handleClosePopup = async () => {
-  showConfirmDialog({
-    title: "",
-    message: "Are you sure hang up?",
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-  })
-    .then(async () => {
-      await handleCallHangUp();
-      emit("update:modelValue", false);
-    })
-    .catch(() => {
-      // on cancel
-    });
+  // showConfirmDialog({
+  //   title: "",
+  //   message: "Are you sure hang up?",
+  //   confirmButtonText: "Yes",
+  //   cancelButtonText: "No",
+  // })
+  //   .then(async () => {
+  //     await handleCallHangUp();
+  //     emit("update:modelValue", false);
+  //   })
+  //   .catch(() => {
+  //     // on cancel
+  //   });
+  await handleCallHangUp();
+  emit("update:modelValue", false);
 };
 
 // 挂断逻辑
@@ -591,6 +622,10 @@ const handleCallPickUp = async () => {
     const token = callpickUpData.value.token;
 
     handleLoginRoom(roomID, token, userID, userName);
+    nextTick(() => {
+      audioRef.value.muted = true;
+      audioRef.value.pause();
+    });
     closeToast();
   } else {
     if (code.value === 402) {
@@ -1303,6 +1338,7 @@ defineExpose({
     position: relative;
     .mineVideo {
       border-radius: 40px 40px 40px 40px;
+      transform: scaleX(-1);
     }
     .camera {
       position: absolute;

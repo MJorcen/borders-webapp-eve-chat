@@ -26,6 +26,7 @@
           :webkit-playsinline="true"
           :playsinline="true"
           :controls="false"
+          preload="auto"
         ></video>
         <video
           v-else
@@ -35,6 +36,7 @@
           muted
           :controls="false"
           loop
+          preload="auto"
         ></video>
         <div class="topbox">
           <div class="topLeft" v-if="!state.isReactive">
@@ -128,14 +130,24 @@
           <div
             class="closeImg"
             v-if="!state.isReactive"
-            @click="handleClosePopup(1)"
+            @click="
+              () => {
+                state.hangupType = 1;
+                state.showHangupPopup = true;
+              }
+            "
           >
             <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
           </div>
           <div
             class="closeImg"
             v-if="state.isReactive"
-            @click="handleClosePopup(2)"
+            @click="
+              () => {
+                state.hangupType = 2;
+                state.showHangupPopup = true;
+              }
+            "
           >
             <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
           </div>
@@ -403,6 +415,11 @@
     v-model="state.showFirstVipPromptPopup"
   >
   </FirstVipPromptPopup> -->
+  <HangupPopup v-model="state.showHangupPopup" @handle-sure="handleSureClose">
+  </HangupPopup>
+  <audio style="display: none" controls loop muted ref="audioRef">
+    <source src="../../assets/call.mp3" />
+  </audio>
 </template>
 
 <script setup lang="ts">
@@ -443,6 +460,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import flvjs from "flv.js";
 import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
+import HangupPopup from "@/components/hangupPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -500,6 +518,8 @@ const state: any = reactive({
   showFirstVipPromptPopup: false,
   mengceng: false,
   isTimeOut: false,
+  showHangupPopup: false,
+  hangupType: 0,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -562,6 +582,8 @@ const flvPlayer = ref<any>(null);
 
 let mengcengTimer = ref<any>(null);
 
+const audioRef = ref<any>(null);
+
 watch(
   () => props.modelValue,
 
@@ -577,8 +599,12 @@ watch(
     stopTimer();
 
     if (newValue) {
-      await userGiftListFetch();
+      nextTick(() => {
+        audioRef.value.muted = false;
+        audioRef.value.play();
+      });
 
+      await userGiftListFetch();
       localStorage.setItem("isLiveCall", "true");
       toggleBodyScroll(newValue);
 
@@ -656,6 +682,10 @@ watch(
         flvPlayer.value.destroy();
         flvPlayer.value = null;
       }
+      nextTick(() => {
+        audioRef.value.muted = true;
+        audioRef.value.pause();
+      });
     }
   },
   { immediate: true }
@@ -683,6 +713,15 @@ const handleClosePopup = async (type: number) => {
     .catch(() => {
       // on cancel
     });
+};
+
+const handleSureClose = async () => {
+  if (state.hangupType === 1) {
+    emit("update:modelValue", false);
+  } else {
+    await handleCallHangUp();
+    emit("update:modelValue", false);
+  }
 };
 
 // 挂断逻辑
@@ -743,6 +782,10 @@ const handleCallPickUp = async () => {
     scene: "liveCall呼叫",
   });
   if (callSuccess.value) {
+    nextTick(() => {
+      audioRef.value.muted = true;
+      audioRef.value.pause();
+    });
     // const userID = `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
     //   callpickUpData.value.toUser.id
     // }`;
@@ -754,7 +797,7 @@ const handleCallPickUp = async () => {
     // handleLoginRoom(roomID, token, userID, userName);
   } else {
     if (callCode.value === 402) {
-      emit("update:modelValue", false);
+      // emit("update:modelValue", false);
       const userDetails = getLocalUserDetail();
       if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;
@@ -1490,6 +1533,7 @@ defineExpose({
     position: relative;
     .mineVideo {
       border-radius: 40px 40px 40px 40px;
+      transform: scaleX(-1);
     }
     .camera {
       position: absolute;

@@ -4,7 +4,7 @@
     v-model:show="props.modelValue"
     position="center"
     round
-    z-index="20"
+    z-index="120"
   >
     <div class="popupBox">
       <video
@@ -14,17 +14,19 @@
         muted
         :controls="false"
         loop
+        preload="auto"
       ></video>
       <div class="mengceng"></div>
       <div class="closeBox" @click="emit('update:modelValue', false)">
         <van-icon name="close" size="36" color="#ffffff" />
       </div>
       <div class="topTitleBox">
-        Video Call
+        <!-- Video Call
         <span style="color: #ff0000; margin-left: 5px; margin-right: 5px"
           >15%</span
         >
-        OFF
+        OFF -->
+        Chat for free
       </div>
       <div class="secondTitleBox">
         <img src="./assets/image926@2x.webp" class="vipIcon" />
@@ -35,20 +37,30 @@
       </div>
       <div class="bottomBox1">
         <img class="gou" src="./assets/Group427320792@2x.webp" />
-        Get {{ vipConfigData.monthlyGoldBonus }} coins every month
+        <!-- Get {{ vipConfigData.monthlyGoldBonus }} coins every month -->
+        Chat for free Unlimited free text message
       </div>
       <div class="bottomBox2">
         <img class="gou" src="./assets/Group427320792@2x.webp" />
-        Vip exclusive sign in,worth total of
-        {{ vipConfigData.monthlyCheckInGoldValue }} coins
+        <!-- Vip exclusive sign in,worth total of
+        {{ vipConfigData.monthlyCheckInGoldValue }} coins -->
+        Unlimited video chat Connect via video calls without restrictions
       </div>
       <div class="bottomBox3">
         <img class="gou" src="./assets/Group427320792@2x.webp" />
-        Unlimited free text message
+        <!-- Unlimited free text message -->
+        Check who viewed my profile Never miss the chance to connect with her.
       </div>
       <div class="bottomBox4">
         <img class="gou" src="./assets/Group427320792@2x.webp" />
-        Recharge 15% OFF
+        <!-- Recharge 15% OFF -->
+        Post messages in the live stream room Chat with the host
+      </div>
+      <div class="bottomBox5">
+        <img class="gou" src="./assets/Group427320792@2x.webp" />
+        <!-- Recharge 15% OFF -->
+        Get free coins
+        {{ vipConfigData.monthlyGoldBonus }} coins a month
       </div>
       <div
         class="btn"
@@ -235,7 +247,7 @@ const handleSelect = async (item: any) => {
   }
   .topTitleBox {
     position: absolute;
-    top: 100px;
+    top: 50px;
     left: 0;
     font-family: "Inter", sans-serif;
     font-weight: 400;
@@ -253,7 +265,7 @@ const handleSelect = async (item: any) => {
   .secondTitleBox {
     z-index: 3;
     position: absolute;
-    top: 380px;
+    top: 120px;
     right: 36px;
     display: flex;
     align-items: center;
@@ -288,8 +300,8 @@ const handleSelect = async (item: any) => {
     z-index: 3;
 
     position: absolute;
-    top: 500px;
-    left: 122px;
+    top: 250px;
+    left: 92px;
     display: flex;
     // align-items: center;
     font-family: "Inter", sans-serif;
@@ -307,15 +319,15 @@ const handleSelect = async (item: any) => {
     z-index: 3;
 
     position: absolute;
-    top: 540px;
-    left: 122px;
+    top: 345px;
+    left: 92px;
     display: flex;
     font-family: "Inter", sans-serif;
     font-weight: 400;
     font-size: 28px;
     color: #ffffff;
     line-height: 30px;
-    width: 402px;
+    // width: 402px;
     .gou {
       width: 16px;
       height: 16px;
@@ -327,14 +339,14 @@ const handleSelect = async (item: any) => {
     z-index: 3;
 
     position: absolute;
-    top: 600px;
-    left: 122px;
+    top: 420px;
+    left: 92px;
     display: flex;
     font-family: "Inter", sans-serif;
     font-weight: 400;
     font-size: 28px;
     color: #ffffff;
-    width: 402px;
+    // width: 402px;
     .gou {
       width: 16px;
       height: 16px;
@@ -346,14 +358,33 @@ const handleSelect = async (item: any) => {
     z-index: 3;
 
     position: absolute;
-    top: 640px;
-    left: 122px;
+    top: 520px;
+    left: 92px;
     display: flex;
     font-family: "Inter", sans-serif;
     font-weight: 400;
     font-size: 28px;
     color: #ffffff;
-    width: 402px;
+    // width: 402px;
+    .gou {
+      width: 16px;
+      height: 16px;
+      margin-right: 10px;
+      margin-top: 12px;
+    }
+  }
+  .bottomBox5 {
+    z-index: 3;
+
+    position: absolute;
+    top: 620px;
+    left: 92px;
+    display: flex;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 28px;
+    color: #ffffff;
+    // width: 402px;
     .gou {
       width: 16px;
       height: 16px;

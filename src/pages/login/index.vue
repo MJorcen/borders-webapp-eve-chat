@@ -295,7 +295,13 @@ const handleLogin = async () => {
         router.push({ name: "HostList" });
         setUser(data.value);
         setUserDetail(data.value);
+        showLoadingToast({
+          duration: 0,
+          message: "Loading...",
+          forbidClick: true,
+        });
         useImHook();
+
         // 写入当前版本号
         localStorage.setItem("version", webConfigData.value.version);
       } else {
@@ -303,6 +309,11 @@ const handleLogin = async () => {
           router.push({ name: "HostList" });
           setUser(data.value);
           setUserDetail(data.value);
+          showLoadingToast({
+            duration: 0,
+            message: "Loading...",
+            forbidClick: true,
+          });
           useImHook();
           localStorage.setItem("version", webConfigData.value.version);
         }
