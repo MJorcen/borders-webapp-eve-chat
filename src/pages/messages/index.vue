@@ -530,6 +530,14 @@ onMounted(async () => {
   // getLocalSessions().then((sessions: any) => {
   //   getMsgList(sessions);
   // });
+  getLocalSessions().then((sessions: any) => {
+    showLoadingToast({
+      duration: 0,
+      message: "Loading...",
+      forbidClick: true,
+    });
+    getMsgList(sessions);
+  });
 });
 
 onActivated(async () => {
@@ -546,9 +554,9 @@ onActivated(async () => {
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
   document.body.style.overflow = "auto";
 
   closeToast();

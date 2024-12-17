@@ -823,7 +823,7 @@ const handleCallPickUp = async () => {
     // handleLoginRoom(roomID, token, userID, userName);
   } else {
     if (callCode.value === 402) {
-      emit("update:modelValue", false);
+      // emit("update:modelValue", false);
       const userDetails = getLocalUserDetail();
       if (userDetails?.user?.vipLevel === 0) {
         state.showVipPopup = true;

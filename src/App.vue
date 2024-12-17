@@ -498,12 +498,6 @@ onMounted(async () => {
   (window as any)?.translate?.changeLanguage("arabic");
 });
 
-onUnmounted(() => {
-  window.removeEventListener("touchmove", () => {
-    audioRef?.value?.pause();
-  });
-});
-
 const dataObj = {
   body: {
     path: "active/off",

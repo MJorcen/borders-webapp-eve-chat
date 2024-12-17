@@ -265,13 +265,9 @@ const handleSelect = async (item: any) => {
   .secondTitleBox {
     z-index: 3;
     position: absolute;
-<<<<<<< HEAD
+
     top: 120px;
-    left: 36px;
-=======
-    top: 380px;
     right: 36px;
->>>>>>> 6c22c71 (✨ feat(阿拉伯语完成):)
     display: flex;
     align-items: center;
     .vipIcon {

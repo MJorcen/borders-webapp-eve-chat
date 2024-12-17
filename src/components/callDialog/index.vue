@@ -567,6 +567,8 @@ const handleClosePopup = async () => {
 
   //     // await handleCallHangUp();
   //     // emit("update:modelValue", false);
+  //     await handleCallHangUp();
+  //     emit("update:modelValue", false);
   //   })
   //   .catch(() => {
   //     // on cancel
