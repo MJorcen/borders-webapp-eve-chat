@@ -66,9 +66,9 @@
     :wsData="state.notificationData"
   ></TopNotification>
   <!-- 音频铃声 -->
-  <audio style="display: none" controls loop muted ref="audioRef">
+  <!-- <audio style="display: none" controls loop muted ref="audioRef">
     <source src="./assets/call.mp3" />
-  </audio>
+  </audio> -->
   <!-- 谷歌地图主要用于调用他的api -->
   <div style="display: none">
     <div id="map"></div>
@@ -181,14 +181,15 @@ evenBus.on("inviteCall", async (data: any) => {
       return;
     }
 
+    if (isFreeCalling === "true") {
+      return;
+    }
     if (isMatch === "true") {
       return;
     }
     if (isLiveCall === "true") {
       return;
     }
-    // audioRef.value.play();
-    audioRef.value.muted = false;
 
     evenBus.emit("byeCall");
     // callDialogRef.value.state.isReactive = false;
@@ -219,7 +220,8 @@ evenBus.on("inviteCall", async (data: any) => {
   }
   //开始收费的通知
   if (data[0].body.type === "call/data") {
-    audioRef.value.muted = true;
+    // audioRef.value.muted = true;
+    // audioRef.value.pause();
   }
   // 视频流通话
   if (data[0].body.type === "live/call") {
@@ -252,19 +254,20 @@ evenBus.on("inviteCall", async (data: any) => {
     if (isFreeCalling === "true") {
       return;
     }
-
+    if (isCall === "true") {
+      return;
+    }
     if (isLiveCall === "true") {
       return;
     }
     state.wsData = data[0].body.data;
     state.showFreeDialog = true;
-    audioRef.value.muted = false;
   }
   // 挂断通话
   if (data[0].body.type === "call/hangUp") {
     const { zg } = useZego();
     zg.logoutRoom(data[0].body.data.call.id);
-    audioRef.value.muted = true;
+
     showCallDialog.value = false;
     state.showLiveCallDialog = false;
     if (data[0].body.data.call.duration > 0) {
@@ -475,10 +478,6 @@ evenBus.on("onSendMsg", async (data: any) => {
 const { connectWebSocket } = useWebSocketHeartbeat();
 
 onMounted(async () => {
-  // 监听是否在触碰屏幕。在的话，播放音乐
-  document.addEventListener("touchmove", (e) => {
-    audioRef?.value?.play();
-  });
   // 监听是否重新返回程序
   document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用
@@ -495,12 +494,6 @@ onMounted(async () => {
   //   window?.fbq?.("track", "PageView");
   // };
   // document.head.appendChild(script);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("touchmove", () => {
-    audioRef?.value?.pause();
-  });
 });
 
 const dataObj = {

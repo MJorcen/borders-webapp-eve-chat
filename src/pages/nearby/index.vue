@@ -45,6 +45,74 @@
             <div class="name">{{ item?.nearbyDistance }}km</div>
           </div>
         </div>
+        <!-- <div class="userPosition" style="bottom: 40px; right: 0px">
+          <van-image
+            @click="handleClick()"
+            round
+            fit="cover"
+            radius="50"
+            lazy-load
+            :src="item?.avatar"
+            alt=""
+            class="hostImg"
+          ></van-image>
+          <img src="./assets/Polygon222@2x.webp" class="sanjiao" />
+          <img class="dian" src="./assets/Ellipse_1894@2x.webp" />
+          <div class="mineFlex">
+            <div class="name">{{ item?.nearbyDistance }}km</div>
+          </div>
+        </div>
+        <div class="userPosition" style="top: 120px; right: 20px">
+          <van-image
+            @click="handleClick()"
+            round
+            fit="cover"
+            radius="50"
+            lazy-load
+            :src="item?.avatar"
+            alt=""
+            class="hostImg"
+          ></van-image>
+          <img src="./assets/Polygon222@2x.webp" class="sanjiao" />
+          <img class="dian" src="./assets/Ellipse_1894@2x.webp" />
+          <div class="mineFlex">
+            <div class="name">{{ item?.nearbyDistance }}km</div>
+          </div>
+        </div>
+        <div class="userPosition" style="top: 240px; right: 80px">
+          <van-image
+            @click="handleClick()"
+            round
+            fit="cover"
+            radius="50"
+            lazy-load
+            :src="item?.avatar"
+            alt=""
+            class="hostImg"
+          ></van-image>
+          <img src="./assets/Polygon222@2x.webp" class="sanjiao" />
+          <img class="dian" src="./assets/Ellipse_1894@2x.webp" />
+          <div class="mineFlex">
+            <div class="name">{{ item?.nearbyDistance }}km</div>
+          </div>
+        </div>
+        <div class="userPosition" style="top: 80px; right: 100px">
+          <van-image
+            @click="handleClick()"
+            round
+            fit="cover"
+            radius="50"
+            lazy-load
+            :src="item?.avatar"
+            alt=""
+            class="hostImg"
+          ></van-image>
+          <img src="./assets/Polygon222@2x.webp" class="sanjiao" />
+          <img class="dian" src="./assets/Ellipse_1894@2x.webp" />
+          <div class="mineFlex">
+            <div class="name">{{ item?.nearbyDistance }}km</div>
+          </div>
+        </div> -->
       </div>
       <div class="fontBig">
         <div class="font">
@@ -66,7 +134,7 @@
 import { ref, reactive, onMounted, onUnmounted } from "vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import { getLocalUserDetail } from "@/common/utils";
-import { distance10, distance20, distance30 } from "./utils";
+import { distance10, distance20, distance30, distance40 } from "./utils";
 const userDetail = getLocalUserDetail();
 import { matchbeforePaymentlistAnchors } from "@/api/allApi";
 import BigNumber from "bignumber.js";
@@ -75,19 +143,6 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
-
-// 大于30公里的
-//top left [20,20] 【500,40】 [100,10]  [160,10] [300,10]
-//top right [20,20] 【500,40】 [100,10]  [160,10] [300,10]
-
-// 20km 的
-//top left  【60,60】  [120,100] [340,100]
-//top right  【-21,300] [120,100]  [340,100]
-//  bottom right [-61,300]
-
-// 10km 的
-// top left [240,150] [180,170]
-// top right [240,150] [180,170]
 
 const { fetchData: fetchMatchbeforePaymentlistAnchors, data: beforeAnchors } =
   matchbeforePaymentlistAnchors();
@@ -123,20 +178,32 @@ const handleGetNearby = async () => {
       item.positionStyle = getRandomObject(distance10);
     } else if (
       Number(new BigNumber(item.nearbyDistance).div(1000)) > 3 &&
-      Number(new BigNumber(item.nearbyDistance).div(1000)) <= 6
+      Number(new BigNumber(item.nearbyDistance).div(1000)) <= 5
     ) {
       item.nearbyDistance = new BigNumber(item.nearbyDistance)
         .div(1000)
         .toFixed(2);
       item.positionStyle = getRandomObject(distance20);
-    } else {
+    } else if (
+      Number(new BigNumber(item.nearbyDistance).div(1000)) > 6 &&
+      Number(new BigNumber(item.nearbyDistance).div(1000)) <= 8
+    ) {
       item.nearbyDistance = new BigNumber(item.nearbyDistance)
         .div(1000)
         .toFixed(2);
       item.positionStyle = getRandomObject(distance30);
+    } else if (
+      Number(new BigNumber(item.nearbyDistance).div(1000)) > 9 &&
+      Number(new BigNumber(item.nearbyDistance).div(1000)) <= 10
+    ) {
+      item.nearbyDistance = new BigNumber(item.nearbyDistance)
+        .div(1000)
+        .toFixed(2);
+      item.positionStyle = getRandomObject(distance40);
     }
     return item;
   });
+  console.log(`state.list`,state.list)
 };
 
 timer.value = setInterval(() => {

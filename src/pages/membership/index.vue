@@ -30,58 +30,41 @@
       <van-swipe class="myswipe" :autoplay="3000" indicator-color="white">
         <van-swipe-item>
           <div class="swiperItem">
-            <img src="./assets/vip1.webp" class="icon" />
-            <div class="title">
-              Get {{ vipConfigData?.monthlyGoldBonus }} coins every month
-            </div>
-            <div class="font">Get coins immediately</div>
-          </div>
-        </van-swipe-item>
-        <van-swipe-item>
-          <div class="swiperItem">
-            <img src="./assets/vip2.webp" class="icon" />
-            <div class="title">VIP exclusive sign in</div>
-            <div class="font">
-              Worth
-              {{ vipConfigData?.monthlyCheckInGoldValue }}
-              coins
-            </div>
-          </div>
-        </van-swipe-item>
-        <van-swipe-item>
-          <div class="swiperItem">
             <img src="./assets/vip3.webp" class="icon" />
-            <div class="title">Unlimited free text message</div>
-            <div class="font">Chat with other users</div>
+            <div class="title">Chat for free</div>
+            <div class="font">Unlimited free text message</div>
           </div>
         </van-swipe-item>
         <van-swipe-item>
           <div class="swiperItem">
-            <img src="./assets/vip4.webp" class="icon" />
-            <div class="title">Recharge 15% OFF</div>
-            <div class="font">Special offer</div>
+            <img src="./assets/vip8.webp" class="icon" />
+            <div class="title">Unlimited video chat</div>
+            <div class="font">Connect via video calls without restrictions</div>
           </div>
         </van-swipe-item>
         <van-swipe-item>
           <div class="swiperItem">
             <img src="./assets/vip5.webp" class="icon" />
-            <div class="title">Profiles are displayed at the top</div>
-            <div class="font">Discovered by more people</div>
+            <div class="title">Check who viewed my profile</div>
+            <div class="font">Never miss the chance to connect with her.</div>
           </div>
         </van-swipe-item>
         <van-swipe-item>
           <div class="swiperItem">
-            <img src="./assets/vip6.webp" class="icon" />
-            <div class="title">Check who visited my profile</div>
-            <div class="font">nerver miss the destiny with her</div>
+            <img src="./assets/vip9.webp" class="icon" />
+            <div class="title">Live stream room</div>
+            <div class="font1">
+              Post messages in the live stream room chat with the host
+            </div>
           </div>
         </van-swipe-item>
-
         <van-swipe-item>
           <div class="swiperItem">
-            <img src="./assets/vip7.webp" class="icon" />
-            <div class="title">VIP badge</div>
-            <div class="font">Shine brighter in a crowd</div>
+            <img src="./assets/vip10.webp" class="icon" />
+            <div class="title">Get free coins</div>
+            <div class="font">
+              Get free coins {{ vipConfigData?.monthlyGoldBonus }} coins a month
+            </div>
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -183,7 +166,7 @@
               />
               <img :src="item.channel.icon" class="activeSelectImg" alt="" />
               <div class="activeSelectText">{{ item.channel.displayName }}</div>
-              <div class="activeSelectText">
+              <div class="activeSelectText" style="color: #c50205">
                 {{ item.channel.discountText }}
               </div>
             </div>
@@ -352,7 +335,7 @@ const handleSelect = async (item: any) => {
   font-size: 40px !important;
 }
 ::v-deep(.van-swipe__indicators) {
-  bottom: 80px;
+  bottom: 60px;
 }
 .bigBox {
   background-color: #fff;
@@ -395,6 +378,16 @@ const handleSelect = async (item: any) => {
         font-weight: 400;
         font-size: 32px;
         color: rgba(240, 240, 240, 0.8);
+        text-align: center;
+      }
+      .font1 {
+        padding-left: 122px;
+        padding-right: 122px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: rgba(240, 240, 240, 0.8);
+        text-align: center;
       }
     }
   }
@@ -688,8 +681,8 @@ const handleSelect = async (item: any) => {
             margin-right: 8px;
           }
           .activeSelectImg {
-            min-width: 32px;
-            height: 32px;
+            min-width: 48px;
+            height: 48px;
             margin-right: 8px;
           }
           .activeSelectText {
@@ -697,7 +690,6 @@ const handleSelect = async (item: any) => {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 28px;
-            color: #1a1a1a;
           }
         }
         .itemBoxRight {

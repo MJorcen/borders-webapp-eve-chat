@@ -74,6 +74,7 @@
           :webkit-playsinline="true"
           :playsinline="true"
           :controls="false"
+          preload="auto"
         ></video>
       </van-swipe-item>
     </van-swipe>
@@ -267,7 +268,7 @@ import {
 import SvgaDialog from "@/components/svgaDialog/index.vue";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import flvjs from "flv.js";
-import { convertRtmpToFlv } from "@/common/utils";
+import { convertRtmpToFlv, getLocalUserDetail } from "@/common/utils";
 import SDK from "@yxim/nim-web-sdk";
 import evenBus from "@/common/evenBus";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";

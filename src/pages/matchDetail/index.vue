@@ -331,6 +331,7 @@ watch(
     .mineVideo {
       height: 482px;
       width: 50%;
+      transform: scaleX(-1);
     }
   }
   .rulesFont {
