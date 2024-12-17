@@ -118,6 +118,7 @@
                 :src="item.images?.[0]?.resourcePath"
                 controls
                 ref="videoRefDynamic"
+                preload="auto"
               ></video>
               <div
                 style="
