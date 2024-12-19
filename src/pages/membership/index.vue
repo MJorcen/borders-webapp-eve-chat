@@ -675,6 +675,11 @@ const handleShowMore = async () => {
       align-items: center;
       padding-left: 32px;
       margin-bottom: 20px;
+      position: sticky;
+      top: 0px;
+      z-index: 1;
+      width: 100%;
+      background: #f2f2f2;
       .rightImg {
         width: 48px;
         height: 48px;

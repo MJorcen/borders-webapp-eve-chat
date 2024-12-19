@@ -658,6 +658,11 @@ const handleShowMore = async () => {
   background-color: #f2f2f2;
   padding-top: 20px;
   .popupBoxTop {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+    width: 100%;
+    background: #f2f2f2;
     display: flex;
     align-items: center;
     padding-left: 32px;
