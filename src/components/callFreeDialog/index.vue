@@ -500,40 +500,40 @@ const {
 } = freeCallhangUp();
 
 const handleCallHangUp = async () => {
-  showConfirmDialog({
-    title: "",
-    message: "Are you sure hang up?",
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-  })
-    .then(async () => {
-      showLoadingToast({
-        message: "Please wait...",
-        duration: 0,
-        forbidClick: true,
-      });
-      await hangUpFetch({
-        callId: props.wsData.call?.id,
-      });
-      if (hangUpSuccess.value) {
-        showToast("Success");
-        emit("update:modelValue", false);
-        emit("handleCallHangUp");
-        // localStorage.setItem("isFreeCalling", "false");
-        state.showDownLoadPopup = true;
-        state.tips = "Download APP to chat for free";
-        // emit("handleCallFrend", props.wsData, currentTime.value);
-        state.isPick = false;
-      } else {
-        emit("update:modelValue", false);
-        emit("handleCallHangUp");
-        showToast(hangUpMsg.value);
-        state.isPick = false;
-      }
-    })
-    .catch(() => {
-      // on cancel
-    });
+  // showConfirmDialog({
+  //   title: "",
+  //   message: "Are you sure hang up?",
+  //   confirmButtonText: "Yes",
+  //   cancelButtonText: "No",
+  // })
+  //   .then(async () => {
+  //     showLoadingToast({
+  //       message: "Please wait...",
+  //       duration: 0,
+  //       forbidClick: true,
+  //     });
+  //   })
+  //   .catch(() => {
+  //     // on cancel
+  //   });
+  await hangUpFetch({
+    callId: props.wsData.call?.id,
+  });
+  if (hangUpSuccess.value) {
+    showToast("Success");
+    emit("update:modelValue", false);
+    emit("handleCallHangUp");
+    // localStorage.setItem("isFreeCalling", "false");
+    state.showDownLoadPopup = true;
+    state.tips = "Download APP to chat for free";
+    // emit("handleCallFrend", props.wsData, currentTime.value);
+    state.isPick = false;
+  } else {
+    emit("update:modelValue", false);
+    emit("handleCallHangUp");
+    showToast(hangUpMsg.value);
+    state.isPick = false;
+  }
 };
 
 const onVideoEnded = () => {

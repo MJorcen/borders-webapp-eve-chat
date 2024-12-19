@@ -546,23 +546,27 @@ watch(
 const showGiftPopup = ref(false);
 
 const handleClosePopup = async () => {
-  showConfirmDialog({
-    title: "",
-    message: "Are you sure hang up?",
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-  })
-    .then(async () => {
-      state.tips = "Download APP to chat for free";
-      // localStorage.setItem("isCall", "false");
-      state.showDownLoadPopup = true;
+  // showConfirmDialog({
+  //   title: "",
+  //   message: "Are you sure hang up?",
+  //   confirmButtonText: "Yes",
+  //   cancelButtonText: "No",
+  // })
+  //   .then(async () => {
+  //     state.tips = "Download APP to chat for free";
+  //     // localStorage.setItem("isCall", "false");
+  //     state.showDownLoadPopup = true;
 
-      // await handleCallHangUp();
-      // emit("update:modelValue", false);
-    })
-    .catch(() => {
-      // on cancel
-    });
+  //     // await handleCallHangUp();
+  //     // emit("update:modelValue", false);
+  //   })
+  //   .catch(() => {
+  //     // on cancel
+  //   });
+  emit("update:modelValue", false);
+  state.tips = "Download APP to chat for free";
+  localStorage.setItem("isCall", "false");
+  state.showDownLoadPopup = true;
 };
 
 // 挂断逻辑

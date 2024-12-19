@@ -31,7 +31,7 @@
             src="./assets/gold@2x.webp"
           />{{ detailData?.call?.giftCost || 0 }}
         </div>
-        <!-- <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
+        <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
           <div class="vipFont">
             <!-- Get VIP for
             <span style="color: #e405ff">{{
@@ -45,7 +45,7 @@
             Get VIP and enjoy unlimited video chats
           </div>
           <div class="getBtn" @click="state.showVipPopup = true">Get</div>
-        </div> -->
+        </div>
       </div>
       <div class="closeBtnBox">
         <div class="closeBtn" @click="emit('update:modelValue', false)">

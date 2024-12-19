@@ -723,8 +723,14 @@ const handleClosePopup = async (type: number) => {
 
 const handleSureClose = async () => {
   if (state.hangupType === 1) {
+    localStorage.setItem("isLiveCall", "false");
+    state.showDownLoadPopup = true;
+    state.tips = "Download APP to chat for free";
     emit("update:modelValue", false);
   } else {
+    localStorage.setItem("isLiveCall", "false");
+    state.showDownLoadPopup = true;
+    state.tips = "Download APP to chat for free";
     await handleCallHangUp();
     emit("update:modelValue", false);
   }
