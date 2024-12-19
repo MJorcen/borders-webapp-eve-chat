@@ -3,7 +3,7 @@
     <div class="titleBig">
       <div class="title">Match</div>
     </div>
-    <div v-if="beforeConfigData?.remainingTimes !== 0">
+    <div>
       <div class="matchTop">
         <img class="matchLeftImg" src="./assets/Group427320734@2x.webp" />
         <div class="matchCenter">
@@ -47,9 +47,12 @@
         >
           Start
         </div>
+        <div v-else class="button" @click="state.showDownLoadPopup = true">
+          Start
+        </div>
       </div>
     </div>
-    <div v-else>
+    <!-- <div v-else>
       <img class="bgImg" src="./assets/bg.webp" />
       <div class="contentBoxBig">
         <div class="contentBox">
@@ -84,7 +87,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- <CutDownDialog v-model="state.shwoCutDownDialog"></CutDownDialog> -->
   </div>
   <VipPopup
@@ -92,6 +95,10 @@
     :vipConfg="vipConfigData"
     v-model="state.showVipPopup"
   ></VipPopup>
+  <DownLoadPopup
+    :tips="'Download APP for free matching'"
+    v-model="state.showDownLoadPopup"
+  ></DownLoadPopup>
   <Tabbar></Tabbar>
 </template>
 
@@ -116,6 +123,7 @@ import {
 import { showToast } from "vant";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -129,6 +137,7 @@ const state = reactive<any>({
   shwoCutDownDialog: false,
   showVipPopup: false,
   time: "",
+  showDownLoadPopup: false,
 });
 
 const { fetchData: fetchMatchbeforePaymentlistAnchors, data: beforeAnchors } =

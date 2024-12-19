@@ -121,6 +121,10 @@
       v-model="state.showVipPopup"
     ></VipPopup>
     <CutDownDialog v-model="state.shwoCutDownDialog"></CutDownDialog>
+    <DownLoadPopup
+      @handleClose="handleNext"
+      v-model="state.showDownLoadPopup"
+    ></DownLoadPopup>
   </div>
 </template>
 
@@ -135,6 +139,7 @@ import { matchbeforePaymentstart } from "@/api/allApi";
 import CutDownDialog from "@/components/cutDownDialog/index.vue";
 import { handleGo } from "@/common/fetchCommon";
 import { getLocalUserDetail } from "@/common/utils";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -151,6 +156,7 @@ const state = reactive({
   isNext: false,
   hostStar: false,
   userStar: false,
+  showDownLoadPopup: false,
 });
 
 const leftProgress = ref(0); // 左边颜色进度
@@ -272,19 +278,20 @@ watch(
     if (state.userStar && state.hostStar) {
       matchTimeouts.forEach((timeoutId: any) => clearTimeout(timeoutId));
       matchTimeouts = []; // 清空定时器列表
-      handleGo({
-        user: {
-          inCall: 0,
-          active: 1,
-          id: data.value?.userId,
-        },
-      }).then((res) => {
-        if (!res) {
-          if (userInfo?.user?.vipLevel === 0) {
-            state.showVipPopup = true;
-          }
-        }
-      });
+      // handleGo({
+      //   user: {
+      //     inCall: 0,
+      //     active: 1,
+      //     id: data.value?.userId,
+      //   },
+      // }).then((res) => {
+      //   if (!res) {
+      //     if (userInfo?.user?.vipLevel === 0) {
+      //       state.showVipPopup = true;
+      //     }
+      //   }
+      // });
+      state.showDownLoadPopup = true;
     }
   },
   { immediate: true, deep: true }

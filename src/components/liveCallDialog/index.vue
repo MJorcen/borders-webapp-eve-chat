@@ -167,7 +167,11 @@
           <!-- 挂断 -->
           <!-- 邀请接听 -->
           <div class="bottomBoxInvite" v-if="!state.isReactive">
-            <div class="inviteBox" @click="handleCallPickUp" v-if="!state.isTimeOut">
+            <div
+              class="inviteBox"
+              @click="handleCallPickUp"
+              v-if="!state.isTimeOut"
+            >
               <SvgaShow
                 :divId="`demo${props?.wsData?.fromUser?.id}`"
                 :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
@@ -392,6 +396,10 @@
     v-model="state.showFirstVipPromptPopup"
   >
   </FirstVipPromptPopup> -->
+  <DownLoadPopup
+    :tips="state.tips"
+    v-model="state.showDownLoadPopup"
+  ></DownLoadPopup>
 </template>
 
 <script setup lang="ts">
@@ -432,6 +440,7 @@ import SvgaShow from "@/components/svgaShow/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import flvjs from "flv.js";
 import { convertRtmpToFlv } from "@/common/utils";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -489,6 +498,8 @@ const state: any = reactive({
   showFirstVipPromptPopup: false,
   mengceng: false,
   isTimeOut: false,
+  showDownLoadPopup: false,
+  tips: "Download the APP for free calls",
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -663,8 +674,14 @@ const handleClosePopup = async (type: number) => {
   })
     .then(async () => {
       if (type === 1) {
+        localStorage.setItem("isLiveCall", "false");
+        state.showDownLoadPopup = true;
+        state.tips = "Download APP to chat for free";
         emit("update:modelValue", false);
       } else {
+        localStorage.setItem("isLiveCall", "false");
+        state.showDownLoadPopup = true;
+        state.tips = "Download APP to chat for free";
         await handleCallHangUp();
         emit("update:modelValue", false);
       }
@@ -693,6 +710,8 @@ const handleCallHangUp = async () => {
     emit("update:modelValue", false);
     closeToast();
     localStorage.setItem("isLiveCall", "false");
+    state.showDownLoadPopup = true;
+    state.tips = "Download APP to chat for free";
   } else {
     showToast(handupMsg.value);
   }
@@ -720,6 +739,11 @@ const {
 } = calldial();
 
 const handleCallPickUp = async () => {
+  // await handleCallHangUp();
+  state.tips = "Download the APP for free calls";
+  state.showDownLoadPopup = true;
+  // emit("update:modelValue", false);
+  return;
   await configFetch();
   showLoadingToast({
     message: "Please wait...",
@@ -1192,7 +1216,7 @@ defineExpose({
       justify-content: center;
       align-items: center;
     }
-    .callingImg{
+    .callingImg {
       width: 272px;
       height: 272px;
     }

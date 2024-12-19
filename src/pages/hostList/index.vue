@@ -427,7 +427,7 @@ import {
   userlistTabs,
 } from "@/api/allApi";
 import { useRouter } from "vue-router";
-import { handleGo } from "@/common/fetchCommon";
+import { handleGo, handleResgiter } from "@/common/fetchCommon";
 import { onDeactivated } from "vue";
 import SignPopup from "@/components/signPopup/index.vue";
 import FirstChargeVipPopup from "@/components/firstChargeVipPopup/index.vue";
@@ -499,29 +499,28 @@ onActivated(async () => {
   await Promise.all([
     configFetch(),
     configFetchTwo(),
-    webConfigFetch(),
+    // webConfigFetch(),
     wollectFetch(),
-    userListTabsFetch(),
   ]);
   setVipConfigData(configDataTwo.value);
 
-  const localVersion = localStorage.getItem("version") || "1.0.0";
-  if (localVersion !== webConfigData.value?.version) {
-    localStorage.setItem("version", webConfigData.value?.version || "1.0.0");
-    window.location.reload();
-  }
+  // const localVersion = localStorage.getItem("version") || "1.0.0";
+  // if (localVersion !== webConfigData.value?.version) {
+  //   localStorage.setItem("version", webConfigData.value?.version || "1.0.0");
+  //   window.location.reload();
+  // }
   const canVipCheckIn = Cookies.get("canVipCheckIn");
 
   if (configData.value.canVipCheckIn && !canVipCheckIn) {
     showSignPopup.value = true;
     Cookies.set("canVipCheckIn", true, { expires: 1 });
   }
-  const showFirstVipPrompt = Cookies.get("showFirstVipPrompt");
+  // const showFirstVipPrompt = Cookies.get("showFirstVipPrompt");
 
-  if (configData.value.showFirstVipPrompt && !showFirstVipPrompt) {
-    showChargePopup.value = true;
-    Cookies.set("showFirstVipPrompt", true, { expires: 1 });
-  }
+  // if (configData.value.showFirstVipPrompt && !showFirstVipPrompt) {
+  //   showChargePopup.value = true;
+  //   Cookies.set("showFirstVipPrompt", true, { expires: 1 });
+  // }
 
   const showDownLoadPopups = Cookies.get("showDownLoadPopups");
   if (
@@ -566,9 +565,11 @@ const {
   loading: loadingTwo,
 } = userfollowfollowingList();
 
-onMounted(() => {
-  getList();
-  getFolowList();
+onMounted(async () => {
+  await handleResgiter().then(() => {
+    userListTabsFetch(), getList();
+    getFolowList();
+  });
 });
 
 const getFolowList = async () => {

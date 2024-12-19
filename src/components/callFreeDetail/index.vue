@@ -161,11 +161,11 @@ watch(
     if (newValue) {
       // state.showRechargePopup = true;
       const userInfo = getLocalUserDetail();
-      if (userInfo?.user?.vipLevel === 0) {
-        state.showVipPopup = true;
-      } else {
-        state.showRechargePopup = true;
-      }
+      // if (userInfo?.user?.vipLevel === 0) {
+      //   state.showVipPopup = true;
+      // } else {
+      //   state.showRechargePopup = true;
+      // }
 
       toggleBodyScroll(newValue);
     } else {

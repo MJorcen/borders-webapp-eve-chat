@@ -333,6 +333,10 @@
     v-model="state.showFirstVipPromptPopup"
   >
   </FirstVipPromptPopup> -->
+  <DownLoadPopup
+    :tips="state.tips"
+    v-model="state.showDownLoadPopup"
+  ></DownLoadPopup>
 </template>
 
 <script setup lang="ts">
@@ -370,6 +374,7 @@ import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import SvgaShow from "@/components/svgaShow/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -425,6 +430,7 @@ const state: any = reactive({
   askForGiftData: {},
   showAskForGift: false,
   showFirstVipPromptPopup: false,
+  tips: "",
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -518,8 +524,12 @@ const handleClosePopup = async () => {
     cancelButtonText: "No",
   })
     .then(async () => {
-      await handleCallHangUp();
-      emit("update:modelValue", false);
+      state.tips = "Download APP to chat for free";
+      // localStorage.setItem("isCall", "false");
+      state.showDownLoadPopup = true;
+
+      // await handleCallHangUp();
+      // emit("update:modelValue", false);
     })
     .catch(() => {
       // on cancel
@@ -564,6 +574,10 @@ const {
 const { fetchData: configFetch, data: configData } = userconfig();
 
 const handleCallPickUp = async () => {
+  state.tips = "Download the APP for free calls";
+  localStorage.setItem("isCall", "false");
+  state.showDownLoadPopup = true;
+  return;
   // await configFetch();
   showLoadingToast({
     message: "Please wait...",

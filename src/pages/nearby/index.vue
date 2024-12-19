@@ -55,7 +55,10 @@
     </div>
   </div>
   <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
-
+  <DownLoadPopup
+    :tips="'Download the APP for free calls'"
+    v-model="state.showDownLoadPopup"
+  ></DownLoadPopup>
   <Tabbar></Tabbar>
 </template>
 
@@ -69,6 +72,7 @@ import { matchbeforePaymentlistAnchors } from "@/api/allApi";
 import BigNumber from "bignumber.js";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useVipConfigStore } from "@/stores/vipConfig";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -90,10 +94,11 @@ const { fetchData: fetchMatchbeforePaymentlistAnchors, data: beforeAnchors } =
 
 const state = reactive<any>({
   list: [],
+  showDownLoadPopup: false,
 });
 
 const handleClick = () => {
-  state.showVipPopup = true;
+  state.showDownLoadPopup = true;
 };
 
 let timer: any = ref(null);

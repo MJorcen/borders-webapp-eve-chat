@@ -30,23 +30,23 @@ router.beforeEach((to, from: any) => {
   loadingDom?.parentNode?.removeChild(loadingDom);
   const userInfo = localStorage.getItem("userInfo");
   NProgress.start();
-  if (!userInfo) {
-    // 关闭ws连接
-    window.wsConnet?.send(JSON.stringify(dataObj));
-    window.wsConnet?.close();
-    if (!["Login"].includes(to.name as string)) {
-      return {
-        name: "Login",
-        query: {
-          redirect: to.fullPath,
-        },
-      };
-    }
-    return true;
-  } else {
-    console.log("to.name:::", to.name);
-    return true;
-  }
+  // if (!userInfo) {
+  //   // 关闭ws连接
+  //   window.wsConnet?.send(JSON.stringify(dataObj));
+  //   window.wsConnet?.close();
+  //   if (!["Login"].includes(to.name as string)) {
+  //     return {
+  //       name: "Login",
+  //       query: {
+  //         redirect: to.fullPath,
+  //       },
+  //     };
+  //   }
+  //   return true;
+  // } else {
+  //   console.log("to.name:::", to.name);
+  //   return true;
+  // }
 });
 
 router.afterEach(() => {

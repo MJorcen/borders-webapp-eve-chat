@@ -88,10 +88,10 @@
         />
         <div class="dialogContent">
           <img src="./assets/Frame@2x.png" class="w-[120px] h-[120px]" />
-          <div class="dialogFont">Subescribe to Vip and view all visitors</div>
+          <div class="dialogFont">Download the APP and view all visitors</div>
           <div class="dialogBtnBig">
-            <div class="dialogBtn" @click="state.showVipPopup = true">
-              Get VIP
+            <div class="dialogBtn">
+              <a :href="state.href">Download</a>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, nextTick } from "vue";
 import Dialog from "./components/Dialog.vue";
-import { userviewedLog, vipconfig } from "@/api/allApi";
+import { userviewedLog, vipconfig, webdownload } from "@/api/allApi";
 import Empty from "@/components/Empty.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
@@ -117,7 +117,9 @@ const state = reactive<any>({
   finished: true,
   offset: 0,
   showVipPopup: false,
+  href: "",
 });
+const { fetchData: downConfig, data: downData } = webdownload();
 
 const router = useRouter();
 
@@ -126,6 +128,11 @@ const { fetchData: configFetch, data: configData } = vipconfig();
 
 onMounted(async () => {
   await configFetch();
+  await downConfig({
+    userId: user?.user.id,
+  });
+  const encodeURIStr = encodeURIComponent(downData.value);
+  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
   // nextTick(() => {
   if (user.user.vipLevel === 0) {
     DialogRef.value.state.showModal = true;
@@ -249,6 +256,7 @@ const getList = async () => {
     position: absolute;
     bottom: 88px;
     .dialogBtn {
+      width: 100%;
       height: 100px;
       background: #eb6300;
       border-radius: 16px 16px 16px 16px;

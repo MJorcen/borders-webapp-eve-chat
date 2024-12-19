@@ -552,7 +552,7 @@
         <img
           class="toolsImg"
           src="./assets/ic_gift@2x.png"
-          @click.stop="showGiftPopup = true"
+          @click.stop="state.showDownLoadPopup = true"
         />
       </div>
     </div>
@@ -602,6 +602,10 @@
     <AppUserDownLoadPopup
       v-model="state.showAppUserDownLoadPopup"
     ></AppUserDownLoadPopup>
+    <DownLoadPopup
+      :tips="'Download the APP to chat with her for free'"
+      v-model="state.showDownLoadPopup"
+    ></DownLoadPopup>
   </div>
 </template>
 
@@ -656,6 +660,7 @@ import GoogleMap from "@/components/googleMap/index.vue";
 // import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { vipConfigData } = useVipConfigStore();
 
@@ -698,6 +703,7 @@ const state = reactive<any>({
   showFirstVipPromptPopup: false,
   showCallDownLoadPopup: false,
   showAppUserDownLoadPopup: false,
+  showDownLoadPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
@@ -865,19 +871,21 @@ const handleFileChange = () => {
 
 const triggerFileInput = (event: any) => {
   const files = event.target.files;
-  if (files.length > 0) {
-    // const file = files[0];
-    // afterRead(file);
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (configData.value?.hasPayment) {
-        state.showAppUserDownLoadPopup = true;
-        return;
-      } else {
-        afterRead(file);
-      }
-    }
-  }
+  // if (files.length > 0) {
+  //   // const file = files[0];
+  //   // afterRead(file);
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+  //     if (configData.value?.hasPayment) {
+  //       state.showAppUserDownLoadPopup = true;
+  //       return;
+  //     } else {
+  //       afterRead(file);
+  //     }
+  //   }
+  // }
+  state.showDownLoadPopup = true;
+  return;
 };
 
 // 发送图片
@@ -948,10 +956,12 @@ const afterRead = async (file: any) => {
 
 // 发送文字
 const handleSend = async () => {
-  if (configData.value?.hasPayment) {
-    state.showAppUserDownLoadPopup = true;
-    return;
-  }
+  // if (configData.value?.hasPayment) {
+  //   state.showAppUserDownLoadPopup = true;
+  //   return;
+  // }
+  state.showDownLoadPopup = true;
+  return;
   if (state.inputText.trim() === "") {
     return;
   }
@@ -1130,18 +1140,20 @@ const touchElement = ref<any>(null);
 const isInside = ref<any>(false);
 
 const onTouchStart = (event: any) => {
-  if (!configData.value?.hasPayment) {
-    if (userDetail?.user?.vipLevel === 0) {
-      state.showVipPopup = true;
-    } else {
-      // state.showRechargePopup = true;
-      // state.showCallDownLoadPopup = true;
-      state.showAppUserDownLoadPopup = true;
-    }
-  } else {
-    state.showAppUserDownLoadPopup = true;
-    return;
-  }
+  // if (!configData.value?.hasPayment) {
+  //   if (userDetail?.user?.vipLevel === 0) {
+  //     state.showVipPopup = true;
+  //   } else {
+  //     // state.showRechargePopup = true;
+  //     // state.showCallDownLoadPopup = true;
+  //     state.showAppUserDownLoadPopup = true;
+  //   }
+  // } else {
+  //   state.showAppUserDownLoadPopup = true;
+  //   return;
+  // }
+  state.showDownLoadPopup = true;
+  return;
   event.preventDefault();
 
   rec.start();

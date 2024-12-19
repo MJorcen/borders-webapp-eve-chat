@@ -148,7 +148,7 @@ const router = useRouter();
 const { fetchData: configFetch, data: configData } = userconfig();
 
 onMounted(async () => {
-  await configFetch();
+  // await configFetch();
 
   const currentTab = getCurrentTab();
   getLocalSessions().then((res: any) => {
@@ -156,34 +156,6 @@ onMounted(async () => {
   });
 
   emits("update:tabsCurrent", currentTab);
-
-  if (!configData.value?.hasPayment) {
-    tabsList = tabsList.map((item: any, i: number) => {
-      if (i === 1) {
-        item.name = "MatchNew";
-        item.img = imgMatch;
-        item.activeImg = imgMatchActive;
-      }
-      if (i === 2) {
-        item.name = "Nearby";
-        item.img = img9;
-        item.activeImg = img10;
-      }
-      return item;
-    });
-  } else {
-    tabsList = tabsList.map((item: any, i: number) => {
-      if (i === 1) {
-        item.name = "MatchHome";
-      }
-      if (i === 2) {
-        item.name = "Dynamic";
-        item.img = img3;
-        item.activeImg = img4;
-      }
-      return item;
-    });
-  }
 
   if (currentTab === 0) {
     tabsList[0].active = true;
@@ -219,40 +191,11 @@ onMounted(async () => {
 });
 
 onActivated(async () => {
-  await configFetch();
   const currentTab = getCurrentTab();
 
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
   });
-
-  if (!configData.value?.hasPayment) {
-    tabsList = tabsList.map((item: any, i: number) => {
-      if (i === 1) {
-        item.name = "MatchNew";
-      }
-      if (i === 2) {
-        item.name = "Nearby";
-        item.img = img9;
-        item.activeImg = img10;
-      }
-      return item;
-    });
-  } else {
-    tabsList = tabsList.map((item: any, i: number) => {
-      if (i === 1) {
-        item.name = "MatchHome";
-        item.img = imgMatch;
-        item.activeImg = imgMatchActive;
-      }
-      if (i === 2) {
-        item.name = "Dynamic";
-        item.img = img3;
-        item.activeImg = img4;
-      }
-      return item;
-    });
-  }
 
   emits("update:tabsCurrent", currentTab);
 
@@ -290,32 +233,17 @@ onActivated(async () => {
 });
 
 const getCurrentTab = () => {
-  if (configData.value?.hasPayment) {
-    switch (router?.currentRoute?.value?.name) {
-      case "HostList":
-        return 0;
-      case "Messages":
-        return 3;
-      case "Dynamic":
-        return 2;
-      case "MatchHome":
-        return 1;
-      case "Mine":
-        return 4;
-    }
-  } else {
-    switch (router?.currentRoute?.value?.name) {
-      case "HostList":
-        return 0;
-      case "Messages":
-        return 3;
-      case "Nearby":
-        return 2;
-      case "MatchNew":
-        return 1;
-      case "Mine":
-        return 4;
-    }
+  switch (router?.currentRoute?.value?.name) {
+    case "HostList":
+      return 0;
+    case "Messages":
+      return 3;
+    case "Nearby":
+      return 2;
+    case "MatchNew":
+      return 1;
+    case "Mine":
+      return 4;
   }
 };
 
@@ -323,20 +251,20 @@ let tabsList: any = reactive([
   {
     img: img1,
     activeImg: img2,
-    active: false,
+    active: true,
     name: "HostList",
   },
   {
     img: imgMatch,
     activeImg: imgMatchActive,
     active: false,
-    name: "MatchHome",
+    name: "MatchNew",
   },
   {
-    img: img3,
-    activeImg: img4,
+    img: img9,
+    activeImg: img10,
     active: false,
-    name: "Dynamic",
+    name: "Nearby",
   },
   {
     img: img5,

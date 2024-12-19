@@ -242,6 +242,10 @@
         </div>
       </div>
     </van-popup>
+    <DownLoadPopup
+      :tips="'Download the APP to chat with her for free'"
+      v-model="state.showDownLoadPopup"
+    ></DownLoadPopup>
   </div>
 </template>
 
@@ -272,6 +276,7 @@ import { useUserDetailStore } from "@/stores/userDetail";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 const router = useRouter();
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 const { vipConfigData } = useVipConfigStore();
@@ -461,11 +466,14 @@ const state = reactive<any>({
   showFromGift: false,
   fromGiftObj: {},
   showCallPopup: false,
+  showDownLoadPopup: false,
 });
 
 const inputRef = ref<any>(null);
 
 const handleShowInput = () => {
+  state.showDownLoadPopup = true;
+  return;
   state.showInput = true;
   nextTick(() => {
     inputRef.value.focus();
@@ -651,6 +659,9 @@ const giftPopupRef = ref<any>();
 const SvgaDialogRef = ref<any>();
 
 const handleGive = async (item: any) => {
+  state.showGiftPopup = false;
+  state.showDownLoadPopup = true;
+  return;
   await giftFetch({
     // backpack: 0,
     streamId: state.streamId,

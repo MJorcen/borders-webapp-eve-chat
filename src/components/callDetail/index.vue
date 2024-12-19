@@ -31,7 +31,7 @@
             src="./assets/gold@2x.webp"
           />{{ detailData?.call?.giftCost || 0 }}
         </div>
-        <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
+        <!-- <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
           <div class="vipFont">
             Get VIP for
             <span style="color: #e405ff">{{
@@ -44,7 +44,7 @@
             coins!!!
           </div>
           <div class="getBtn" @click="state.showVipPopup = true">Get</div>
-        </div>
+        </div> -->
       </div>
       <div class="closeBtnBox">
         <div class="closeBtn" @click="emit('update:modelValue', false)">
@@ -185,7 +185,7 @@ const { fetchData: feedbackFetch, data: feedbackgetData } = callfeedbackget();
 const getDetail = async () => {
   await detailFetch({ callId: props.callId });
   await configFetch();
-  await feedbackFetch({ callId: props.callId });
+  // await feedbackFetch({ callId: props.callId });
 
   if (feedbackgetData.value.showPrompt) {
     showReasonPopup.value = true;

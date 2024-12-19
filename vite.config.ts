@@ -92,6 +92,8 @@ export default defineConfig(({ command, mode }) => {
         },
         workbox: {
           globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg,webp,gif}"],
+          maximumFileSizeToCacheInBytes: 5 * 1024 ** 2, // 5 MB or set to something else
+
           // runtimeCaching: [
           //   {
           //     urlPattern: /^https:\/\/fonts\.gstatic\.com/,
@@ -176,9 +178,9 @@ export default defineConfig(({ command, mode }) => {
             if (id.includes("src/index.css")) {
               return "tailwindcss";
             }
-            // if (id.includes("node_modules")) {
-            //   return "vendor";
-            // }
+            if (id.includes("node_modules")) {
+              return "vendor";
+            }
           },
         },
         // input: 'index.html'

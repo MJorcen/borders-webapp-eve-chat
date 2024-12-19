@@ -3,9 +3,7 @@
     <div v-if="props.modelValue" class="popup">
       <!-- v-if="state.showVideo" -->
       <div class="videoBox" v-if="state.showVideo">
-        <div class="bottomFont" v-if="walletData?.wallet?.gold === 0">
-          Top up coins to turn on the voice
-        </div>
+        <div class="bottomFont">Download the APP to turn on the sound</div>
         <div class="topLeft">
           <div class="flex items-center">
             <van-image
@@ -61,7 +59,15 @@
               src="./assets/ic_changecamera@2x.png"
               alt=""
             /> -->
-            <div class="kaiCameraBig" @click="state.showVipPopup = true">
+            <div
+              class="kaiCameraBig"
+              @click="
+                () => {
+                  state.tips = 'Download the APP and continue calling';
+                  state.showDownLoadPopup = true;
+                }
+              "
+            >
               <img src="./assets/Slice356@2x.webp" class="kaiCamera" />
             </div>
           </div>
@@ -113,73 +119,18 @@
         </div>
         <!-- 聊天框 -->
 
-        <!-- 接听后底部 -->
-        <!-- <img
-          class="giftBox"
-          src="./assets/ic_calling_gift@2x.png"
-          alt=""
-          @click="state.showVipPopup = true"
-        />
-        <div class="reciveBottomBox">
-          <img
-            class="maiKai"
-            v-if="state.showAudio"
-            src="./assets/ic_calling_mic@2x.png"
-            alt=""
-            @click="state.showVipPopup = true"
-          />
-          <img
-            class="maiKai"
-            v-else
-            src="./assets/ic_mic-off@2x.png"
-            alt=""
-            @click="state.showVipPopup = true"
-          />
-          <img
-            class="videoKai"
-            v-if="state.showVideo"
-            src="./assets/ic_camera_open@2x.png"
-            alt=""
-            @click="state.showVipPopup = true"
-          />
-          <img
-            class="videoKai"
-            v-if="!state.showVideo"
-            src="./assets/ic_camera_close@2x.png"
-            alt=""
-            @click="state.showVipPopup = true"
-          />
-
-          <div class="sendBox" @click="state.showVipPopup = true">
-            <div class="inputBox">Say something...</div>
-            <!-- <input
-              :disabled="true"
-              class="inputBox"
-              type="text"
-              placeholder="Say something..."
-              @click="state.showVipPopup = true"
-            />
-            <img
-              src="./assets/ic_send_2@2x.png"
-              class="sendImg"
-              alt=""
-              @click="state.showVipPopup = true"
-            />
-          </div>
-          <img
-            class="goldIcon"
-            @click="() => (state.showVipPopup = true)"
-            src="./assets/gold@2x.webp"
-            alt=""
-          />
-        </div> -->
         <div class="reciveBottomBoxTwo">
           <div class="reciveBottomBoxTwoBottom">
             <div class="reciveBottomBoxTwoBottomItem">
               <img
                 src="./assets/Group14008@2x.webp"
                 class="reciveBottomBoxTwoBottomItemImg"
-                @click="state.showVipPopup = true"
+                @click="
+                  () => {
+                    state.tips = 'Download the APP and continue calling';
+                    state.showDownLoadPopup = true;
+                  }
+                "
               />
             </div>
             <div
@@ -189,7 +140,12 @@
               <div
                 class="reciveBottomBoxTwoBottomItem2"
                 v-for="(item, index) in userGiftListData?.recommendList"
-                @click="state.showVipPopup = true"
+                @click="
+                  () => {
+                    state.tips = 'Download the APP and continue calling';
+                    state.showDownLoadPopup = true;
+                  }
+                "
               >
                 <img
                   :src="item?.icon"
@@ -200,7 +156,12 @@
             </div>
             <div
               class="reciveBottomBoxTwoBottomItem"
-              @click="state.showVipPopup = true"
+              @click="
+                () => {
+                  state.tips = 'Download the APP and continue calling';
+                  state.showDownLoadPopup = true;
+                }
+              "
             >
               <img
                 style="width: 85px; height: 85px"
@@ -211,7 +172,12 @@
 
             <div
               class="reciveBottomBoxTwoBottomItem"
-              @click="state.showVipPopup = true"
+              @click="
+                () => {
+                  state.tips = 'Download the APP and continue calling';
+                  state.showDownLoadPopup = true;
+                }
+              "
             >
               <img
                 src="./assets/Slice353@2x.webp"
@@ -298,6 +264,10 @@
     v-model="state.showFirstVipPromptPopup"
   >
   </FirstVipPromptPopup> -->
+  <DownLoadPopup
+    :tips="state.tips"
+    v-model="state.showDownLoadPopup"
+  ></DownLoadPopup>
 </template>
 
 <script setup lang="ts">
@@ -328,6 +298,7 @@ import { generateRandomString } from "@/common/utils";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import VipPopup from "@/components/vipPopup/index.vue";
 import { useUserDetailStore } from "@/stores/userDetail";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -365,6 +336,8 @@ const state = reactive({
   isPick: false,
   showVipPopup: false,
   showFirstVipPromptPopup: false,
+  showDownLoadPopup: false,
+  tips: "Download the APP for free calls",
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -484,14 +457,10 @@ const handleCallPickUp = async () => {
     // localStorage.setItem("isFreeCalling", "true");
   } else {
     if (code.value === 402) {
-      if (userDetail?.user?.vipLevel === 0) {
-        state.showVipPopup = true;
-      } else {
-        state.showRechargePopup = true;
-      }
-      // if (configData?.value?.showFirstVipPrompt) {
-      //   state.showFirstVipPromptPopup = true;
-      // }
+      state.showDownLoadPopup = true;
+      state.tips = "Download the APP for free calls";
+      state.isPick = false;
+      // emit("update:modelValue", false);
     }
     emit("handleCallPickUp");
     showToast(pickUpMsg.value);
@@ -526,7 +495,9 @@ const handleCallHangUp = async () => {
         emit("update:modelValue", false);
         emit("handleCallHangUp");
         // localStorage.setItem("isFreeCalling", "false");
-        emit("handleCallFrend", props.wsData, currentTime.value);
+        state.showDownLoadPopup = true;
+        state.tips = "Download APP to chat for free";
+        // emit("handleCallFrend", props.wsData, currentTime.value);
         state.isPick = false;
       } else {
         emit("update:modelValue", false);
@@ -617,6 +588,7 @@ watch(
   (newValue) => {
     if (newValue >= props?.wsData?.call?.durationLimit && props.modelValue) {
       emit("handleCallFrend", props.wsData, currentTime.value, state.isPick);
+      // state.showDownLoadPopup = true;
       stopTimer();
     }
   },

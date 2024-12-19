@@ -152,27 +152,6 @@ export const getCurrentQueryParams = (urlParamsStr: string) => {
   });
 
   return paramsObject;
-  // const objectParams: any = {};
-  // let url = decodeURI(window.location.search || window.location.hash);
-  // let strs;
-  // if (url.indexOf("?") != -1) {
-  //   // hash模式进此判断
-  //   if (window.location.hash) {
-  //     strs = url.split("?")[1].toString().split("&");
-  //     // history模式
-  //   } else {
-  //     strs = url.substr(1).split("&");
-  //   }
-  //   // 循环遍历并添加到对象中
-  //   for (let i = 0; i < strs.length; i++) {
-  //     objectParams[strs[i].split("=")[0]] = strs[i].split("=")[1];
-  //   }
-  // }
-  // // 判断objectParams对象的长度，大于1则有值
-  // if (Object.keys(objectParams).length > 0) {
-  //   console.log(objectParams);
-  // }
-  // return objectParams;
 };
 
 // 计算两经纬度之间的距离
@@ -363,3 +342,29 @@ export function convertRtmpToFlv(rtmpUrl: string) {
 
   return flvUrl;
 }
+
+export const getUrlSearchParams = () => {
+  // const urlParams = new URLSearchParams(window.location.href);
+  // return urlParams.get(param);
+  const objectParams: any = {};
+  let url = decodeURI(window.location.search || window.location.hash);
+  let strs;
+  if (url.indexOf("?") != -1) {
+    // hash模式进此判断
+    if (window.location.hash) {
+      strs = url.split("?")[1].toString().split("&");
+      // history模式
+    } else {
+      strs = url.substr(1).split("&");
+    }
+    // 循环遍历并添加到对象中
+    for (let i = 0; i < strs.length; i++) {
+      objectParams[strs[i].split("=")[0]] = strs[i].split("=")[1];
+    }
+  }
+  // 判断objectParams对象的长度，大于1则有值
+  if (Object.keys(objectParams).length > 0) {
+    console.log(objectParams);
+  }
+  return objectParams;
+};

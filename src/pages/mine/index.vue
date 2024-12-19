@@ -93,7 +93,7 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="vipBox"
       v-if="data?.user?.vipLevel !== 0"
       @click="router.push('/signDetail')"
@@ -148,7 +148,7 @@
           src="./assets/Group1000004485@2x.webp"
         />
       </div>
-    </div>
+    </div> -->
     <div
       class="coinsBox"
       v-if="configDataUser?.hasPayment"

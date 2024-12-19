@@ -113,8 +113,9 @@ service.interceptors.response.use(
       } else {
         response.data.msg = msg;
       }
-
-      showToast(msg);
+      if (msg !== "User existed" && msg !== "Login expired") {
+        showToast(msg);
+      }
       console.log("status", status);
 
       //  没有权限跳转到登录页面重新登录
@@ -122,7 +123,7 @@ service.interceptors.response.use(
         console.log("== 401");
         // localStorage.removeItem("userInfo");
         localStorage.clear();
-        router.push("/login");
+        // router.push("/login");
         // location.reload();
       }
     }

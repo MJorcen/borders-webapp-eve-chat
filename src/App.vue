@@ -47,6 +47,8 @@
             state.showFreeDialog = false;
             if (isPick) {
               state.showCallFreeDetail = true;
+              state.tips = 'Download the APP and continue calling';
+              state.showDownLoadPopup = true;
             }
           }
         "
@@ -75,6 +77,10 @@
   <AppUserDownLoadPopup
     v-model="state.showAppUserDownLoadPopup"
   ></AppUserDownLoadPopup>
+  <DownLoadPopup
+    :tips="'Download the APP to chat with her for free'"
+    v-model="state.showDownLoadPopup"
+  ></DownLoadPopup>
 </template>
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
@@ -92,10 +98,12 @@ import {
   generateRandomString,
   getLocalMsgList,
   getPositionObj,
+  getUrlSearchParams,
   haversine,
 } from "./common/utils";
 import useWebSocketHeartbeat from "@/hook/useWebScoket";
 import TopNotification from "@/components/topNotification/index.vue";
+import DownLoadPopup from "@/components/downLoadPopup/index.vue";
 
 import { useRouter } from "vue-router";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
@@ -116,6 +124,7 @@ const state = reactive<any>({
   showCallDownLoadPopup: false,
   showAppUserDownLoadPopup: false,
   showLiveCallDialog: false,
+  showDownLoadPopup: false,
 });
 
 const audioRef = ref<any>(null);
@@ -123,6 +132,10 @@ const audioRef = ref<any>(null);
 const showCallDialog = ref(false);
 
 const callDialogRef = ref<any>(null);
+
+evenBus.on("call", () => {
+  state.showDownLoadPopup = true;
+});
 
 evenBus.on("updateTopNotification", (data: any) => {
   let localCustomObj: any = {};
@@ -470,6 +483,18 @@ onMounted(async () => {
   document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用
   (window as any)?.translate?.changeLanguage("english");
+  // const obj = getUrlSearchParams();
+
+  // // 动态加载 Facebook Pixel 脚本
+  // const script = document.createElement("script");
+  // script.src = "https://connect.facebook.net/en_US/fbevents.js";
+  // script.async = true;
+  // script.onload = () => {
+  //   // 初始化 Pixel
+  //   window?.fbq?.("init", obj?.pixel_id);
+  //   window?.fbq?.("track", "PageView");
+  // };
+  // document.head.appendChild(script);
 });
 
 onUnmounted(() => {
