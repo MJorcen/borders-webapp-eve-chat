@@ -224,7 +224,7 @@
               <div class="mapFont" v-if="JSON.parse(it?.text)?.name === ''">
                 Allow location access to view the message
               </div>
-              <div class="allowBig">
+              <div class="allowBig" v-if="JSON.parse(it?.text)?.name === ''">
                 <div class="allowBtn" @click.stop="handleAllow">Allow</div>
               </div>
               <!-- <GoogleMap
