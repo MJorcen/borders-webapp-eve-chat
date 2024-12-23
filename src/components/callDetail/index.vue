@@ -143,18 +143,18 @@ const freeBackPopups = ref(false);
 // const { userDetail }: any = useUserDetailStore();
 
 let userDetail: any = {};
-try {
-  const info: any = localStorage.getItem("userInfo");
-  userDetail = JSON.parse(info as any);
-  // user = user.userDetail;
-} catch (e) {
-  console.log("error::", e);
-}
 
 watch(
   () => props.modelValue,
   (newValue) => {
     if (newValue) {
+      try {
+        const info: any = localStorage.getItem("userInfo");
+        userDetail = JSON.parse(info as any);
+        // user = user.userDetail;
+      } catch (e) {
+        console.log("error::", e);
+      }
       getDetail();
     }
   }
