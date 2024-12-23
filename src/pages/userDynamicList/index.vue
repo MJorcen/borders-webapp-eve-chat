@@ -404,7 +404,8 @@ const onSelect = (val: any) => {
       forbidClick: true,
     });
     blockFetch({
-      toUserId: state.blockAndReportId,
+      toUserId: state.blockAndReportId || 123,
+      scene: "个人空间拉黑",
     });
     if (blockSuccess.value) {
       showToast("Success");

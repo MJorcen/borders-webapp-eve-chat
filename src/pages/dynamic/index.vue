@@ -385,6 +385,7 @@ const onSelect = (val: any) => {
     });
     blockFetch({
       toUserId: state.blockAndReportId,
+      scene: "动态列表拉黑",
     });
     if (blockSuccess.value) {
       showToast("Success");

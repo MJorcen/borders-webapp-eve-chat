@@ -615,7 +615,8 @@ const onSelect = (val: any) => {
       forbidClick: true,
     });
     blockFetch({
-      toUserId: route.query.id,
+      toUserId: route.query.id || 123,
+      scene: "主播详情拉黑",
     });
     if (blockSuccess.value) {
       showToast("Success");
@@ -752,7 +753,8 @@ const handleFollow = async () => {
     forbidClick: true,
   });
   await followFetch({
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
+    scene: "主播详情关注",
   });
   if (followSuccess.value) {
     showToast("Success");
@@ -775,7 +777,8 @@ const handleCancelFollow = async () => {
     forbidClick: true,
   });
   await UnFollowFetch({
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
+    scene: "主播详情取消关注",
   });
   if (UnFollowSuccess.value) {
     showToast("Success");

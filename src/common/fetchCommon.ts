@@ -53,9 +53,13 @@ export const handleGo = async (item: any) => {
       if (configSuccess.value) {
         closeToast();
         if (configData.value?.hasPayment && flag) {
-          resolve(true);
+          resolve(false);
         } else {
-          await callFetch({ type: 1, toUserId: item.user.id });
+          await callFetch({
+            type: 1,
+            toUserId: item.user.id,
+            scene: "普通呼叫场景",
+          });
           if (callSuccess.value) {
             evenBus.emit("activeCall", { ...callData.value });
             // resolve(true);

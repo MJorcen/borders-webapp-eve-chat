@@ -638,7 +638,8 @@ const handleFollow = async () => {
     forbidClick: true,
   });
   await followFetch({
-    toUserId: state.userObj.id,
+    toUserId: state.userObj.id || 123,
+    scene: "直播间关注",
   });
   if (followSuccess.value) {
     showToast("Success");

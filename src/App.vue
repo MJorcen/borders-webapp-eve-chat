@@ -541,49 +541,49 @@ router.afterEach((to) => {
 });
 </script>
 <style lang="scss" scoped>
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: transform 300ms ease, opacity 400ms step-end;
-  backface-visibility: hidden;
-  width: 100vw;
-  height: 100vh;
-}
+// .slide-left-enter-active,
+// .slide-left-leave-active,
+// .slide-right-enter-active,
+// .slide-right-leave-active {
+//   transition: transform 300ms ease, opacity 400ms step-end;
+//   backface-visibility: hidden;
+//   width: 100vw;
+//   height: 100vh;
+// }
 
-.slide-left-enter-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 99;
-  background-color: #241213;
-}
+// .slide-left-enter-active,
+// .slide-right-enter-active,
+// .slide-right-leave-active {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   z-index: 99;
+//   background-color: #241213;
+// }
 
-.slide-right-leave-active {
-  z-index: 99;
-}
+// .slide-right-leave-active {
+//   z-index: 99;
+// }
 
-.slide-left-enter-active {
-  background-color: #241213;
-}
+// .slide-left-enter-active {
+//   background-color: #241213;
+// }
 
-.slide-left-enter-from {
-  transform: translateX(80vw);
-}
+// .slide-left-enter-from {
+//   transform: translateX(80vw);
+// }
 
-.slide-right-enter-from {
-  transform: translateX(-10vw);
-}
+// .slide-right-enter-from {
+//   transform: translateX(-10vw);
+// }
 
-.slide-right-leave-from {
-  transform: translateX(40vw);
-}
+// .slide-right-leave-from {
+//   transform: translateX(40vw);
+// }
 
-.slide-right-leave-active {
-  transform: translateX(100vw);
-}
+// .slide-right-leave-active {
+//   transform: translateX(100vw);
+// }
 .appBox {
   position: relative;
   /* slide */

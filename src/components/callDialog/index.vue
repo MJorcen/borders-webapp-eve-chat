@@ -808,10 +808,11 @@ const handleGive = async (item: any) => {
       : props?.wsData?.toUser?.id;
   await giftFetch({
     backpack: 0,
-    toUserId: userId,
+    toUserId: userId || 123,
     giftId: item.id,
     number: 1,
     callId: props?.wsData?.call?.id,
+    scene: "送礼",
   });
   if (giftSuccess.value) {
     showToast("Success");
