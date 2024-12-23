@@ -894,7 +894,8 @@ const handleFollow = async () => {
     forbidClick: true,
   });
   await followFetch({
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
+    scene: "房间关注",
   });
   if (followSuccess.value) {
     showToast("Success");
@@ -1331,7 +1332,8 @@ const handleCancelFollow = async () => {
     forbidClick: true,
   });
   await UnFollowFetch({
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
+    scene: "房间取消关注",
   });
   if (UnFollowSuccess.value) {
     showToast("Success");
@@ -1489,9 +1491,10 @@ const handleGive = async (item: any) => {
   }
   await giftFetch({
     backpack: 0,
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
     giftId: item.id,
     number: 1,
+    scene: "私聊送礼",
   });
   // debugger
   if (giftSuccess.value) {
