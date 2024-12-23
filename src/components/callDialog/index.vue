@@ -403,13 +403,6 @@ const { userDetail }: any = useUserDetailStore();
 const { vipConfigData } = useVipConfigStore();
 
 let user: any = {};
-try {
-  const info: any = localStorage.getItem("userInfo");
-  user = JSON.parse(info as any);
-  // user = user.userDetail;
-} catch (e) {
-  console.log("error::", e);
-}
 
 interface Prop {
   modelValue: boolean;
@@ -526,6 +519,13 @@ watch(
     state.showAskForGift = false;
     stopTimer();
     if (newValue) {
+      try {
+        const info: any = localStorage.getItem("userInfo");
+        user = JSON.parse(info as any);
+        // user = user.userDetail;
+      } catch (e) {
+        console.log("error::", e);
+      }
       await userGiftListFetch();
       nextTick(() => {
         const localUserDetail = getLocalUserDetail();
