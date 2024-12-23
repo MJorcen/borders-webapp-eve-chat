@@ -124,7 +124,8 @@ const handleUnBlock = async (id: number) => {
     message: "Plesase wait...",
   });
   await fetchDataNo({
-    toUserId: id,
+    toUserId: id || 123,
+    scene: "黑名单",
   });
   if (fetchDataNoSuccess.value) {
     showToast("Success");

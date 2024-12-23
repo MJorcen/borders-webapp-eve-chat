@@ -153,7 +153,8 @@ const handleSubmit = async () => {
 
   route.query.type === "Report"
     ? await complaintFetch({
-        toUserId: route.query.id,
+        toUserId: route.query.id || 123,
+        scene: "举报",
         content: state.text,
         fileIds: arr.join(","),
       })
