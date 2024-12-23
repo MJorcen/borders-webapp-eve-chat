@@ -53,7 +53,7 @@ export const handleGo = async (item: any) => {
       if (configSuccess.value) {
         closeToast();
         if (configData.value?.hasPayment && flag) {
-          resolve(false);
+          resolve(true);
         } else {
           await callFetch({
             type: 1,
