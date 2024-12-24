@@ -616,13 +616,13 @@ const handleExitWatch = async (index: number) => {
   }
 };
 
-evenBus.on("liveEnd", async () => {
-  handleExitWatch(state.currentSwiperIndex);
-  showToast("Live has ended");
-  setTimeout(() => {
-    router.go(-1);
-  }, 2000);
-});
+// evenBus.on("liveEnd", async () => {
+//   handleExitWatch(state.currentSwiperIndex);
+//   showToast("Live has ended");
+//   setTimeout(() => {
+//     router.go(-1);
+//   }, 2000);
+// });
 
 // 关注
 const {

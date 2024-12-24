@@ -184,7 +184,7 @@ import {
   vipMultipriceList,
   userconfig,
   vipMultisubmit,
-  paymentchannellistMore,
+  paymentchannelvipMultilistMore,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import router from "@/router";
@@ -339,7 +339,7 @@ const handleSelect = async (item: any) => {
 };
 
 const { fetchData: moreChannelFetch, data: moreChannelData } =
-  paymentchannellistMore();
+paymentchannelvipMultilistMore();
 
 const handleShowMore = async () => {
   state.showMore = false;

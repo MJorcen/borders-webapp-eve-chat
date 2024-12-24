@@ -603,3 +603,10 @@ export const paymentchannellistMore = () => {
     method: "get",
   });
 };
+
+export const paymentchannelvipMultilistMore = () => {
+  return useRequest({
+    url: "/payment/channel/vipMulti/listMore",
+    method: "get",
+  });
+};

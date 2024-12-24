@@ -205,7 +205,7 @@ import {
   vipMultipriceList,
   matchbeforePaymentlistAnchors,
   vipMultisubmit,
-  paymentchannellistMore,
+  paymentchannelvipMultilistMore,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 const { vipConfigData } = useVipConfigStore();
@@ -345,7 +345,7 @@ const handleSelect = async (item: any) => {
 };
 
 const { fetchData: moreChannelFetch, data: moreChannelData } =
-  paymentchannellistMore();
+paymentchannelvipMultilistMore();
 
 const handleShowMore = async () => {
   state.showMore = false;
