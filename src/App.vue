@@ -486,6 +486,7 @@ const { fetchData: localFetchData } = userlocation();
 
 const handleVisibilityChange = async () => {
   console.log(`我重新进来了`, document.visibilityState);
+
   if (document.visibilityState === "hidden") {
     window.removeEventListener("visibilitychange", () => {});
     Cookies.remove("showDownLoadPopups");
@@ -501,7 +502,7 @@ const handleVisibilityChange = async () => {
         return response.json();
       })
       .then(async function (data) {
-        if (data) {
+        if (data?.latitude !== "" && data?.latitude) {
           await localFetchData({
             latitude: data.latitude,
             longitude: data.longitude,

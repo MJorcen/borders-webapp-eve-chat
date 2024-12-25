@@ -170,9 +170,23 @@
       </div>
 
       <div class="btnBig" v-if="state.showLink">
-        <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
+        <!-- <a
+          v-if="state.linkType === 'h5'"
+          :href="state.payUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div class="btnBox2">Submit</div>
         </a>
+        <a
+          v-else
+          :href="state.payUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="btnBox2">Submit</div>
+        </a> -->
+        <div @click="handleDeepLink" class="btnBox2">Submit</div>
       </div>
     </div>
   </van-popup>
@@ -233,6 +247,7 @@ const state = reactive<any>({
   showMore: true,
   moreChannelParmas: 0,
   choseIndex: 1,
+  linkType: "",
 });
 
 const { fetchData, data } = vipMultipriceList();
@@ -318,28 +333,53 @@ const handleSelect = async (item: any) => {
     }
     return i;
   });
+  buyShop.value = item;
+  state.showLink = true;
+};
+
+const buyShop = ref("");
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannelvipMultilistMore();
+
+const handleDeepLink = async (e: any) => {
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
     forbidClick: true,
+    zIndex: 999999,
   });
   await buyFetchedData({
     priceId: state.payData.id,
-    channelId: item.channel.id,
-    deeplink: false,
+    channelId: buyShop.value.channel.id,
+    deeplink: true,
   });
   if (buySuccess.value) {
     state.payUrl = buyData.value.data.payInfo;
+    state.linkType = buyData.value?.type;
+    const startTime = Date.now();
 
-    state.showLink = true;
-    closeToast();
+    document.addEventListener("visibilitychange", () => {
+      closeToast();
+    });
+
+    window.location.href = state.payUrl;
+
+    if (state.payUrl.indexOf("https") === -1) {
+      setTimeout(() => {
+        const endTime = Date.now();
+        if (endTime - startTime < 2000) {
+          showToast("Payment method not supported.");
+          setTimeout(() => {
+            closeToast();
+          }, 1000);
+        }
+      }, 500); // 延迟检查的时间
+    }
   } else {
     showToast(buyMsg.value);
   }
 };
-
-const { fetchData: moreChannelFetch, data: moreChannelData } =
-paymentchannelvipMultilistMore();
 
 const handleShowMore = async () => {
   state.showMore = false;

@@ -281,7 +281,7 @@ const handleLogin = async () => {
         birthDate: dayjs().format("YYYY-MM-DD"),
       });
       if (userSuccess.value) {
-        if (latitude.value) {
+        if (latitude.value !== "" && typeof latitude.value !== "undefined") {
           await localFetchData(
             getFilterData({
               latitude: latitude.value,

@@ -275,9 +275,23 @@
           </div>
         </div>
         <div class="btnBig" v-if="state.showLink">
-          <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
+          <!-- <a
+            v-if="state.linkType === 'h5'"
+            :href="state.payUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <div class="btnBox">Submit</div>
           </a>
+          <a
+            v-else
+            :href="state.payUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="btnBox">Submit</div>
+          </a> -->
+          <div @click="handleDeepLink" class="btnBox">Submit</div>
         </div>
       </div>
     </van-popup>
@@ -325,6 +339,7 @@ const state = reactive<any>({
   showVipPopup: false,
   showMore: true,
   moreChannelParmas: 0,
+  linkType: "",
 });
 
 const getRemainingMilliseconds = () => {
@@ -358,6 +373,18 @@ const handleSelect = async (item: any) => {
     }
     return i;
   });
+  buyShop.value = item;
+  state.showLink = true;
+};
+
+const router = useRouter();
+
+const buyShop = ref("");
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannellistMore();
+
+const handleDeepLink = async (e: any) => {
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
@@ -366,23 +393,35 @@ const handleSelect = async (item: any) => {
   await submitFetch({
     priceId: state.payData.id,
     specialPriceId: state.payData.specialPriceId,
-    channelId: item.channel.id,
-    deeplink: false,
+    channelId: buyShop.value.channel.id,
+    deeplink: true,
   });
   if (submitSuccess.value) {
     state.payUrl = submitData.value.data.payInfo;
+    state.linkType = submitData.value?.type;
+    const startTime = Date.now();
 
-    state.showLink = true;
-    closeToast();
+    document.addEventListener("visibilitychange", () => {
+      closeToast();
+    });
+
+    window.location.href = state.payUrl;
+
+    if (state.payUrl.indexOf("https") === -1) {
+      setTimeout(() => {
+        const endTime = Date.now();
+        if (endTime - startTime < 2000) {
+          showToast("Payment method not supported.");
+          setTimeout(() => {
+            closeToast();
+          }, 1000);
+        }
+      }, 500); // 延迟检查的时间
+    }
   } else {
     showToast(submitMsg.value);
   }
 };
-
-const router = useRouter();
-
-const { fetchData: moreChannelFetch, data: moreChannelData } =
-  paymentchannellistMore();
 
 const handleShowMore = async () => {
   state.showMore = false;

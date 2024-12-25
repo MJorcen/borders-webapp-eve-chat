@@ -1395,12 +1395,15 @@ const handleAllow = async () => {
     forbidClick: true,
   });
   navigator.geolocation.getCurrentPosition(async function (position) {
-    var latitude = position.coords.latitude;
+    var latitude: any = position.coords.latitude;
     var longitude = position.coords.longitude;
-    await localFetchData({
-      latitude: latitude,
-      longitude: longitude,
-    });
+    if (latitude !== "" && latitude !== "undefined") {
+      await localFetchData({
+        latitude: latitude,
+        longitude: longitude,
+      });
+    }
+
     showToast("Success");
   });
 };
