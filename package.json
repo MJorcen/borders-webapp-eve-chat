@@ -22,6 +22,8 @@
     "build:SpicyChat": "vite build --mode SpicyChat",
     "build:strangers": "vite build --mode strangers",
     "build:SexyChat": "vite build --mode SexyChat",
+    "build:Sexylivechat": "vite build --mode Sexylivechat",
+    "build:Hornyhub": "vite build --mode Hornyhub",
     "preview": "vite preview"
   },
   "dependencies": {

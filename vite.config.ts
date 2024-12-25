@@ -41,6 +41,10 @@ const getOutputDir = (buildCommand) => {
       return "dist-strangers";
     case "build:SexyChat":
       return "dist-SexyChat";
+    case "build:Hornyhub":
+      return "dist-Hornyhub";
+    case "build:Sexylivechat":
+      return "dist-Sexylivechat";
     default:
       return "dist"; // 默认构建输出目录
   }
