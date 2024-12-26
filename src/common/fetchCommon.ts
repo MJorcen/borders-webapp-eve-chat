@@ -37,11 +37,6 @@ const {
 
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
-    showLoadingToast({
-      message: "Please wait...",
-      duration: 0,
-      forbidClick: true,
-    });
     let flag = false;
     let mapMsgArr: any = [];
 

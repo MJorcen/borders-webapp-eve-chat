@@ -1347,7 +1347,7 @@ defineExpose({
 .bottomBoxPushStream {
   position: absolute;
   top: 368px;
-  right: 32px;
+  left: 32px;
   width: 224px;
   height: 300px;
   border-radius: 40px 40px 40px 40px;

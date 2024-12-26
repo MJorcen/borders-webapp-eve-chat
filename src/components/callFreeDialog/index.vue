@@ -233,8 +233,6 @@
             }
           "
         >
-
-        <div class="closeImgMq" @click="handleCallHangUp">
           <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
         </div>
         <div class="bottomBoxConnect">
@@ -473,12 +471,12 @@ const handleCallPickUp = async () => {
       state.tips = "Download the APP for free calls";
       state.isPick = false;
       // emit("update:modelValue", false);
-      const userDetails = getLocalUserDetail();
-      if (userDetails?.user?.vipLevel === 0) {
-        state.showVipPopup = true;
-      } else {
-        state.showRechargePopup = true;
-      }
+      // const userDetails = getLocalUserDetail();
+      // if (userDetails?.user?.vipLevel === 0) {
+      //   state.showVipPopup = true;
+      // } else {
+      //   state.showRechargePopup = true;
+      // }
       // if (configData?.value?.showFirstVipPrompt) {
       //   state.showFirstVipPromptPopup = true;
       // }
@@ -619,7 +617,7 @@ watch(
   () => currentTime.value,
   (newValue) => {
     if (newValue >= props?.wsData?.call?.durationLimit && props.modelValue) {
-      emit("handleCallFrend", props.wsData, currentTime.value, state.isPick);
+      emit("handleCallFrend", props.wsData, currentTime.value, true);
       // state.showDownLoadPopup = true;
       stopTimer();
     }
@@ -725,7 +723,7 @@ const getCountryImg = (item: any) => {
   .topLeft {
     position: absolute;
     top: 130px;
-    left: 20px;
+    right: 20px;
     width: 490px;
     height: 96px;
     display: flex;
@@ -802,7 +800,7 @@ const getCountryImg = (item: any) => {
   .bottomBoxPushStream {
     position: absolute;
     top: 368px;
-    right: 32px;
+    left: 32px;
     width: 224px;
     height: 300px;
     border-radius: 40px 40px 40px 40px;

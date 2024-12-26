@@ -9,7 +9,6 @@
     v-model:show="props.modelValue"
     position="center"
     round
-    z-index="99999"
   >
     <div class="popupBox">
       <div class="popupTitleBox"></div>
@@ -103,7 +102,6 @@ const handleJump = async () => {
   //     console.error("上报时出错:", error);
   //   });
   const encodeURIStr = encodeURIComponent(downData.value);
-  alert(JSON.stringify(obj));
   const url = `https://receive-us.solar-engine.com/receive/turl/EZzkk3a?attribution_type=ua&touchpoint_type=click&adgroup_name=${obj?.adgroup_name}&adgroup_id=${obj?.adgroup_id}&adplan_name=${obj?.adplan_name}&adplan_id=${obj?.adplan_id}&adcreative_name=${obj?.adcreative_name}&adcreative_id=${obj?.adcreative_id}&referrer=${encodeURIStr}`;
 
   window.open(url, "_blank");

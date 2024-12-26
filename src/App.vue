@@ -483,18 +483,18 @@ onMounted(async () => {
   document.addEventListener("visibilitychange", handleVisibilityChange);
   // 切换语言 仅供测试使用
   (window as any)?.translate?.changeLanguage("english");
-  // const obj = getUrlSearchParams();
+  const obj = getUrlSearchParams();
 
-  // // 动态加载 Facebook Pixel 脚本
-  // const script = document.createElement("script");
-  // script.src = "https://connect.facebook.net/en_US/fbevents.js";
-  // script.async = true;
-  // script.onload = () => {
-  //   // 初始化 Pixel
-  //   window?.fbq?.("init", obj?.pixel_id);
-  //   window?.fbq?.("track", "PageView");
-  // };
-  // document.head.appendChild(script);
+  // 动态加载 Facebook Pixel 脚本
+  const script = document.createElement("script");
+  script.src = "https://connect.facebook.net/en_US/fbevents.js";
+  script.async = true;
+  script.onload = () => {
+    // 初始化 Pixel
+    window?.fbq?.("init", obj?.pixel_id);
+    window?.fbq?.("track", "PageView");
+  };
+  document.head.appendChild(script);
   (window as any)?.translate?.changeLanguage("arabic");
 });
 
