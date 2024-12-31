@@ -39,6 +39,7 @@ import {
   getCurrentInstance,
   onActivated,
   computed,
+  nextTick,
 } from "vue";
 import { useRouter } from "vue-router";
 import img1 from "../../assets/img1.webp";
@@ -150,14 +151,57 @@ const { fetchData: configFetch, data: configData } = userconfig();
 onMounted(async () => {
   await configFetch();
 
-  const currentTab = getCurrentTab();
+  const currentTab = await getCurrentTab();
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
   });
 
+  if (configData?.value?.hasPayment) {
+    localStorage.setItem("needRefreshTabbar", "true");
+  }
   emits("update:tabsCurrent", currentTab);
 
-  if (!configData.value?.hasPayment) {
+  // if (!configData.value?.hasPayment) {
+  //   tabsList = tabsList.map((item: any, i: number) => {
+  //     if (i === 1) {
+  //       item.name = "MatchNew";
+  //       item.img = imgMatch;
+  //       item.activeImg = imgMatchActive;
+  //     }
+  //     if (i === 2) {
+  //       item.name = "Nearby";
+  //       item.img = img9;
+  //       item.activeImg = img10;
+  //     }
+  //     return item;
+  //   });
+  // } else {
+  //   tabsList = tabsList.map((item: any, i: number) => {
+  //     if (i === 1) {
+  //       item.name = "MatchHome";
+  //     }
+  //     if (i === 2) {
+  //       item.name = "Dynamic";
+  //       item.img = img3;
+  //       item.activeImg = img4;
+  //     }
+  //     return item;
+  //   });
+  // }
+  const needRefreshTabbar = localStorage.getItem("needRefreshTabbar");
+  if (needRefreshTabbar === "true") {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchHome";
+      }
+      if (i === 2) {
+        item.name = "Dynamic";
+        item.img = img3;
+        item.activeImg = img4;
+      }
+      return item;
+    });
+  } else {
     tabsList = tabsList.map((item: any, i: number) => {
       if (i === 1) {
         item.name = "MatchNew";
@@ -171,20 +215,7 @@ onMounted(async () => {
       }
       return item;
     });
-  } else {
-    tabsList = tabsList.map((item: any, i: number) => {
-      if (i === 1) {
-        item.name = "MatchHome";
-      }
-      if (i === 2) {
-        item.name = "Dynamic";
-        item.img = img3;
-        item.activeImg = img4;
-      }
-      return item;
-    });
   }
-
   if (currentTab === 0) {
     tabsList[0].active = true;
     tabsList[1].active = false;
@@ -219,36 +250,37 @@ onMounted(async () => {
 });
 
 onActivated(async () => {
-  await configFetch();
-  const currentTab = getCurrentTab();
+  // await configFetch();
+  const currentTab = await getCurrentTab();
 
   getLocalSessions().then((res: any) => {
     state.badge = sumUnreadAndLocalCustomUnread(res);
   });
 
-  if (!configData.value?.hasPayment) {
+  const needRefreshTabbar = localStorage.getItem("needRefreshTabbar");
+  if (needRefreshTabbar === "true") {
     tabsList = tabsList.map((item: any, i: number) => {
       if (i === 1) {
-        item.name = "MatchNew";
+        item.name = "MatchHome";
       }
       if (i === 2) {
-        item.name = "Nearby";
-        item.img = img9;
-        item.activeImg = img10;
+        item.name = "Dynamic";
+        item.img = img3;
+        item.activeImg = img4;
       }
       return item;
     });
   } else {
     tabsList = tabsList.map((item: any, i: number) => {
       if (i === 1) {
-        item.name = "MatchHome";
+        item.name = "MatchNew";
         item.img = imgMatch;
         item.activeImg = imgMatchActive;
       }
       if (i === 2) {
-        item.name = "Dynamic";
-        item.img = img3;
-        item.activeImg = img4;
+        item.name = "Nearby";
+        item.img = img9;
+        item.activeImg = img10;
       }
       return item;
     });
@@ -290,7 +322,8 @@ onActivated(async () => {
 });
 
 const getCurrentTab = () => {
-  if (configData.value?.hasPayment) {
+  const needRefreshTabbar = localStorage.getItem("needRefreshTabbar");
+  if (needRefreshTabbar === "true") {
     switch (router?.currentRoute?.value?.name) {
       case "HostList":
         return 0;

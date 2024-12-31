@@ -6,6 +6,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/hostList/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/hostList/index.vue");
+    },
   },
   {
     path: "/login",
@@ -55,6 +58,9 @@ const routes: any = [
       title: "Messages",
     },
     component: async () => await import("@/pages/messages/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/messages/index.vue");
+    },
   },
   {
     path: "/followAndFans",
@@ -81,6 +87,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/chatRoom/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/chatRoom/index.vue");
+    },
   },
   {
     path: "/anchorDetail",
@@ -90,6 +99,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/anchorDetail/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/anchorDetail/index.vue");
+    },
   },
   {
     path: "/blockList",
@@ -108,6 +120,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/dynamic/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/dynamic/index.vue");
+    },
   },
   {
     path: "/blockAndReport",
@@ -162,6 +177,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/wallect/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/wallect/index.vue");
+    },
   },
   {
     path: "/walletDetail",
@@ -171,6 +189,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/walletDetail/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/walletDetail/index.vue");
+    },
   },
   {
     path: "/feedBack",
@@ -189,6 +210,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/matchHome/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/matchHome/index.vue");
+    },
   },
   {
     path: "/gameCat",
@@ -216,6 +240,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/liveRoom/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/liveRoom/index.vue");
+    },
   },
   {
     path: "/matchNew",
@@ -225,6 +252,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/matchNew/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/matchNew/index.vue");
+    },
   },
   {
     path: "/matchDetail",
@@ -234,6 +264,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/matchDetail/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/matchDetail/index.vue");
+    },
   },
   {
     path: "/nearby",
@@ -243,6 +276,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/nearby/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/nearby/index.vue");
+    },
   },
   {
     path: "/membership",
@@ -252,6 +288,9 @@ const routes: any = [
       title: "",
     },
     component: async () => await import("@/pages/membership/index.vue"),
+    beforeEnter: () => {
+      import("@/pages/membership/index.vue");
+    },
   },
 ];
 

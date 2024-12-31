@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { showLoadingToast, showToast } from "vant";
-import { ref, reactive, h, onMounted } from "vue";
+import { ref, reactive, h, onMounted, watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import { webdownload } from "@/api/allApi";
 const emit = defineEmits(["update:modelValue", "handleOpen"]);
@@ -48,14 +48,28 @@ const state = reactive({
   href: "",
 });
 
-onMounted(async () => {
-  await downConfig({
-    userId: user?.user.id,
-  });
-  const encodeURIStr = encodeURIComponent(downData.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
-  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
-});
+watch(
+  () => props.modelValue,
+  async () => {
+    if (props.modelValue) {
+      await downConfig({
+        userId: user?.user.id,
+      });
+      const encodeURIStr = encodeURIComponent(downData.value);
+      state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
+    }
+  },
+  { immediate: true }
+);
+
+// onMounted(async () => {
+//   await downConfig({
+//     userId: user?.user.id,
+//   });
+//   const encodeURIStr = encodeURIComponent(downData.value);
+//   state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
+//   // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=utm_source=pwa&utm_medium=cpc&utm_campaign=fall_sale&pwa_uid=${user?.user?.id}`;
+// });
 </script>
 <style lang="scss" scoped>
 .van-popup {
