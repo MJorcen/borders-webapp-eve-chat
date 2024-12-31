@@ -33,23 +33,25 @@ const parser = ref<any>(null);
 
 onMounted(() => {
   nextTick(() => {
-    player.value = new SVGA.Player(`#${props.divId}`);
-    parser.value = new SVGA.Parser();
-    parser.value.load(
-      props.url,
-      function (videoItem: any) {
-        // 你的svga文件路径
-        // player.value.loops = 1;
-        player?.value?.setVideoItem?.(videoItem);
-        player?.value?.startAnimation?.(); // 开始动画
-      },
-      function (error: any) {
-        // alert("加载失败：" + error);
-        console.log(error, "错误");
-      }
-    );
+    Promise.all([loadingSvga()]);
   });
 });
+
+const loadingSvga = () => {
+  player.value = new SVGA.Player(`#${props.divId}`);
+  parser.value = new SVGA.Parser();
+  parser.value.load(
+    props.url,
+    function (videoItem: any) {
+      player?.value?.setVideoItem?.(videoItem);
+      player?.value?.startAnimation?.(); // 开始动画
+    },
+    function (error: any) {
+      // alert("加载失败：" + error);
+      console.log(error, "错误");
+    }
+  );
+};
 </script>
 <style lang="scss" scoped>
 .bigBoxqq {

@@ -266,6 +266,8 @@ evenBus.on("inviteCall", async (data: any) => {
   if (data[0].body.type === "payment/success") {
     await fetchData();
     setUser(data.value);
+    evenBus.emit("updateTabbar");
+    localStorage.setItem("needRefreshTabbar", "true");
     const link_id = localStorage.getItem("link_id");
     const extra = {
       currency: "USD",
