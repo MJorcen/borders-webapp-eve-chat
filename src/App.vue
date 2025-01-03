@@ -495,6 +495,8 @@ const handleVisibilityChange = async () => {
     window.wsConnet?.send(JSON.stringify(dataObj));
     window.wsConnet?.close();
   } else {
+    const hasToken = localStorage.getItem("web_token");
+    if (!hasToken) return;
     await connectWebSocket(true);
     await fetchData();
     setUser(data.value);

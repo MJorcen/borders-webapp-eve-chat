@@ -224,13 +224,13 @@
               </div> -->
               <img
                 :src="JSON.parse(it?.text)?.mapUrl"
-                style="width: 300px; height: 250px"
+                style="width: 300px; height: 200px"
               />
               <div class="mapFont" v-if="JSON.parse(it?.text)?.name === ''">
-                Allow location access to view the message
+                Open VIP and view for free...
               </div>
               <div class="allowBig" v-if="JSON.parse(it?.text)?.name === ''">
-                <div class="allowBtn" @click.stop="handleAllow">Allow</div>
+                <div class="allowBtn" @click.stop="handleAllow">View</div>
               </div>
               <!-- <GoogleMap
                 :position="getDistance(it)"
@@ -1386,26 +1386,32 @@ const handleSendDistance = async () => {
 };
 
 const { fetchData: localFetchData } = userlocation();
-
 // 授权定位信息
 const handleAllow = async () => {
-  showLoadingToast({
-    duration: 0,
-    message: "Please wait...",
-    forbidClick: true,
-  });
-  navigator.geolocation.getCurrentPosition(async function (position) {
-    var latitude: any = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    if (latitude !== "" && latitude !== "undefined") {
-      await localFetchData({
-        latitude: latitude,
-        longitude: longitude,
-      });
-    }
+  const userDetails = getLocalUserDetail();
+  if (userDetails?.user?.vipLevel === 0) {
+    state.showVipPopup = true;
+  } else {
+    showToast("Message has expired");
+  }
 
-    showToast("Success");
-  });
+  // showLoadingToast({
+  //   duration: 0,
+  //   message: "Please wait...",
+  //   forbidClick: true,
+  // });
+  // navigator.geolocation.getCurrentPosition(async function (position) {
+  //   var latitude: any = position.coords.latitude;
+  //   var longitude = position.coords.longitude;
+  //   if (latitude !== "" && latitude !== "undefined") {
+  //     await localFetchData({
+  //       latitude: latitude,
+  //       longitude: longitude,
+  //     });
+  //   }
+
+  //   showToast("Success");
+  // });
 };
 
 const getDistance = (it: any) => {
@@ -1804,6 +1810,18 @@ const handleSetCash = () => {
           font-size: 28px;
           color: #112437;
           line-height: 40px;
+          animation: flash 2.5s infinite;
+        }
+        @keyframes flash {
+          0% {
+            opacity: 1; /* 完全显示 */
+          }
+          50% {
+            opacity: 0; /* 完全隐藏 */
+          }
+          100% {
+            opacity: 1; /* 再次显示 */
+          }
         }
         .allowBig {
           margin-top: 32px;
@@ -1818,7 +1836,7 @@ const handleSetCash = () => {
             border-radius: 1200px 1200px 1200px 1200px;
             font-family: "Inter", sans-serif;
             font-weight: 400;
-            font-size: 20px;
+            font-size: 34px;
             color: #ffffff;
             text-align: center;
             line-height: 57px;
