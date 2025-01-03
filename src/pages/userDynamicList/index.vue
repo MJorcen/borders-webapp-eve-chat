@@ -200,20 +200,32 @@
             </div>
 
             <div class="bottomBoxRight">
-              <!-- <img
-                class="likeImg"
+              <img
+                class="caozuo"
+                src="./assets/callOp.png"
+                v-if="
+                  user?.user?.id !== item.user.id &&
+                  item.user.onDuty &&
+                  item.user.inCall === 0
+                "
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
                       if (!res) {
-                        state.showRechargePopup = true;
+                        const userDetails = getLocalUserDetail();
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showAppUserDownLoadPopup = true;
+                        }
+                      } else {
+                        state.showAppUserDownLoadPopup = true;
                       }
                     });
                   }
                 "
-                src="./assets/video.png"
-              /> -->
-              <div
+              />
+              <!-- <div
                 v-if="
                   user?.user?.id !== item.user.id &&
                   item.user.active === 1 &&
@@ -244,7 +256,7 @@
                   :divId="`demo${item?.user?.id}${index}`"
                   :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
                 ></SvgaShow>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="line"></div>

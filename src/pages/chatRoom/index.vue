@@ -38,12 +38,12 @@
           </div>
           <div
             class="onlineBox"
-            v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
+            v-if="data?.user?.inCall === 0 && data?.user?.onDuty"
           >
             <div class="onlineYuan"></div>
             <div class="onlineYuanFont">Online</div>
           </div>
-          <div v-if="data?.user?.active === 0" class="offlineBox">
+          <div v-if="!data?.user?.onDuty" class="offlineBox">
             <div class="onlineYuan"></div>
             <div class="onlineYuanFont">Offline</div>
           </div>

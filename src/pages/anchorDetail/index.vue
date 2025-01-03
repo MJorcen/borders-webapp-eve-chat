@@ -171,26 +171,24 @@
               </div>
               <div
                 class="yuan"
-                v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
+                v-if="data?.user?.inCall === 0 && data?.user?.onDuty"
               ></div>
-              <div class="yuan2" v-if="data?.user?.active === 0"></div>
+              <div class="yuan2" v-if="!data?.user?.onDuty"></div>
               <div
                 class="yuan3"
-                v-if="data?.user?.inCall === 1 && data?.user?.active === 1"
+                v-if="data?.user?.inCall === 1 && data?.user?.onDuty"
               ></div>
               <div
                 class="online"
-                v-if="data?.user?.inCall === 0 && data?.user?.active === 1"
+                v-if="data?.user?.inCall === 0 && data?.user?.onDuty"
               >
                 Online
               </div>
-              <div class="onlineOff" v-if="data?.user?.active === 0">
-                Offline
-              </div>
+              <div class="onlineOff" v-if="!data?.user?.onDuty">Offline</div>
               <div
                 class="online"
                 style="color: #f1db15"
-                v-if="data?.user?.inCall === 1 && data?.user?.active === 1"
+                v-if="data?.user?.inCall === 1 && data?.user?.onDuty"
               >
                 Busy
               </div>

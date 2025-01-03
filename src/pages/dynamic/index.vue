@@ -178,22 +178,10 @@
             </div>
 
             <div class="bottomBoxRight">
-              <!-- <img
-                class="likeImg"
-                @click.stop="
-                  () => {
-                    handleGo(item).then((res) => {
-                      if (!res) {
-                        state.showRechargePopup = true;
-                      }
-                    });
-                  }
-                "
-                src="./assets/video.png"
-              /> -->
-              <div
+              <img
                 class="caozuo"
-                v-if="item.user.active === 1 && item.user.inCall === 0"
+                src="./assets/callOp.png"
+                v-if="item.user.onDuty && item.user.inCall === 0"
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
@@ -202,12 +190,30 @@
                         if (userDetails?.user?.vipLevel === 0) {
                           state.showVipPopup = true;
                         } else {
-                          // state.showRechargePopup = true;
-                          // state.showCallDownLoadPopup = true;
                           state.showAppUserDownLoadPopup = true;
                         }
                       } else {
-                        // state.showCallDownLoadPopup = true;
+                        state.showAppUserDownLoadPopup = true;
+                      }
+                    });
+                  }
+                "
+              />
+              <!-- <div
+                class="caozuo"
+                v-if="item.user.onDuty && item.user.inCall === 0"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        const userDetails = getLocalUserDetail();
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                      
+                          state.showAppUserDownLoadPopup = true;
+                        }
+                      } else {
                         state.showAppUserDownLoadPopup = true;
                       }
                     });
@@ -218,7 +224,7 @@
                   :divId="`demo${item?.user?.id}${index}`"
                   :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
                 ></SvgaShow>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="line"></div>

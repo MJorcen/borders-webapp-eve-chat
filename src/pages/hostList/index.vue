@@ -112,7 +112,7 @@
                     class="yuan"
                     v-if="
                       item.user.inCall === 0 &&
-                      item.user.active === 1 &&
+                      item.user.onDuty &&
                       !item.user?.hasVideoStream
                     "
                   ></div>
@@ -121,11 +121,11 @@
                     src="./assets/Group14669@2x.webp"
                     v-if="
                       item.user.inCall === 0 &&
-                      item.user.active === 1 &&
+                      item.user.active &&
                       item.user?.hasVideoStream
                     "
                   />
-                  <div class="yuan2" v-if="item.user.active === 0"></div>
+                  <div class="yuan2" v-if="!item.user.onDuty"></div>
                   <div
                     class="yuan3"
                     v-if="item.user.inCall === 1 && item.user.active === 1"
@@ -135,7 +135,7 @@
                     class="online"
                     v-if="
                       item.user.inCall === 0 &&
-                      item.user.active === 1 &&
+                      item.user.onDuty &&
                       !item.user?.hasVideoStream
                     "
                   >
@@ -145,7 +145,7 @@
                     class="online"
                     v-if="
                       item.user.inCall === 0 &&
-                      item.user.active === 1 &&
+                      item.user.onDuty &&
                       item.user?.hasVideoStream
                     "
                   >
@@ -157,12 +157,10 @@
                   >
                     Busy
                   </div>
-                  <div class="online" v-if="item.user.active === 0">
-                    Offline
-                  </div>
+                  <div class="online" v-if="!item.user.onDuty">Offline</div>
                 </div>
-                <div
-                  v-if="item.user.inCall === 0 && item.user.active === 1"
+                <!-- <div
+                  v-if="item.user.inCall === 0 && item.user.onDuty"
                   class="caozuo"
                   @click.stop="
                     () => {
@@ -183,7 +181,26 @@
                     :divId="`demo${item?.user?.id}${index}`"
                     :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
                   ></SvgaShow>
-                </div>
+                </div> -->
+                <img
+                  class="caozuo"
+                  src="./assets/callOp.png"
+                  v-if="item.user.inCall === 0 && item.user.onDuty"
+                  @click.stop="
+                    () => {
+                      handleGo(item).then((res) => {
+                        const userDetails = getLocalUserDetail();
+                        if (!res) {
+                          if (userDetails?.user?.vipLevel === 0) {
+                            state.showVipPopup = true;
+                          } else {
+                            state.showRechargePopup = true;
+                          }
+                        }
+                      });
+                    }
+                  "
+                />
                 <img
                   v-else
                   class="caozuo"
@@ -216,6 +233,7 @@
     </div>
     <div v-else>
       <van-pull-refresh
+        style="padding-top: 40px"
         v-model="loadingTwo"
         @refresh="
           () => {
@@ -263,21 +281,8 @@
                 :src="item?.portrait"
                 lazy-load
               ></van-image>
-              <!-- <img
-                class="caozuo"
-                src="./assets/caozuo.png"
-                v-if="item?.inCall === 0 && item?.active === 1"
-                @click.stop="
-                  () => {
-                    handleGo(item).then((res) => {
-                      if (!res) {
-                        state.showRechargePopup = true;
-                      }
-                    });
-                  }
-                "
-              /> -->
-              <div
+
+              <!-- <div
                 v-if="item?.inCall === 0 && item?.active === 1"
                 class="caozuo"
                 @click.stop="
@@ -299,7 +304,28 @@
                   :divId="`demo${item?.user?.id}${index}`"
                   :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
                 ></SvgaShow>
-              </div>
+              </div> -->
+              <img
+                class="caozuo"
+                src="./assets/callOp.png"
+                v-if="item.inCall === 0 && item.onDuty"
+                @click.stop="
+                  () => {
+                    handleGo({
+                      user: item,
+                    }).then((res) => {
+                      const userDetails = getLocalUserDetail();
+                      if (!res) {
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
+                      }
+                    });
+                  }
+                "
+              />
               <img
                 v-else
                 class="caozuo"
@@ -323,21 +349,17 @@
                 <div
                   class="yuan"
                   v-if="
-                    item.inCall === 0 &&
-                    item.active === 1 &&
-                    !item?.hasVideoStream
+                    item.inCall === 0 && item.onDuty && !item?.hasVideoStream
                   "
                 ></div>
                 <img
                   class="liveSmallImg"
                   src="./assets/Group14669@2x.webp"
                   v-if="
-                    item.inCall === 0 &&
-                    item.active === 1 &&
-                    item?.hasVideoStream
+                    item.inCall === 0 && item.onDuty && item?.hasVideoStream
                   "
                 />
-                <div class="yuan2" v-if="item.active === 0"></div>
+                <div class="yuan2" v-if="!item.onDuty"></div>
                 <div
                   class="yuan3"
                   v-if="item.inCall === 1 && item.active === 1"
@@ -345,9 +367,7 @@
                 <div
                   class="online"
                   v-if="
-                    item.inCall === 0 &&
-                    item.active === 1 &&
-                    !item?.hasVideoStream
+                    item.inCall === 0 && item.onDuty && !item?.hasVideoStream
                   "
                 >
                   Online
@@ -355,9 +375,7 @@
                 <div
                   class="online"
                   v-if="
-                    item.inCall === 0 &&
-                    item.active === 1 &&
-                    item?.hasVideoStream
+                    item.inCall === 0 && item.onDuty && item?.hasVideoStream
                   "
                 >
                   Live
@@ -368,7 +386,7 @@
                 >
                   Busy
                 </div>
-                <div class="online" v-if="item.active === 0">Offline</div>
+                <div class="online" v-if="!item.onDuty">Offline</div>
               </div>
               <div class="hostName">{{ item.nickname }}</div>
               <div class="bottmBox3">
@@ -704,7 +722,7 @@ const onLoad = () => {
       width: 332px;
       height: 498px;
       border-radius: 10px 10px 10px 10px;
-      // position: relative;
+      position: relative;
       .liveImg {
         width: 100%;
         height: 498px;

@@ -72,7 +72,7 @@
               :src="item?.portrait"
               lazy-load
             ></van-image>
-            <div
+            <!-- <div
               class="caozuo"
               @click.stop="
                 () => {
@@ -101,7 +101,34 @@
                 :divId="`demo${item?.id}${index}`"
                 :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
               ></SvgaShow>
-            </div>
+            </div> -->
+
+            <img
+              class="caozuo"
+              src="./assets/callOp.png"
+              @click.stop="
+                () => {
+                  handleGo({
+                    user: {
+                      inCall: 0,
+                      active: 1,
+                      id: item?.id,
+                    },
+                  }).then((res) => {
+                    if (!res) {
+                      if (userDetail?.user?.vipLevel === 0) {
+                        state.showVipPopup = true;
+                      } else {
+                        // state.showRechargePopup = true;
+                        state.showCallDownLoadPopup = true;
+                      }
+                    } else {
+                      state.showCallDownLoadPopup = true;
+                    }
+                  });
+                }
+              "
+            />
 
             <div class="bottmBox2">
               <!-- <SvgaShow
