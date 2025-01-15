@@ -99,7 +99,6 @@ const compressOutputPlugin = () => {
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  let outputDir = "dist"; // 默认输出目录
   const buildCommand = process.env.npm_lifecycle_event;
 
   return {
@@ -118,57 +117,57 @@ export default defineConfig(({ command, mode }) => {
           },
         },
       }),
-      VitePWA({
-        registerType: "autoUpdate", // 可选：autoUpdate | manual
-        includeAssets: [
-          "favicon.ico",
-          "apple-touch-icon.png",
-          "masked-icon.svg",
-        ],
-        manifest: {
-          name: "My PWA App",
-          short_name: "MyApp",
-          description: "A description of my PWA app.",
-          theme_color: "#ffffff",
-          icons: [
-            {
-              src: "./public/vite.svg",
-              sizes: "192x192",
-              type: "image/png",
-            },
-            // {
-            //   src: "android-chrome-512x512.png",
-            //   sizes: "512x512",
-            //   type: "image/png",
-            // },
-          ],
-        },
-        workbox: {
-          globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg,webp,gif}"],
-          maximumFileSizeToCacheInBytes: 5 * 1024 ** 2, // 5 MB or set to something else
+      // VitePWA({
+      //   registerType: "autoUpdate", // 可选：autoUpdate | manual
+      //   includeAssets: [
+      //     "favicon.ico",
+      //     "apple-touch-icon.png",
+      //     "masked-icon.svg",
+      //   ],
+      //   manifest: {
+      //     name: "My PWA App",
+      //     short_name: "MyApp",
+      //     description: "A description of my PWA app.",
+      //     theme_color: "#ffffff",
+      //     icons: [
+      //       {
+      //         src: "./public/vite.svg",
+      //         sizes: "192x192",
+      //         type: "image/png",
+      //       },
+      //       // {
+      //       //   src: "android-chrome-512x512.png",
+      //       //   sizes: "512x512",
+      //       //   type: "image/png",
+      //       // },
+      //     ],
+      //   },
+      //   workbox: {
+      //     globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg,webp,gif}"],
+      //     maximumFileSizeToCacheInBytes: 5 * 1024 ** 2, // 5 MB or set to something else
 
-          // runtimeCaching: [
-          //   {
-          //     urlPattern: /^https:\/\/fonts\.gstatic\.com/,
-          //     handler: "StaleWhileRevalidate",
-          //     options: {
-          //       cacheName: "google-fonts-webfonts",
-          //       cacheableResponse: {
-          //         statuses: [0, 200],
-          //       },
-          //       expiration: {
-          //         maxEntries: 10,
-          //         maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
-          //       },
-          //     },
-          //   },
-          //   // Add more runtime caching rules as needed
-          // ],
-        },
-        // devOptions: {
-        //   enabled: true,
-        // },
-      }),
+      //     // runtimeCaching: [
+      //     //   {
+      //     //     urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+      //     //     handler: "StaleWhileRevalidate",
+      //     //     options: {
+      //     //       cacheName: "google-fonts-webfonts",
+      //     //       cacheableResponse: {
+      //     //         statuses: [0, 200],
+      //     //       },
+      //     //       expiration: {
+      //     //         maxEntries: 10,
+      //     //         maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+      //     //       },
+      //     //     },
+      //     //   },
+      //     //   // Add more runtime caching rules as needed
+      //     // ],
+      //   },
+      //   // devOptions: {
+      //   //   enabled: true,
+      //   // },
+      // }),
     ],
     resolve: {
       alias: {

@@ -282,16 +282,28 @@
                   </div>
                 </div>
               </div>
-              <!-- <img
+              <img
                 :src="
-                  item.user.inCall === 0 && item.user.active === 1
-                    ? videoImg
-                    : msgImg
+                  item.user.inCall === 0 && item.user.onDuty ? videoImg : msgImg
                 "
-                @click="handleGo(item)"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
+
+                      if (!res) {
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
+                      }
+                    });
+                  }
+                "
                 class="callBoxItemRight"
-              /> -->
-              <div
+              />
+              <!-- <div
                 class="caozuo"
                 @click.stop="
                   () => {
@@ -316,7 +328,7 @@
                   :divId="`demo${item?.user?.id}${index}`"
                   :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
                 ></SvgaShow>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -367,7 +379,7 @@ import { useImHook } from "@/hook/useIm";
 import { callrecordlist, notiflist, livelist, userconfig } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import msgImg from "./assets/ic_video@2x (1).png";
-import videoImg from "./assets/ic_video@2x.png";
+import videoImg from "./assets/callOp.png";
 import evenBus from "@/common/evenBus";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
@@ -380,6 +392,7 @@ import { useVipConfigStore } from "@/stores/vipConfig";
 import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
 import SignPopup from "@/components/signPopup/index.vue";
 import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
 
 const { userDetail }: any = useUserDetailStore();
 

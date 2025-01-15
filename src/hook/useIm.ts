@@ -33,9 +33,11 @@ export const useImHook = () => {
     console.log("error::", e);
   }
 
+  const isDev = import.meta.env.env === "development";
+
   const nim: any = SDK.NIM.getInstance({
     appKey: import.meta.env.VITE_APP_IM_APPKEY,
-    debug: import.meta.env.VITE_NODE_ENV === "prod" ? false : true,
+    debug: isDev,
     db: true,
     dbLog: true,
     account: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
