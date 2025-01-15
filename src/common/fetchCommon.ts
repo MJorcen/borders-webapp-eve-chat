@@ -57,7 +57,7 @@ export const handleGo = async (item: any) => {
         } else {
           await callFetch({
             type: 1,
-            toUserId: item.user.id,
+            toUserId: item?.user?.id || 123,
             scene: "普通呼叫场景",
           });
           if (callSuccess.value) {
