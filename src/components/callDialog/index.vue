@@ -485,7 +485,7 @@ const stopTimer = () => {
 // 计时器
 const startTime = ref(0);
 const currentTime = ref(0);
-const timerId = ref(null);
+const timerId = ref<any>(null);
 
 const { fetchData: userGiftListFetch, data: userGiftListData } =
   usergiftmalelist();
@@ -504,6 +504,7 @@ watch(
     state.msgList = [];
     state.showInput = true;
     state.showAskForGift = false;
+    await scheduler.yield();
     stopTimer();
     if (newValue) {
       try {

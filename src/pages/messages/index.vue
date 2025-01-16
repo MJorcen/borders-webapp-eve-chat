@@ -519,6 +519,7 @@ onMounted(async () => {
   // await getMsgList(hooksState.messageList);
 
   document.body.style.overflow = "auto";
+  await scheduler.yield();
   getLocalSessions().then((sessions: any) => {
     showLoadingToast({
       duration: 0,
@@ -530,6 +531,7 @@ onMounted(async () => {
 });
 
 onActivated(async () => {
+  await scheduler.yield();
   await getList();
   await noticeFetch({
     tab: 3,

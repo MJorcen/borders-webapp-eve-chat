@@ -586,7 +586,7 @@ const emit = defineEmits([
 // 计时器
 const startTime = ref(0);
 const currentTime = ref(0);
-const timerId = ref(null);
+const timerId = ref<any>(null);
 
 const startTimer = () => {
   startTime.value = Date.now() - currentTime.value * 1000;
@@ -603,6 +603,7 @@ watch(
     state.showVideo = false;
     state.msgList = [];
     toggleBodyScroll(newValue);
+    await scheduler.yield();
     if (newValue) {
       nextTick(() => {
         audioRef.value.muted = false;

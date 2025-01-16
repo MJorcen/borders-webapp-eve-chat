@@ -123,7 +123,10 @@ const {
   msg: matchStopMsg,
 } = matchstop();
 
-onMounted(() => {
+onMounted(async () => {
+  await scheduler.yield();
+  await nextTick();
+
   nextTick(() => {
     // if (route.name === "MatchHome") {
     // document.body.style.overflow = "hidden";
@@ -132,7 +135,9 @@ onMounted(() => {
   });
 });
 
-onActivated(() => {
+onActivated(async () => {
+  await scheduler.yield();
+
   getPrice();
   window.scrollTo({ top: 0, behavior: "instant" });
 

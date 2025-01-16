@@ -161,6 +161,8 @@ const rightProgressStyle = ref();
 
 onMounted(async () => {
   localStorage.setItem("isMatch", "true");
+  await scheduler.yield();
+  await nextTick();
   handleMatch();
   nextTick(async () => {
     try {
@@ -176,7 +178,7 @@ onUnmounted(() => {
   localStorage.setItem("isMatch", "false");
 
   matchTimeouts.forEach((timeoutId: any) => clearTimeout(timeoutId));
-  matchTimeouts = []; 
+  matchTimeouts = [];
   clearInterval(progressTimer.value);
 });
 

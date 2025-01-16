@@ -138,6 +138,8 @@ const { fetchData: beforeConfigFetch, data: beforeConfigData } =
   matchbeforePaymentconfig();
 
 onMounted(async () => {
+  await scheduler.yield();
+
   await beforeConfigFetch();
 
   showToast(
@@ -173,6 +175,8 @@ onActivated(async () => {
   if (beforeConfigData.value?.remainingTimes === 0) {
     state.shwoCutDownDialog = true;
   }
+  await scheduler.yield();
+
   nextTick(async () => {
     try {
       localStream.value = await zg.createZegoStream();

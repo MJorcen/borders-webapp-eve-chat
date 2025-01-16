@@ -206,8 +206,8 @@
   <Tabbar></Tabbar>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive, onMounted, onActivated } from "vue";
+<script setup lang="ts" name="Mine">
+import { ref, reactive, onMounted, nextTick, onActivated } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Tabbar from "@/components/Tabbar/index.vue";
 import img1 from "./assets/blocklist.webp";
@@ -240,7 +240,9 @@ const {
   success: signSuccess,
 } = checkInvip();
 
-onMounted(() => {
+onActivated(async () => {
+  await nextTick();
+
   getUserDetail();
 });
 

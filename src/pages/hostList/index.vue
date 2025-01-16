@@ -517,6 +517,7 @@ onActivated(async () => {
     top: scrollY,
     behavior: "instant",
   });
+  await scheduler.yield();
   await Promise.all([
     configFetch(),
     configFetchTwo(),

@@ -586,6 +586,7 @@ const { fetchData: configFetchUser, data: configDataUser } = userconfig();
 
 onMounted(async () => {
   state.showPopup = false;
+  await scheduler.yield();
   getUserDetail();
   getReciveGifs();
   getPaidPic();

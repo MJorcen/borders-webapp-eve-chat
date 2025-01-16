@@ -736,6 +736,9 @@ const SvgaDialogRef = ref<any>();
 onMounted(async () => {
   getUserData();
   await configFetch();
+  await scheduler.yield();
+  await nextTick();
+
   nextTick(() => {
     // var height = document.body.clientHeight;
     window.scrollTo({ top: 100000000, behavior: "instant" });

@@ -210,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useVipConfigStore } from "@/stores/vipConfig";
 import QuickPopup from "@/components/quickPopup/index.vue";
@@ -261,6 +261,7 @@ const { fetchData: fetchMatchbeforePaymentlistAnchors, data: beforeAnchors } =
   matchbeforePaymentlistAnchors();
 
 onMounted(async () => {
+  await nextTick();
   await fetchMatchbeforePaymentlistAnchors({
     sence: "random_one",
   });

@@ -291,7 +291,14 @@
 <script lang="ts" setup name="Dynamic">
 import Tabbar from "@/components/Tabbar/index.vue";
 import { showImagePreview, showLoadingToast, showToast } from "vant";
-import { reactive, ref, onMounted, onActivated, onDeactivated } from "vue";
+import {
+  reactive,
+  ref,
+  onMounted,
+  onActivated,
+  onDeactivated,
+  nextTick,
+} from "vue";
 import {
   postrecommendList,
   userfollow,
@@ -321,10 +328,12 @@ const handleScroll = () => {
   scrollY.value = window.pageYOffset;
 };
 
-onActivated(() => {
+onActivated(async () => {
+  await nextTick();
   state.showPopup = false;
   document.body.style.overflow = "auto";
   window.addEventListener("scroll", handleScroll);
+  await scheduler.yield();
   const scrollY = localStorage.getItem("dynaMicScroll") || 0;
   window.scrollTo({
     top: scrollY as number,

@@ -9,6 +9,7 @@
             'Dynamic',
             'MatchHome',
             'MatchNew',
+            'Mine',
           ]"
         >
           <component :is="Component" :key="route.path"> </component>
