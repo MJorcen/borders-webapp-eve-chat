@@ -3,6 +3,14 @@
     <div class="title">Match</div>
     <div class="kongBox">
       <img src="./assets/Group 1000004710@2x.png" class="bigImg" />
+      <div class="posBox">
+        <SvgaShow
+          :divId="'demoase'"
+          :width="350"
+          :height="350"
+          :url="'https://fs.duome.live/app/match/match.svga'"
+        ></SvgaShow>
+      </div>
     </div>
 
     <div class="matchBig">
@@ -54,6 +62,12 @@
     <source src="./assets/match.mp3" />
   </audio>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <!-- <FirstVipPromptPopup
+    :video-url="configData.firstVipPromptVideo"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup> -->
   <Tabbar></Tabbar>
 </template>
 
@@ -61,24 +75,42 @@
 import { ref, reactive, onMounted, nextTick, onActivated } from "vue";
 import Tabbar from "@/components/Tabbar/index.vue";
 import { useRoute } from "vue-router";
-import { matchprice, matchstart, matchstop } from "@/api/allApi";
+import {
+  matchprice,
+  matchstart,
+  matchstop,
+  vipconfig,
+  userconfig,
+} from "@/api/allApi";
 import { showToast } from "vant";
 import evenBus from "@/common/evenBus";
 import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
+import SvgaShow from "@/components/svgaShow/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
+// import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
 
 const route = useRoute();
 
 const state = reactive({
   showBottomFixedBox: false,
   showRechargePopup: false,
+  showVipPopup: false,
+  showFirstVipPromptPopup: false,
 });
+
+const { vipConfigData } = useVipConfigStore();
 
 const audioMatchRef: any = ref(null);
 
 const { userDetail }: any = useUserDetailStore();
 
 const { fetchData: fetchMatchPrice, data: matchPriceData } = matchprice();
+
+const { fetchData: configFetch, data: configData } = userconfig();
+
 const {
   fetchData: fetchMatchStart,
   success: matchStartSuccess,
@@ -91,7 +123,10 @@ const {
   msg: matchStopMsg,
 } = matchstop();
 
-onMounted(() => {
+onMounted(async () => {
+  await scheduler.yield();
+  await nextTick();
+
   nextTick(() => {
     // if (route.name === "MatchHome") {
     // document.body.style.overflow = "hidden";
@@ -100,7 +135,9 @@ onMounted(() => {
   });
 });
 
-onActivated(() => {
+onActivated(async () => {
+  await scheduler.yield();
+
   getPrice();
   window.scrollTo({ top: 0, behavior: "instant" });
 
@@ -112,6 +149,7 @@ const getPrice = async () => {
 };
 
 const handleMatch = async (type: number) => {
+  // await configFetch();
   await fetchMatchStart({
     type,
   });
@@ -124,7 +162,17 @@ const handleMatch = async (type: number) => {
     } else {
       state.showBottomFixedBox = false;
       showToast(matchStartMsg.value);
-      state.showRechargePopup = true;
+      const userDetails = getLocalUserDetail();
+
+      if (userDetails?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+      if (configData?.value?.showFirstVipPrompt) {
+        state.showFirstVipPromptPopup = true;
+      }
+
       audioMatchRef.value.pause();
     }
   }
@@ -179,10 +227,15 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    position: relative;
     .bigImg {
       margin-left: 26px;
       margin-right: 26px;
       height: 696px;
+    }
+    .posBox {
+      position: absolute;
+      top: 550px;
     }
   }
 

@@ -1,6 +1,12 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="" left-text="" fixed :border="false">
+    <van-nav-bar
+      title=""
+      left-text=""
+      fixed
+      :border="false"
+      style="background-color: #2c1a1a; color: #fff"
+    >
       <template #title>
         <div class="flex items-center">
           <div class="topTitle">Notification</div>
@@ -11,7 +17,7 @@
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
           @click="
             () => {
               router.go(-1);
@@ -26,6 +32,7 @@
       title-inactive-color="#8C8C8C"
       :sticky="false"
       color="#FF4D42"
+      background="#241213"
     >
       <van-tab title="Interaction">
         <div class="bigBoxs">
@@ -51,7 +58,7 @@
             <van-list
               v-model:loading="loading"
               :finished="state.finished"
-              finished-text="Noting More"
+              finished-text="Nothing More"
               loading-text="Loading..."
               @load="getListLeft(1)"
             >
@@ -60,7 +67,15 @@
                 v-for="(item, index) in state.list"
                 :key="index"
               >
-                <div class="callBoxItem">
+                <div
+                  class="callBoxItem"
+                  @click="
+                    router.push({
+                      name: 'AnchorDetail',
+                      query: { id: item.userId },
+                    })
+                  "
+                >
                   <div class="callBoxItemLeft">
                     <van-image
                       round
@@ -125,7 +140,7 @@
           <van-list
             v-model:loading="loading"
             :finished="state.noticeFinished"
-            finished-text="Noting More"
+            finished-text="Nothing More"
             loading-text="Loading..."
             @load="getListRight(3)"
           >
@@ -153,10 +168,7 @@
                       class="noticeContentBottomLeft"
                       @click="handleTranslate(item)"
                     >
-                      <img
-                        src="./assets/icon_translate@2x (1).png"
-                        class="noticeImg"
-                      />
+                      <img src="./assets/Slice130@2x.webp" class="noticeImg" />
                       <div class="text">See translation</div>
                     </div>
                     <div class="noticeContentBottomRight">
@@ -179,7 +191,7 @@ import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Empty from "@/components/Empty.vue";
 import { notiflist, datatranslate } from "@/api/allApi";
-import NoticeImg from "./assets/ic_sysmess@2x.png";
+import NoticeImg from "./assets/Group14000.webp";
 import { showLoadingToast, showToast } from "vant";
 import { getFilterData } from "@/common/utils";
 
@@ -264,7 +276,7 @@ const active = ref(0);
     font-family: "SF Pro Text", sans-serif;
     font-weight: 600;
     font-size: 34px;
-    color: #1a1a1a;
+    color: #fff;
   }
   .topImg {
     width: 40px;
@@ -275,7 +287,7 @@ const active = ref(0);
     padding-top: 30px;
     .callBigBox {
       //   height: 168px;
-      background: #ffffff;
+      // background: #ffffff;
       display: flex;
       align-items: center;
       padding-left: 32px;
@@ -285,7 +297,7 @@ const active = ref(0);
         justify-content: space-between;
         align-items: center;
         // height: 168px;
-        border-bottom: 2px solid #f5f5f5;
+        border-bottom: 2px dashed #566b88;
         width: 100%;
         padding-bottom: 10px;
         margin-bottom: 20px;
@@ -304,7 +316,7 @@ const active = ref(0);
               font-family: "SF Pro Display", sans-serif;
               font-weight: bold;
               font-size: 36px;
-              color: #1a1a1a;
+              color: #fff;
               margin-bottom: 8px;
             }
             .callContentBottom {
@@ -314,7 +326,7 @@ const active = ref(0);
                 font-family: "SF Pro Display", sans-serif;
                 font-weight: 400;
                 font-size: 28px;
-                color: #404040;
+                color: #eb6300;
                 // width: 300px;
               }
               //   .callContentBottomTwo {
@@ -361,7 +373,7 @@ const active = ref(0);
     padding-top: 40px;
     padding-left: 32px;
     padding-right: 32px;
-    background-color: #f8f8f8;
+    // background-color: #f8f8f8;
     min-height: 100vh;
     .noticeItem {
       display: flex;
@@ -374,12 +386,12 @@ const active = ref(0);
       .noticeContent {
         padding: 24px;
         margin-left: 16px;
-        background: #ffffff;
-        border-radius: 0px 32px 32px 32px;
-        font-family: "SF Pro Display", sans-serif;
+        background: #fff5ed;
+        border-radius: 20px 20px 20px 20px;
+        font-family: "Inter", sans-serif;
         font-weight: 400;
         font-size: 28px;
-        color: #1a1a1a;
+        color: #344054;
       }
       .noticeContentBottom {
         margin-top: 16px;
@@ -395,10 +407,10 @@ const active = ref(0);
             margin-right: 8px;
           }
           .text {
-            font-family: "SF Pro Display", sans-serif;
-            font-weight: 400;
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
             font-size: 24px;
-            color: #ff4d42;
+            color: #ffcaa3;
           }
         }
         .noticeContentBottomRight {

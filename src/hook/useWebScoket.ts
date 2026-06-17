@@ -60,18 +60,19 @@ const useWebSocketHeartbeat = () => {
         startHeartbeat();
         reconnectDelay = INITIAL_RECONNECT_DELAY; // 重置重连延迟时间
         clearTimeout(reconnectTimer); // 取消重连定时器
+        window.wsConnet = ws.value;
       });
 
       // 监听WebSocket消息接收事件
       ws.value.addEventListener("message", (event) => {
         console.log("收到WebSocket消息:", JSON.parse(event.data));
-        eventBus.emit("inviteCall", JSON.parse(event?.data || {}));
 
         const data = JSON.parse(event.data);
 
         if (
           data[0].body.type === "im/p2p/msg/insert" &&
-          data[0].body.data.subType === 0
+          (data[0].body.data.subType === 0 ||
+            data[0]?.body?.data?.type === "maps")
         ) {
           let newWsMsgArr: any = [];
           try {
@@ -81,6 +82,17 @@ const useWebSocketHeartbeat = () => {
           }
           newWsMsgArr.push(data[0].body.data);
           localStorage.setItem("wsMsgArr", JSON.stringify(newWsMsgArr));
+
+          let mapMsgArr: any = [];
+          if (data[0].body.data.type === "maps") {
+            try {
+              mapMsgArr = JSON.parse(localStorage.getItem("mapMsgArr") || "[]");
+              mapMsgArr.push(data[0].body.data.from);
+              localStorage.setItem("mapMsgArr", JSON.stringify(mapMsgArr));
+            } catch (e) {
+              console.log(e);
+            }
+          }
         }
         if (
           data[0].body.type === "im/p2p/msg/insert" &&
@@ -88,7 +100,14 @@ const useWebSocketHeartbeat = () => {
         ) {
           eventBus.emit("insetCallMsg", data[0].body.data);
         }
+        if (data[0].body.type === "gift/askFor") {
+          eventBus.emit("askForGift", data[0].body.data);
+        }
+        // if (data[0].body.type === "live/endLive") {
+        //   eventBus.emit("liveEnd", data[0].body.data);
+        // }
         eventBus.emit("onSendMsg", data);
+        eventBus.emit("inviteCall", JSON.parse(event?.data || {}));
       });
 
       // 监听WebSocket连接关闭事件
@@ -165,11 +184,10 @@ const useWebSocketHeartbeat = () => {
     if (ws.value) {
       ws.value.close();
     }
+
     stopHeartbeat();
     clearTimeout(reconnectTimer);
   };
-
-
 
   // onMounted(connectWebSocket);
   // onUnmounted(disconnectWebSocket);
@@ -180,6 +198,7 @@ const useWebSocketHeartbeat = () => {
     connectWebSocket,
     sendMessage,
     stopConnect,
+    disconnectWebSocket,
   };
 };
 

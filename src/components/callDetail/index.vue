@@ -22,18 +22,18 @@
         <div class="callCost">
           Call cost:<img
             class="w-[16px] h-[16px]"
-            src="./assets/coin_16@2x.png"
+            src="./assets/gold@2x.webp"
           />{{ detailData?.call?.callCost || 0 }}
         </div>
         <div class="callCost">
           Gift cost:<img
             class="w-[16px] h-[16px]"
-            src="./assets/coin_16@2x.png"
+            src="./assets/gold@2x.webp"
           />{{ detailData?.call?.giftCost || 0 }}
         </div>
         <div class="vipBox" v-if="userDetail?.user?.vipLevel === 0">
           <div class="vipFont">
-            Get VIP for
+            <!-- Get VIP for
             <span style="color: #e405ff">{{
               configData?.monthlyGoldBonus
             }}</span>
@@ -41,7 +41,8 @@
             <span style="color: #e405ff">{{
               configData?.monthlyCheckInGoldValue
             }}</span>
-            coins!!!
+            coins!!! -->
+            Get VIP and enjoy unlimited video chats
           </div>
           <div class="getBtn" @click="state.showVipPopup = true">Get</div>
         </div>
@@ -140,12 +141,21 @@ const showReasonPopup = ref(false);
 
 const freeBackPopups = ref(false);
 
-const { userDetail }: any = useUserDetailStore();
+// const { userDetail }: any = useUserDetailStore();
+
+let userDetail: any = {};
 
 watch(
   () => props.modelValue,
   (newValue) => {
     if (newValue) {
+      try {
+        const info: any = localStorage.getItem("userInfo");
+        userDetail = JSON.parse(info as any);
+        // user = user.userDetail;
+      } catch (e) {
+        console.log("error::", e);
+      }
       getDetail();
     }
   }
@@ -355,7 +365,8 @@ const emit = defineEmits(["update:modelValue"]);
   padding-right: 32px;
   .closeBtn {
     height: 100px;
-    background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+    background: #eb6300;
+    // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
     border-radius: 16px 16px 16px 16px;
     font-family: "SF Pro Display", sans-serif;
     font-weight: 500;

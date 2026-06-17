@@ -6,6 +6,19 @@
     round
   >
     <div class="coinBox">
+      <div class="vipBox">
+        <div class="vipBoxItem">
+          <div class="vipBoxItemLeft">
+            Become VIP Get <span style="color: #fdff87">8000</span> coins for
+            just %d!
+          </div>
+          <img
+            @click.stop="state.showVipPopup = true"
+            class="vipBoxItemRight"
+            src="./assets/Group1000004643@2x.webp"
+          />
+        </div>
+      </div>
       <div
         :class="
           item.type === 1
@@ -24,6 +37,8 @@
             state.showLink = false;
 
             state.channelData = item.channelList;
+            state.showMore = true;
+            state.moreChannelParmas = item.money;
           }
         "
       >
@@ -37,7 +52,7 @@
         </div>
         <div class="flex items-center justify-between">
           <div class="coinBoxItemLeft">
-            <img src="./assets/coin_20@2x.png" class="coinBoxItemLeftImg" />
+            <img src="./assets/gold@2x.webp" class="coinBoxItemLeftImg" />
             <div class="coinBoxItemLeftNums">{{ item.goldResult }}</div>
             <div class="coinBoxItemLeftNumsOff" v-if="item.type === 2">
               {{ item.discountInfo }}
@@ -54,7 +69,7 @@
   <van-popup v-model:show="state.showPopup" position="bottom" round>
     <div class="popupBox">
       <div class="popupBoxTop">
-        <img src="./assets/coin_20@2x.png" class="rightImg" />
+        <img src="./assets/gold@2x.webp" class="rightImg" />
         <div class="myWalletFont">{{ state.selectMoney }}</div>
       </div>
       <div class="itemBig">
@@ -71,7 +86,7 @@
               class="choseBoxImg"
             />
             <img
-              src="./assets/ic_select@2x (1).png"
+              src="./assets/ic_select@2x(1).png"
               v-else
               class="choseBoxImg"
             />
@@ -83,14 +98,33 @@
             {{ item.price.symbol }}{{ item.price.money }}
           </div>
         </div>
+        <div class="moreBox" @click="handleShowMore" v-if="state.showMore">
+          <div>More</div>
+          <van-icon name="arrow-down" size="30px" />
+        </div>
       </div>
       <div class="possBig" v-if="state.showLink">
-        <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
+        <!-- <a
+          v-if="state.linkType === 'h5'"
+          :href="state.payUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div class="possBigBtn">Submit</div>
         </a>
+        <a
+          v-else
+          :href="state.payUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="possBigBtn">Submit</div>
+        </a> -->
+        <div @click="handleDeepLink" class="possBigBtn">Submit</div>
       </div>
     </div>
   </van-popup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
 </template>
 
 <script setup lang="ts">
@@ -99,11 +133,16 @@ import {
   rechargeV2priceList,
   rechargeV2pricesubmit,
   userwallet,
+  paymentchannellistMore,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import { useRouter } from "vue-router";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
 
 const { fetchData, data } = rechargeV2priceList();
+
+const { vipConfigData } = useVipConfigStore();
 
 const { fetchData: wollectFetch, data: walletData } = userwallet();
 
@@ -137,6 +176,10 @@ const state = reactive<any>({
   payUrl: "",
   showLink: false,
   channelData: [],
+  showVipPopup: false,
+  showMore: true,
+  moreChannelParmas: 0,
+  linkType: "",
 });
 
 watch(
@@ -200,6 +243,13 @@ const handleSelect = async (item: any) => {
     }
     return i;
   });
+  buyShop.value = item;
+  state.showLink = true;
+};
+
+const buyShop = ref("");
+
+const handleDeepLink = async (e: any) => {
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
@@ -208,13 +258,31 @@ const handleSelect = async (item: any) => {
   await submitFetch({
     priceId: state.payData.id,
     specialPriceId: state.payData.specialPriceId,
-    channelId: item.channel.id,
-    deeplink: false,
+    channelId: buyShop.value.channel.id,
+    deeplink: true,
   });
   if (submitSuccess.value) {
     state.payUrl = submitData.value.data.payInfo;
-    state.showLink = true;
-    closeToast();
+    state.linkType = submitData.value?.type;
+    const startTime = Date.now();
+
+    document.addEventListener("visibilitychange", () => {
+      closeToast();
+    });
+
+    window.location.href = state.payUrl;
+
+    if (state.payUrl.indexOf("https") === -1) {
+      setTimeout(() => {
+        const endTime = Date.now();
+        if (endTime - startTime < 2000) {
+          showToast("Payment method not supported.");
+          setTimeout(() => {
+            closeToast();
+          }, 1000);
+        }
+      }, 500); // 延迟检查的时间
+    }
   } else {
     showToast(submitMsg.value);
   }
@@ -229,8 +297,55 @@ const handleSubmit = async () => {
 };
 
 const router = useRouter();
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannellistMore();
+
+const handleShowMore = async () => {
+  state.showMore = false;
+  await moreChannelFetch({
+    scene: "recharge",
+    money: state.moreChannelParmas,
+  });
+  state.channelData = [...state.channelData, ...moreChannelData.value?.list];
+};
 </script>
 <style lang="scss" scoped>
+.vipBox {
+  width: 100%;
+  // padding-left: 24px;
+  // padding-right: 24px;
+  margin-bottom: 20px;
+  background-color: #2e1819;
+  .vipBoxItem {
+    height: 116px;
+    background: #eb6300;
+    border-radius: 20px 20px 20px 20px;
+    border-image: linear-gradient(
+        180deg,
+        rgba(255, 181, 184, 1),
+        rgba(255, 250, 229, 1),
+        rgba(215, 121, 37, 1)
+      )
+      2 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 32px;
+    padding-right: 22px;
+    .vipBoxItemLeft {
+      font-family: "Inter", sans-serif;
+      font-weight: normal;
+      font-size: 32px;
+      color: #ffffff;
+      line-height: 40px;
+    }
+    .vipBoxItemRight {
+      width: 114px;
+      height: 48px;
+    }
+  }
+}
 .coinBox {
   width: 100%;
   padding-left: 62px;
@@ -250,7 +365,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImg {
-        background-image: url("./assets/Union@2x (1).png");
+        background-image: url("./assets/Union@2x(1).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -268,7 +383,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImgTwo {
-        background-image: url("./assets/Union@2x (2).png");
+        background-image: url("./assets/Union@2x(2).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -324,7 +439,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImg {
-        background-image: url("./assets/Union@2x (1).png");
+        background-image: url("./assets/Union@2x(1).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -342,7 +457,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImgTwo {
-        background-image: url("./assets/Union@2x (2).png");
+        background-image: url("./assets/Union@2x(2).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -400,7 +515,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImg {
-        background-image: url("./assets/Union@2x (1).png");
+        background-image: url("./assets/Union@2x(1).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -418,7 +533,7 @@ const router = useRouter();
       align-items: center;
       justify-content: center;
       .coinBoxItemTopImgTwo {
-        background-image: url("./assets/Union@2x (2).png");
+        background-image: url("./assets/Union@2x(2).png");
         width: 280px;
         height: 40px;
         background-repeat: no-repeat;
@@ -576,6 +691,16 @@ const router = useRouter();
         text-align: center;
       }
     }
+    .moreBox {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
   }
   .possBig {
     position: fixed;
@@ -583,6 +708,7 @@ const router = useRouter();
     width: 100%;
     padding-left: 32px;
     padding-right: 32px;
+
     .possBigBtn {
       width: 100%;
       height: 100px;

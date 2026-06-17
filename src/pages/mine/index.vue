@@ -1,30 +1,32 @@
 <template>
   <div class="bigBox">
-    <div class="editBox" @click="router.push('/EditProfile')">
-      <img src="./assets/ic_edit-data@2x (2).png" class="editImg" />
-      Edit
-    </div>
+    <img
+      src="./assets/editImg.webp"
+      class="editImg"
+      @click="router.push('/editProfile')"
+    />
     <div class="topBox">
       <div class="topBoxLeft">
-        <van-image
-          round
-          fit="cover"
-          :src="data?.user?.avatar"
-          class="avatarImg"
-          lazy-load
-        ></van-image>
+        <div class="avatarBox">
+          <van-image
+            round
+            fit="cover"
+            :src="data?.user?.avatar"
+            class="avatarImg"
+            lazy-load
+          ></van-image>
+          <img :src="getCountryImg(data?.user)" alt="" class="guoImg" />
+        </div>
+
         <div class="topBoxLeftContent">
           <div class="topBoxLeftContentTop">
             <div class="name">{{ data?.user?.nickname }}</div>
-            <!-- <img src="./assets/ic_edit-data@2x.png" class="guoImg" /> -->
-            <img :src="getCountryImg(data?.user)" alt="" class="guoImg" />
-
-            <div class="age">{{ data?.user?.age }}</div>
+            <img src="./assets/Group4414@2x.webp" class="sex" />
           </div>
           <div class="topBoxLeftContentBottom">
             <div class="id">ID:{{ data?.user?.id }}</div>
             <img
-              src="./assets/ic_copy@2x.png"
+              src="./assets/copy-template1@2x.webp"
               class="copyImg"
               @click="handleCopy(data?.user?.id)"
             />
@@ -45,7 +47,7 @@
           })
         "
       >
-        <div class="contentBoxLeftNums">{{ data?.user?.likeCount }}</div>
+        <div class="contentBoxLeftNums">{{ data?.user?.likeCount || 0 }}</div>
         <div class="contentBoxLeftFont">Following</div>
       </div>
       <div class="shu"></div>
@@ -60,39 +62,104 @@
           })
         "
       >
-        <div class="contentBoxLeftNums">{{ data?.user?.fansCount }}</div>
-        <div class="contentBoxLeftFont">Followers</div>
+        <div class="contentBoxLeftNums">{{ data?.user?.fansCount || 0 }}</div>
+        <div class="contentBoxLeftFont">Follow</div>
       </div>
-    </div>
-    <div class="coinsBox" @click="router.push('/wallect')">
-      <div class="coinsBoxLeft">My coins:</div>
-      <div class="coinsBoxRight">{{ walletData?.wallet?.gold }}</div>
+      <div class="shu"></div>
+
+      <div
+        class="contentBoxLeft"
+        @click="
+          router.push({
+            name: 'UserDynamicList',
+            query: { id: data?.user?.id },
+          })
+        "
+      >
+        <div class="contentBoxLeftNums">{{ data?.user?.postCount || 0 }}</div>
+        <div class="contentBoxLeftFont">Moments</div>
+      </div>
+      <div class="shu"></div>
+      <div
+        class="contentBoxLeft"
+        @click="
+          router.push({
+            name: 'Visitor',
+          })
+        "
+      >
+        <div class="contentBoxLeftNums">{{ data?.user?.viewedCount || 0 }}</div>
+        <div class="contentBoxLeftFont">Visitor</div>
+      </div>
     </div>
 
     <div
       class="vipBox"
-      v-if="data?.user?.vipLevel === 0"
-      @click="state.showVipPopup = true"
-    >
-      <div class="vipBoxLeft">
-        Become <span style="color: #ffec40">VIP</span>
-      </div>
-      <div class="vipBoxRight">
-        Get
-        <span style="color: #ffec40">{{ configData?.monthlyGoldBonus }}</span>
-        coins
-      </div>
-    </div>
-    <div
-      class="vipBoxTwo"
       v-if="data?.user?.vipLevel !== 0"
       @click="router.push('/signDetail')"
     >
-      <div class="vipBoxTwoLeft">
-        <div class="vipBoxTwoLeftOne">Valid until</div>
-        <div class="vipBoxTwoLeftTwo">{{ data?.info?.vipValidEnd }}</div>
+      <img class="vipBoxLeft" src="./assets/image922@2x.webp" />
+      <div class="becomeVipBoxFont1" v-if="data?.user?.vipLevel === 0">
+        Become <span style="color: #ffec93">VIP</span>
       </div>
-      <div class="possBox" @click.stop="handleSign">Sign-in</div>
+      <div class="becomeVipBoxFont2" v-if="data?.user?.vipLevel === 0">
+        Get <span style="color: #ffec93">8000</span> coins
+      </div>
+      <div class="vipBoxRight">
+        <div v-if="data?.user?.vipLevel !== 0" class="vipBoxRightOne">
+          Valid until {{ data?.info?.vipValidEnd }}
+        </div>
+        <img
+          @click="router.push('/signDetail')"
+          v-if="data?.user?.vipLevel !== 0"
+          class="youjiantou"
+          src="./assets/Polygon18@2x.webp"
+        />
+        <img
+          v-if="data?.user?.vipLevel === 0"
+          @click="state.showVipPopup = true"
+          class="signImg"
+          src="./assets/Group1000004485@2x.webp"
+        />
+      </div>
+    </div>
+    <div class="vipBox" v-else @click="router.push('/membership')">
+      <img class="vipBoxLeft" src="./assets/image922@2x.webp" />
+      <div class="becomeVipBoxFont1" v-if="data?.user?.vipLevel === 0">
+        Become <span style="color: #ffec93">VIP</span>
+      </div>
+      <div class="becomeVipBoxFont2" v-if="data?.user?.vipLevel === 0">
+        Get <span style="color: #ffec93">8000</span> coins
+      </div>
+      <div class="vipBoxRight">
+        <div v-if="data?.user?.vipLevel !== 0" class="vipBoxRightOne">
+          Valid until {{ data?.info?.vipValidEnd }}
+        </div>
+        <img
+          @click="router.push('/signDetail')"
+          v-if="data?.user?.vipLevel !== 0"
+          class="youjiantou"
+          src="./assets/Polygon18@2x.webp"
+        />
+        <img
+          v-if="data?.user?.vipLevel === 0"
+          @click="state.showVipPopup = true"
+          class="signImg"
+          src="./assets/Group1000004485@2x.webp"
+        />
+      </div>
+    </div>
+    <div
+      class="coinsBox"
+      v-if="configDataUser?.hasPayment"
+      @click="router.push('/wallect')"
+    >
+      <img src="./assets/gold-8@2x.webp" class="coinImg" />
+      <div>
+        <div class="coinsBoxLeft">My coins:</div>
+        <div class="coinsBoxRight">{{ walletData?.wallet?.gold || 0 }}</div>
+      </div>
+      <img src="./assets/Group1000004825@2x.webp" class="coinImgBg" />
     </div>
     <div class="settingBox">
       <div
@@ -106,61 +173,76 @@
         :key="index"
       >
         <div class="flex items-center">
-          <img :src="item.icon" class="iconImg" />
+          <img
+            :src="item.icon"
+            :class="item.name === 'Feedback' ? 'iconImgSmall' : 'iconImg'"
+          />
           <div class="itemBoxLeft">{{ item.name }}</div>
         </div>
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
     </div>
-
-    <div class="settingBox" v-if="environmentVariable === 'development'">
-      <div class="itemBox" @click="handleClearStoranage">
+    <!-- v-if="environmentVariable !== 'prod'" -->
+    <!-- <div class="settingBox" v-if="environmentVariable !== 'prod'">
+      <div class="itemBox" @click="(event) => handleClearStoranage(event)">
         <div class="flex items-center">
           <img :src="img3" class="iconImg" />
           <div class="itemBoxLeft">{{ "清缓存" }}</div>
         </div>
         <van-icon name="arrow" color="#cccccc" size="20" />
       </div>
-    </div>
+    </div> -->
   </div>
-  <!-- <audio width="100%" height="100%" controls class="audioClass" ref="audioRef">
-    <source
-      src="https://img.duome.live/audio/230826/047a2f3954fb213f0a652624f75c7d57.aac"
-      type="audio/aac"
-    />
-
-  </audio>
-  <a :href="state.href">跳转</a> -->
+  <!-- v-if="environmentVariable === 'development'" -->
+  <!-- <a
+    v-if="environmentVariable === 'development'"
+    style="color: #fff"
+    :href="state.href"
+    >跳转</a
+  > -->
   <div class="w-[100%] h-[100px]"></div>
 
   <VipPopup :vipConfg="configData" v-model="state.showVipPopup"></VipPopup>
   <Tabbar></Tabbar>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive, onMounted, onActivated } from "vue";
+<script setup lang="ts" name="Mine">
+import { ref, reactive, onMounted, nextTick, onActivated } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Tabbar from "@/components/Tabbar/index.vue";
-import img1 from "./assets/ic_block List@2x.png";
-import img2 from "./assets/ic_feedback@2x.png";
-import img3 from "./assets/ic_settings@2x.png";
-import { userDetail, userwallet, vipconfig, checkInvip } from "@/api/allApi";
+import img1 from "./assets/blocklist.webp";
+import img2 from "./assets/Group1000004827@2x.webp";
+import img3 from "./assets//blocklist.webp";
+import {
+  userDetail,
+  userwallet,
+  vipconfig,
+  checkInvip,
+  webdownload,
+  userconfig,
+} from "@/api/allApi";
 import { showLoadingToast, showToast } from "vant";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
+import Cookies from "js-cookie";
 
 const router = useRouter();
 
 const { fetchData, data } = userDetail();
 const { fetchData: wollectFetch, data: walletData } = userwallet();
 const { fetchData: configFetch, data: configData } = vipconfig();
+const { fetchData: downConfig, data: downData } = webdownload();
+const { fetchData: configFetchUser, data: configDataUser } = userconfig();
+
 const {
   fetchData: signFetch,
   msg: signMsg,
   success: signSuccess,
 } = checkInvip();
 
-onMounted(() => {
+onActivated(async () => {
+  await nextTick();
+
   getUserDetail();
 });
 
@@ -178,11 +260,20 @@ const state = reactive({
 const { setUser }: any = useUserDetailStore();
 
 const getUserDetail = async () => {
-  await fetchData();
-  await wollectFetch();
-  await configFetch();
+  await Promise.all([
+    fetchData(),
+    wollectFetch(),
+    configFetch(),
+    configFetchUser(),
+  ]);
+
+  // await downConfig({
+  //   userId: data.value.user.id,
+  // });
   setUser(data.value);
-  state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.idn&uid=${data?.value?.user?.id}`;
+  // const encodeURIStr = encodeURIComponent(downData.value);
+  // state.href = `https://play.google.com/store/apps/details?id=app.duomevideochat.global&referrer=${encodeURIStr}`;
+  // alert(state.href);
 };
 
 const handleSign = async () => {
@@ -226,95 +317,67 @@ const settingList = reactive<any>([
   },
 ]);
 
-const regions = [
-  "bgd",
-  "bra",
-  "col",
-  "egy",
-  "esp",
-  "fra",
-  "idn",
-  "ind",
-  "mar",
-  "nga",
-  "pak",
-  "phl",
-  "usa",
-  "ven",
-  "vnm",
-];
-
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/contryIcon/icon_counties_rectangle_${item?.region.toLowerCase()}.png`,
     import.meta.url
   );
-  const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
-    import.meta.url
-  );
-
-  if (regions.includes(item?.region?.toLowerCase())) {
-    return path;
-  } else {
-    return defaultImg;
-  }
+  return path || "";
 };
 
-const handleClearStoranage = () => {
+const handleClearStoranage = (e) => {
+  // e.preventDefault();
+  // window.location.href = state.href;
+  // window.open(state.href);
+
   localStorage.clear();
+  Cookies.remove("deviceId");
 };
 </script>
 <style lang="scss" scoped>
 .bigBox {
   max-height: 100%;
   position: relative;
-  background-color: #fff;
-  .editBox {
-    // background-size: 100% 100%;
-    // background-size: contain;
-    // background-repeat: no-repeat;
-    // background-image: url("./assets/wode_edit@2x.png");
-    // width: 148px;
-    display: flex;
-    align-items: center;
-    height: 148px;
+  background-color: #241213;
+  .editImg {
     position: absolute;
-    top: 44px;
-    right: 0px;
-    font-family: "SF Pro Display", sans-serif;
-    font-weight: 500;
-    font-size: 28px;
-    color: #ffffff;
-    justify-content: flex-end;
-    padding-right: 30px;
-
-    .editImg {
-      height: 48px;
-      width: 48px;
-      margin-right: 20px;
-    }
+    top: 30px;
+    right: 48px;
+    width: 60px;
+    height: 60px;
   }
   .topBox {
     display: flex;
     align-items: center;
     // height: 100%;
-    min-height: 438px;
+    // min-height: 438px;
     justify-content: space-between;
-    padding-left: 32px;
+    padding-left: 40px;
     padding-right: 32px;
-    padding-top: 150px;
-    background: linear-gradient(180deg, #ff4d42 0%, #ff834e 100%);
+    padding-top: 50px;
     .topBoxLeft {
       display: flex;
       align-items: center;
-      .avatarImg {
-        width: 160px;
-        height: 160px;
-        border: 4px solid #ffffff;
-        border-radius: 50%;
+      .avatarBox {
         margin-right: 32px;
+        position: relative;
+        .avatarImg {
+          width: 160px;
+          height: 160px;
+          border: 4px solid #ffffff;
+          border-radius: 50%;
+        }
+        .guoImg {
+          position: absolute;
+          bottom: 20px;
+          right: 10px;
+          z-index: 10;
+          width: 48px;
+          height: 48px;
+          // border-radius: 50%;
+        }
       }
+
       .topBoxLeftContent {
         .topBoxLeftContentTop {
           display: flex;
@@ -327,10 +390,9 @@ const handleClearStoranage = () => {
             color: #ffffff;
             margin-right: 8px;
           }
-          .guoImg {
-            min-width: 48px;
-            height: 48px;
-            margin-right: 8px;
+          .sex {
+            width: 42px;
+            height: 24px;
           }
           .age {
             width: 32px;
@@ -351,30 +413,27 @@ const handleClearStoranage = () => {
           display: flex;
           align-items: center;
           .id {
-            font-family: "SF Pro Text", sans-serif;
+            font-family: "Inter", sans-serif;
             font-weight: 400;
-            font-size: 24px;
-            color: #ffffff;
+            font-size: 32px;
+            color: #c7c4cc;
             margin-right: 8px;
           }
           .copyImg {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
           }
         }
       }
     }
   }
   .contentBox {
-    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    margin-top: -20px;
-    padding-left: 146px;
-    padding-right: 146px;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
+    margin-top: 26px;
+    padding-left: 22px;
+    padding-right: 22px;
     padding-top: 40px;
     .contentBoxLeft {
       display: flex;
@@ -382,128 +441,121 @@ const handleClearStoranage = () => {
       flex-direction: column;
       align-items: center;
       .contentBoxLeftNums {
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: bold;
-        font-size: 36px;
-        color: #1a1a1a;
-        margin-bottom: 10px;
+        font-size: 40px;
+        color: #ffffff;
+        margin-bottom: 6px;
       }
       .contentBoxLeftFont {
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 500;
-        font-size: 26px;
-        color: #aaaaaa;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #c7c4cc;
       }
     }
     .shu {
       width: 4px;
       height: 60px;
-      background-color: #ebebeb;
-      border: 1px dashed #ebebeb;
+      background-color: #51657c;
+      border: 1px solid #51657c;
     }
   }
   .coinsBox {
-    background-size: 100% 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url("./assets/me_coin_bg@2x.png");
-    height: 176px;
+    height: 238px;
+    background: #601e1e;
+    border-radius: 20px 20px 20px 20px;
     margin-left: 24px;
     margin-right: 24px;
-    margin-top: 40px;
     margin-bottom: 24px;
-    padding-left: 60px;
-    padding-top: 32px;
+    padding-left: 38px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    .coinImg {
+      width: 90px;
+      height: 90px;
+      margin-right: 46px;
+    }
     .coinsBoxLeft {
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: 400;
-      font-size: 28px;
-      color: #ffffff;
-      margin-right: 20px;
-      //   margin-bottom: 16px;
+      font-family: "Inter", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #fef6ca;
+      margin-bottom: 10px;
     }
     .coinsBoxRight {
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: bold;
-      font-size: 56px;
-      color: #ffffff;
-    }
-  }
-  .vipBoxTwo {
-    background-size: 100% 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url("./assets/banner-img@2x.png");
-    height: 176px;
-    margin-left: 24px;
-    margin-right: 24px;
-    overflow: hidden;
-    padding-left: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 60px;
-    padding-right: 40px;
-    .vipBoxTwoLeft {
-      .vipBoxTwoLeftOne {
-        margin-top: 44px;
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 500;
-        font-size: 28px;
-        color: #ffffff;
-        margin-bottom: 20px;
-      }
-      .vipBoxTwoLeftTwo {
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 500;
-        font-size: 28px;
-        color: #ffffff;
-      }
-    }
-    .possBox {
-      background-size: 100% 100%;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-image: url("./assets/fontBg.png");
-      //   padding: 16px 24px 16px 24px;
-      min-width: 158px;
-      min-height: 70px;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: bold;
+      font-family: "Inter", sans-serif;
+      font-weight: 500;
       font-size: 32px;
-      color: #a04d00;
+      color: #fef6ca;
+    }
+    .coinImgBg {
+      width: 230px;
+      height: 236px;
+      position: absolute;
+      right: 0;
+      bottom: 0;
     }
   }
   .vipBox {
-    background-size: 100% 100%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url("./assets/me_vip_bg@2x.png");
-    height: 176px;
+    margin-top: 30px;
+    height: 148px;
+    background: linear-gradient(90deg, #fcb73e 0%, #fc9b57 100%);
+    border-radius: 20px 20px 20px 20px;
     margin-left: 24px;
     margin-right: 24px;
     overflow: hidden;
-    padding-left: 60px;
+    padding-left: 20px;
+    padding-right: 20px;
     position: relative;
-    margin-bottom: 24px;
-
-    .vipBoxLeft {
-      margin-top: 40px;
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: bold;
-      font-size: 34px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .becomeVipBoxFont1 {
+      position: absolute;
+      font-family: "Arial", sans-serif;
+      font-weight: normal;
+      font-size: 28px;
       color: #ffffff;
+      top: 20px;
+      right: 154px;
+    }
+    .becomeVipBoxFont2 {
+      position: absolute;
+      font-family: "Arial", sans-serif;
+      font-weight: normal;
+      font-size: 28px;
+      color: #ffffff;
+      bottom: 18px;
+      right: 162px;
+    }
+    .vipBoxLeft {
+      width: 214px;
+      height: 70px;
     }
     .vipBoxRight {
-      margin-top: 8px;
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: bold;
-      font-size: 29px;
-      color: #ffffff;
+      display: flex;
+      align-items: center;
+      .signImg {
+        width: 132px;
+        height: 40px;
+      }
+      .vipBoxRightOne {
+        width: 122px;
+        height: 72px;
+        font-family: "ABeeZee", sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        color: #ffffff;
+        line-height: 23px;
+        margin-right: 88px;
+      }
+      .youjiantou {
+        width: 40px;
+        height: 40px;
+      }
     }
     .possBox {
       position: absolute;
@@ -527,7 +579,7 @@ const handleClearStoranage = () => {
     margin-top: 40px;
     margin-left: 32px;
     margin-right: 32px;
-    background-color: #fff;
+    // background-color: #fff;
     border-radius: 12px;
     padding-left: 40px;
     padding-right: 40px;
@@ -536,17 +588,23 @@ const handleClearStoranage = () => {
       align-items: center;
       justify-content: space-between;
       height: 120px;
-      border-bottom: 1px solid #a1a1a1;
+      // border-bottom: 1px solid #a1a1a1;
       .itemBoxLeft {
         font-family: "SF Pro Display", sans-serif;
         font-weight: 500;
         font-size: 28px;
-        color: #1a1a1a;
+        color: #fff;
       }
       .iconImg {
         width: 56px;
         height: 56px;
         margin-right: 20px;
+      }
+      .iconImgSmall {
+        margin-left: 5px;
+        width: 45px;
+        height: 45px;
+        margin-right: 25px;
       }
       .itemBoxRight {
         width: 40px;

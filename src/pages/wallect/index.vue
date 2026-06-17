@@ -1,11 +1,17 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar title="My Coins" left-text="" fixed :border="false">
+    <van-nav-bar
+      title="My Coins"
+      style="background-color: #2c1a1a; color: #ffffff"
+      left-text=""
+      fixed
+      :border="false"
+    >
       <template #left>
         <van-icon
           name="arrow-left"
           size="18"
-          color="#000000"
+          color="#ffffff"
           @click="
             () => {
               router.go(-1);
@@ -15,7 +21,7 @@
       </template>
       <template #right>
         <img
-          src="./assets/zhangdan.png"
+          src="./assets/zhangdan.webp"
           class="rightImg"
           @click="router.push('/walletDetail')"
         />
@@ -23,8 +29,165 @@
     </van-nav-bar>
     <div class="myWallet">
       <div class="myWalletFont">My Coins:</div>
-      <img src="./assets/coin_20@2x.png" class="rightImg" />
+      <img src="./assets/gold@2x.webp" class="rightImg" />
       <div class="myWalletFont">{{ walletData?.wallet?.gold }}</div>
+    </div>
+    <div class="swiperBox">
+      <van-swipe
+        class="my-swipe"
+        :autoplay="3000"
+        indicator-color="white"
+        @click="state.showVipPopup = true"
+      >
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">
+                Get {{ vipConfigData?.monthlyGoldBonus }} coins every month
+              </div>
+            </div>
+            <div class="swiperItemBottom">
+              <img class="swiperItemBottomLeft" src="./assets/Group@2x.webp" />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Get coins immediately
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">VIP exclusive sign in</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(1).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Worth
+                  <span style="color: #ff0000">{{
+                    vipConfigData?.monthlyCheckInGoldValue
+                  }}</span>
+                  coins
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Unlimited free text message</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(2).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Chat with other users
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Recharge 15% OFF</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(3).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">Special offer</div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Profiles are displayed at the top</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(4).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Discovered by more people
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">Check who visited my profile</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(5).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  nerver miss the destiny with her
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item>
+          <div class="swiperItem">
+            <div class="topSwiper">
+              <div class="topSwiperItem">VIP badge</div>
+            </div>
+            <div class="swiperItemBottom">
+              <img
+                class="swiperItemBottomLeft"
+                src="./assets/Group@2x(6).webp"
+              />
+              <div class="swiperItemBottomRight">
+                <div class="swiperItemBottomRightTop">
+                  Shine brighter in a crowd
+                </div>
+                <div class="btnBig">
+                  <div class="btn">Get Vip</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-swipe-item>
+      </van-swipe>
     </div>
     <div class="coinBox">
       <div
@@ -44,6 +207,8 @@
             state.payData = item;
             state.showLink = false;
             state.channelData = item.channelList;
+            state.showMore = true;
+            state.moreChannelParmas = item.money;
           }
         "
       >
@@ -57,7 +222,7 @@
         </div>
         <div class="flex items-center justify-between">
           <div class="coinBoxItemLeft">
-            <img src="./assets/coin_20@2x.png" class="coinBoxItemLeftImg" />
+            <img src="./assets/gold@2x.webp" class="coinBoxItemLeftImg" />
             <div class="coinBoxItemLeftNums">{{ item.goldResult }}</div>
             <div class="coinBoxItemLeftNumsOff" v-if="item.type === 2">
               {{ item.discountInfo }}
@@ -70,49 +235,68 @@
         </div>
       </div>
     </div>
-  </div>
-  <van-popup v-model:show="state.showPopup" position="bottom" round>
-    <div class="popupBox">
-      <div class="popupBoxTop">
-        <img src="./assets/coin_20@2x.png" class="rightImg" />
-        <div class="myWalletFont">{{ state.selectMoney }}</div>
-      </div>
-      <div class="itemBig">
-        <div
-          class="itemBox"
-          @click="handleSelect(item)"
-          v-for="(item, index) in state.channelData"
-          :key="index"
-        >
-          <div class="itemBoxLeft">
-            <img
-              src="./assets/ic_select@2x.png"
-              v-if="item.selected"
-              class="choseBoxImg"
-            />
-            <img
-              src="./assets/ic_select@2x (1).png"
-              v-else
-              class="choseBoxImg"
-            />
-            <img :src="item.channel.icon" class="activeSelectImg" alt="" />
-            <div class="activeSelectText">{{ item.channel.displayName }}</div>
-            <div class="activeSelectText">
-              {{ item.channel.discountText }}
+    <van-popup v-model:show="state.showPopup" position="bottom" round>
+      <div class="popupBox">
+        <div class="popupBoxTop">
+          <img src="./assets/gold@2x.webp" class="rightImg" />
+          <div class="myWalletFont">{{ state.selectMoney }}</div>
+        </div>
+        <div class="itemBig">
+          <div
+            class="itemBox"
+            @click="handleSelect(item)"
+            v-for="(item, index) in state.channelData"
+            :key="index"
+          >
+            <div class="itemBoxLeft">
+              <img
+                src="./assets/ic_select@2x.png"
+                v-if="item.selected"
+                class="choseBoxImg"
+              />
+              <img
+                src="./assets/ic_select@2x (1).png"
+                v-else
+                class="choseBoxImg"
+              />
+              <img :src="item.channel.icon" class="activeSelectImg" alt="" />
+              <div class="activeSelectText">{{ item.channel.displayName }}</div>
+              <div class="activeSelectText" style="color: #c50205">
+                {{ item.channel.discountText }}
+              </div>
+            </div>
+            <div class="itemBoxRight">
+              {{ item.price.symbol }}{{ item.price.money }}
             </div>
           </div>
-          <div class="itemBoxRight">
-            {{ item.price.symbol }}{{ item.price.money }}
+          <div class="moreBox" @click="handleShowMore" v-if="state.showMore">
+            <div>More</div>
+            <van-icon name="arrow-down" size="30px" />
           </div>
         </div>
+        <div class="btnBig" v-if="state.showLink">
+          <!-- <a
+            v-if="state.linkType === 'h5'"
+            :href="state.payUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="btnBox">Submit</div>
+          </a>
+          <a
+            v-else
+            :href="state.payUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="btnBox">Submit</div>
+          </a> -->
+          <div @click="handleDeepLink" class="btnBox">Submit</div>
+        </div>
       </div>
-      <div class="btnBig" v-if="state.showLink">
-        <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
-          <div class="btnBox">Submit</div>
-        </a>
-      </div>
-    </div>
-  </van-popup>
+    </van-popup>
+    <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -122,8 +306,13 @@ import {
   rechargeV2priceList,
   rechargeV2pricesubmit,
   userwallet,
+  paymentchannellistMore,
 } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
+
+const { vipConfigData } = useVipConfigStore();
 
 const { fetchData, data } = rechargeV2priceList();
 
@@ -147,6 +336,10 @@ const state = reactive<any>({
   payData: {},
   payUrl: "",
   channelData: [],
+  showVipPopup: false,
+  showMore: true,
+  moreChannelParmas: 0,
+  linkType: "",
 });
 
 const getRemainingMilliseconds = () => {
@@ -180,6 +373,18 @@ const handleSelect = async (item: any) => {
     }
     return i;
   });
+  buyShop.value = item;
+  state.showLink = true;
+};
+
+const router = useRouter();
+
+const buyShop = ref("");
+
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannellistMore();
+
+const handleDeepLink = async (e: any) => {
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
@@ -188,26 +393,56 @@ const handleSelect = async (item: any) => {
   await submitFetch({
     priceId: state.payData.id,
     specialPriceId: state.payData.specialPriceId,
-    channelId: item.channel.id,
-    deeplink: false,
+    channelId: buyShop.value.channel.id,
+    deeplink: true,
   });
   if (submitSuccess.value) {
     state.payUrl = submitData.value.data.payInfo;
+    state.linkType = submitData.value?.type;
+    const startTime = Date.now();
 
-    state.showLink = true;
-    closeToast();
+    document.addEventListener("visibilitychange", () => {
+      closeToast();
+    });
+
+    window.location.href = state.payUrl;
+
+    if (state.payUrl.indexOf("https") === -1) {
+      setTimeout(() => {
+        const endTime = Date.now();
+        if (endTime - startTime < 2000) {
+          showToast("Payment method not supported.");
+          setTimeout(() => {
+            closeToast();
+          }, 1000);
+        }
+      }, 500); // 延迟检查的时间
+    }
   } else {
     showToast(submitMsg.value);
   }
 };
 
-const router = useRouter();
+const handleShowMore = async () => {
+  state.showMore = false;
+  await moreChannelFetch({
+    scene: "recharge",
+    money: state.moreChannelParmas,
+  });
+  state.channelData = [...state.channelData, ...moreChannelData.value?.list];
+};
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .bigBox {
   padding-top: 100px;
   // width: 750px;
-  background: linear-gradient(180deg, #29191a 0%, #481816 100%);
+  // background: linear-gradient(180deg, #29191a 0%, #481816 100%);
   min-height: 100vh;
   .rightImg {
     width: 48px;
@@ -229,6 +464,77 @@ const router = useRouter();
       height: 40px;
     }
   }
+  .swiperBox {
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-bottom: 30px;
+    .swiperItem {
+      background-image: url("./assets/Rectangle2282@2x.webp");
+      width: 100%;
+      height: 264px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      .topSwiper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+        .topSwiperItem {
+          background-image: url("./assets/Rectangle34625260@2x.webp");
+          width: 550px;
+          height: 44px;
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Inter", sans-serif;
+          font-weight: normal;
+          font-size: 32px;
+          color: #ffffff;
+          line-height: 44px;
+        }
+      }
+      .swiperItemBottom {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 28px;
+        padding-right: 28px;
+        .swiperItemBottomLeft {
+          width: 160px;
+          height: 160px;
+        }
+        .swiperItemBottomRight {
+          .swiperItemBottomRightTop {
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 32px;
+            text-align: right;
+            color: #ffffff;
+            margin-bottom: 52px;
+          }
+          .btnBig {
+            display: flex;
+            justify-content: flex-end;
+            .btn {
+              width: 160px;
+              height: 60px;
+              background: #eb6300;
+              border-radius: 20px 20px 20px 20px;
+              border: 2px solid #ffffff;
+              font-family: "Inter", sans-serif;
+              font-weight: normal;
+              font-size: 32px;
+              color: #ffffff;
+              line-height: 60px;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
   .coinBox {
     width: 100%;
     padding-left: 62px;
@@ -244,7 +550,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImg {
-          background-image: url("./assets/Union@2x (1).png");
+          background-image: url("./assets/Union@2x(1).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -262,7 +568,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImgTwo {
-          background-image: url("./assets/Union@2x (2).png");
+          background-image: url("./assets/Union@2x(2).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -317,7 +623,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImg {
-          background-image: url("./assets/Union@2x (1).png");
+          background-image: url("./assets/Union@2x(1).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -335,7 +641,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImgTwo {
-          background-image: url("./assets/Union@2x (2).png");
+          background-image: url("./assets/Union@2x(2).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -393,7 +699,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImg {
-          background-image: url("./assets/Union@2x (1).png");
+          background-image: url("./assets/Union@2x(1).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -411,7 +717,7 @@ const router = useRouter();
         align-items: center;
         justify-content: center;
         .coinBoxItemTopImgTwo {
-          background-image: url("./assets/Union@2x (2).png");
+          background-image: url("./assets/Union@2x(2).png");
           width: 280px;
           height: 40px;
           background-repeat: no-repeat;
@@ -519,7 +825,8 @@ const router = useRouter();
         // width: 160px;
         // height: 64px;
         padding: 7px;
-        background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+        background: #eb6300;
+        // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;
         font-weight: bold;
@@ -528,6 +835,16 @@ const router = useRouter();
         line-height: 64px;
         text-align: center;
       }
+    }
+    .moreBox {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
   }
   .btnBig {
@@ -538,7 +855,8 @@ const router = useRouter();
     padding-right: 32px;
     .btnBox {
       height: 100px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
+      //background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 16px 16px 16px 16px;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;

@@ -22,18 +22,18 @@
         <div class="callCost">
           Call cost:<img
             class="w-[16px] h-[16px]"
-            src="./assets/coin_16@2x.png"
+            src="./assets/gold@2x.webp"
           />{{ props?.wsData?.call?.callCost || 0 }}
         </div>
         <div class="callCost">
           Gift cost:<img
             class="w-[16px] h-[16px]"
-            src="./assets/coin_16@2x.png"
+            src="./assets/gold@2x.webp"
           />{{ props?.wsData?.call?.giftCost || 0 }}
         </div>
         <div class="vipBox">
           <div class="vipFont">
-            Get VIP for
+            <!-- Get VIP for
             <span style="color: #e405ff">{{
               configData?.monthlyGoldBonus
             }}</span>
@@ -41,7 +41,8 @@
             <span style="color: #e405ff">{{
               configData?.monthlyCheckInGoldValue
             }}</span>
-            coins!!!
+            coins!!! -->
+            Get VIP and enjoy unlimited video chats
           </div>
           <div class="getBtn" @click="state.showVipPopup = true">Get</div>
         </div>
@@ -111,7 +112,7 @@
 import { ref, reactive, watch, onUnmounted } from "vue";
 import { callfeedback, vipconfig } from "@/api/allApi";
 import { showToast } from "vant";
-import { formatSecondsToTime } from "@/common/utils";
+import { formatSecondsToTime, getLocalUserDetail } from "@/common/utils";
 import { useUserDetailStore } from "@/stores/userDetail";
 import VipPopup from "@/components/vipPopup/index.vue";
 import RechargePopup from "@/components/rechargePopup/index.vue";
@@ -159,7 +160,16 @@ watch(
   (newValue) => {
     state.showRechargePopup = false;
     if (newValue) {
-      state.showRechargePopup = true;
+      // state.showRechargePopup = true;
+      const userInfo = getLocalUserDetail();
+      if (userInfo?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+
+      toggleBodyScroll(newValue);
+    } else {
       toggleBodyScroll(newValue);
     }
   },
@@ -344,7 +354,8 @@ const emit = defineEmits(["update:modelValue"]);
   padding-right: 32px;
   .closeBtn {
     height: 100px;
-    background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+    background: #eb6300;
+    // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
     border-radius: 16px 16px 16px 16px;
     font-family: "SF Pro Display", sans-serif;
     font-weight: 500;

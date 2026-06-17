@@ -36,7 +36,7 @@ export const userfillInfo = () => {
 // 主播墙发现列表
 export const userrecommendList = () => {
   return useRequest({
-    url: "/user/recommendList",
+    url: "/user/recommendListV2",
     method: "get",
   });
 };
@@ -108,7 +108,7 @@ export const giftlist = () => {
 // 获取其他用户信息
 export const userdetail = () => {
   return useRequest({
-    url: "/user/detail",
+    url: "/user/detailV2",
     method: "get",
   });
 };
@@ -324,7 +324,7 @@ export const checkInvipget = () => {
 // 充值价格列表（V2）
 export const rechargeV2priceList = () => {
   return useRequest({
-    url: "/rechargeV2/priceList",
+    url: "/rechargeV2/priceListV2",
     method: "get",
   });
 };
@@ -437,6 +437,176 @@ export const userunfollow = () => {
 export const webconfig = () => {
   return useRequest({
     url: "/web/config",
+    method: "get",
+  });
+};
+
+// 获取download地址
+export const webdownload = () => {
+  return useRequest({
+    url: "/user/token/jwt/getPwaReferer",
+    method: "get",
+  });
+};
+
+// 获取游戏token
+export const gametoken = () => {
+  return useRequest({
+    url: "/user/token/jwt/games",
+    method: "get",
+  });
+};
+
+export const userlistTabs = () => {
+  return useRequest({
+    url: "/user/listTabs",
+    method: "get",
+  });
+};
+
+export const userpaidalbumlistAnchorAlbum = () => {
+  return useRequest({
+    url: "/user/paid/album/listAnchorAlbum",
+    method: "get",
+    otherApi: true,
+  });
+};
+
+// 付费相册配置
+export const userpaidalbumconfig = () => {
+  return useRequest({
+    url: "/user/paid/album/config",
+    method: "get",
+    otherApi: true,
+  });
+};
+
+// 解锁付费相册（男端）
+export const userpaidalbumunlock = () => {
+  return useRequest({
+    url: "/user/paid/album/unlock",
+    method: "post",
+    otherApi: true,
+  });
+};
+
+// 在线视频流列表
+export const livelistPage = () => {
+  return useRequest({
+    url: "/live/listPage",
+    method: "get",
+  });
+};
+
+// 进入直播观看
+export const livewatch = () => {
+  return useRequest({
+    url: "/live/watch",
+    method: "post",
+  });
+};
+
+// 退出直播观看
+export const liveexitWatch = () => {
+  return useRequest({
+    url: "/live/exitWatch",
+    method: "post",
+  });
+};
+
+// 获取推荐赠送礼物列表（男端）
+export const usergiftmalelist = () => {
+  return useRequest({
+    url: "/user/gift/male/list",
+    method: "get",
+    otherApi: true,
+  });
+};
+
+// 直播间赠送礼物（男端）
+export const giftmalesendOfLive = () => {
+  return useRequest({
+    url: "/user/gift/male/sendOfLive",
+    method: "post",
+    otherApi: true,
+  });
+};
+
+// live发消息-前置校验
+export const livecheckPreIm = () => {
+  return useRequest({
+    url: "/live/checkPreIm",
+    method: "post",
+  });
+};
+
+// 消息列表直播信息
+
+export const livelist = () => {
+  return useRequest({
+    url: "/live/list",
+    method: "get",
+  });
+};
+
+export const userlocation = () => {
+  return useRequest({
+    url: "/user/location",
+    method: "post",
+  });
+};
+
+// 付费前匹配
+export const matchbeforePaymentstart = () => {
+  return useRequest({
+    url: "/match/beforePayment/start",
+    method: "post",
+  });
+};
+
+// 随机获取主播
+export const matchbeforePaymentlistAnchors = () => {
+  return useRequest({
+    url: "/anchor/random/fetch",
+    method: "get",
+  });
+};
+
+// 付费前匹配配置
+export const matchbeforePaymentconfig = () => {
+  return useRequest({
+    url: "/match/beforePayment/config",
+    method: "get",
+  });
+};
+
+// 价格列表
+export const vipMultipriceList = () => {
+  return useRequest({
+    url: "/vipMulti/priceList",
+    method: "get",
+  });
+};
+
+// 购买VIP（三方支付）
+export const vipMultisubmit = () => {
+  return useRequest({
+    url: "/vipMulti/submit",
+    method: "post",
+  });
+};
+
+// 获取更多充值渠道
+export const paymentchannellistMore = () => {
+  return useRequest({
+    url: "/payment/channel/listMore",
+    method: "get",
+  });
+};
+
+export const paymentchannelvipMultilistMore = () => {
+  return useRequest({
+    url: "/payment/channel/vipMulti/listMore",
     method: "get",
   });
 };

@@ -1,6 +1,6 @@
-import { calldial } from "@/api/allApi";
+import { calldial, userconfig } from "@/api/allApi";
 import evenBus from "./evenBus";
-import { showToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -13,21 +13,64 @@ const {
   code,
 } = calldial();
 
+const {
+  fetchData: configFetch,
+  data: configData,
+  success: configSuccess,
+} = userconfig();
+
 export const handleGo = async (item: any) => {
   return new Promise(async (resolve, reject) => {
+    showLoadingToast({
+      message: "Please wait...",
+      duration: 0,
+      forbidClick: true,
+    });
+    let flag = false;
+    let mapMsgArr: any = [];
+
+    try {
+      mapMsgArr = JSON.parse(localStorage.getItem("mapMsgArr") || "[]");
+    } catch (e) {
+      console.log(e);
+    }
+
+    if (mapMsgArr.some((i: any) => i == item.user.id)) {
+      flag = true;
+    }
+
     if (item.user.inCall === 0 && item.user.active === 0) {
       return showToast("Not Online");
     }
     if (item.user.inCall === 0 && item.user.active === 1) {
-      await callFetch({ type: 1, toUserId: item.user.id });
-      if (callSuccess.value) {
-        evenBus.emit("activeCall", { ...callData.value });
-        resolve(true);
+      await configFetch();
+      // if (configData.value?.hasPayment) {
+      //   resolve(true);
+      // } else {
+      //   resolve(false);
+      // }
+
+      if (configSuccess.value) {
+        closeToast();
+        if (configData.value?.hasPayment && flag) {
+          resolve(true);
+        } else {
+          await callFetch({
+            type: 1,
+            toUserId: item?.user?.id || 123,
+            scene: "普通呼叫场景",
+          });
+          if (callSuccess.value) {
+            evenBus.emit("activeCall", { ...callData.value });
+            // resolve(true);
+          } else {
+            if (code.value === 402) {
+              resolve(false);
+            }
+          }
+        }
       } else {
         showToast(callMsg.value);
-        if (code.value === 402) {
-          resolve(false);
-        }
         // evenBus.emit("noMony");
       }
     } else {

@@ -1,65 +1,74 @@
 <template>
-  <van-nav-bar title="Edit Profile" left-text="" fixed :border="false">
-    <template #left>
-      <van-icon
-        @click="router.go(-1)"
-        name="arrow-left"
-        size="18"
-        color="#000000"
-      />
-    </template>
-    <template #right>
-      <div class="rightBtn" @click="handleSave">Save</div>
-    </template>
-  </van-nav-bar>
-  <div class="container">
-    <div class="containerTop">
-      <div class="containerTopLeft">Profile Photo</div>
-      <van-uploader :after-read="afterRead">
-        <img
-          v-if="data?.user?.avatar === ''"
-          src="./assets/Component 4@2x.png"
-          class="containerTopRight"
-          alt=""
-        />
-        <img v-else :src="state.form.avatar" class="containerTopRight" />
-      </van-uploader>
-    </div>
-    <div class="containerTop2">
-      <div class="containerTop2Left">Nickname</div>
-      <div class="containerTop2Right">
-        <input v-model="state.form.nickname" class="inputClass" />
+  <div class="bigBox">
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
+      title="Edit Profile"
+      left-text=""
+      fixed
+      :border="false"
+    >
+      <template #left>
         <van-icon
-          v-if="state.form.nickname !== ''"
-          name="cross"
+          @click="router.go(-1)"
+          name="arrow-left"
           size="18"
-          color="#ebebeb"
-          class="iconClass"
-          @click="state.form.nickname = ''"
+          color="#fff"
+        />
+      </template>
+      <template #right>
+        <div class="rightBtn" @click="handleSave">Save</div>
+      </template>
+    </van-nav-bar>
+    <div class="container">
+      <div class="containerTop">
+        <div class="containerTopLeft">Profile Photo</div>
+        <van-uploader :after-read="afterRead">
+          <img
+            v-if="data?.user?.avatar === ''"
+            src="./assets/Component 4@2x.png"
+            class="containerTopRight"
+            alt=""
+          />
+          <img v-else :src="state.form.avatar" class="containerTopRight" />
+        </van-uploader>
+      </div>
+      <div class="containerTop2">
+        <div class="containerTop2Left">Nickname</div>
+        <div class="containerTop2Right">
+          <input v-model="state.form.nickname" class="inputClass" />
+          <van-icon
+            v-if="state.form.nickname !== ''"
+            name="cross"
+            size="18"
+            color="#ebebeb"
+            class="iconClass"
+            @click="state.form.nickname = ''"
+          />
+        </div>
+      </div>
+      <div class="containerTop2">
+        <div class="containerTop2Left">Gender</div>
+        <div class="containerTop2Right">Male</div>
+      </div>
+      <div class="containerTop3">
+        <div class="containerTop3Ttile">Bio</div>
+        <textarea
+          class="textarea"
+          v-model="state.form.bio"
+          maxlength="200"
+        ></textarea>
+      </div>
+      <div class="uploadBox">
+        <div class="uploadBoxTitle">Photo</div>
+        <van-uploader
+          @delete="handleDelete"
+          accept="image/*"
+          class="upload"
+          v-model="state.fileList"
+          multiple
+          :after-read="afterReadPhoto"
         />
       </div>
-    </div>
-    <div class="containerTop2">
-      <div class="containerTop2Left">Gender</div>
-      <div class="containerTop2Right">Male</div>
-    </div>
-    <div class="containerTop3">
-      <div class="containerTop3Ttile">Bio</div>
-      <textarea
-        class="textarea"
-        v-model="state.form.bio"
-        maxlength="200"
-      ></textarea>
-    </div>
-    <div class="uploadBox">
-      <div class="uploadBoxTitle">Photo</div>
-      <van-uploader
-        @delete="handleDelete"
-        accept="image/*"
-        class="upload"
-        v-model="state.fileList"
-        :after-read="afterReadPhoto"
-      />
     </div>
   </div>
 </template>
@@ -217,54 +226,63 @@ const afterReadPhoto = async (file: any) => {
     forbidClick: true,
     duration: 0,
   });
-  const md532Str = generateRandomString();
-  const filesObg = {
-    name: file.file.name,
-    size: file.file.size,
-    md5: md532Str,
-    width: 100,
-    height: 100,
-    duration: 0,
-  };
-  await uploadFetch({
-    files: JSON.stringify([filesObg]),
-    scene: "album",
-  });
-  if (uploadSuccess.value) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", upploadData.value.list[0].token);
-
-    xhr.onerror = (evt) => {
-      showToast("文件上传失败");
+  for (let i = 0; i < file.length; i++) {
+    const md532Str = generateRandomString();
+    const filesObg = {
+      name: file[i].file.name,
+      size: file[i].file.size,
+      md5: md532Str,
+      width: 100,
+      height: 100,
+      duration: 0,
     };
-
-    xhr.send(file.file);
-    await albumFetchPost({
-      fileId: upploadData.value.list[0].id,
+    await uploadFetch({
+      files: JSON.stringify([filesObg]),
+      scene: "album",
     });
-    if (albumSuccessPost.value) {
-      state.fileList = state.fileList.map((item: any) => {
-        if (item.content === file.content) {
-          item.id = albumDataPostData.value.id;
-        }
-        return item;
-      });
-    } else {
-      showToast(albumMsgPost.value);
-    }
+    if (uploadSuccess.value) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", upploadData.value.list[0].token);
 
-    // state.fileIds.push(upploadData.value.list[0].id);
-    showToast("Success");
-  } else {
-    showToast(uploadMsg.value);
+      xhr.onerror = (evt) => {
+        showToast("文件上传失败");
+      };
+
+      xhr.send(file[i].file);
+      await albumFetchPost({
+        fileId: upploadData.value.list[0].id,
+      });
+      if (albumSuccessPost.value) {
+        state.fileList = state.fileList.map((item: any) => {
+          if (item.content === file[i].content) {
+            item.id = albumDataPostData.value.id;
+          }
+          return item;
+        });
+      } else {
+        showToast(albumMsgPost.value);
+      }
+
+      // state.fileIds.push(upploadData.value.list[0].id);
+      showToast("Success");
+    } else {
+      showToast(uploadMsg.value);
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .rightBtn {
   width: 96px;
   height: 50px;
-  background: linear-gradient(90deg, #fa882d 0%, #ff4393 99%);
+  background: #eb6300;
+  // background: linear-gradient(90deg, #fa882d 0%, #ff4393 99%);
   border-radius: 24px 24px 24px 24px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: bold;
@@ -281,7 +299,7 @@ const afterReadPhoto = async (file: any) => {
   .containerTop {
     height: 200px;
     width: 100%;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px dashed#566B88;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -289,7 +307,7 @@ const afterReadPhoto = async (file: any) => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .containerTopRight {
       width: 160px;
@@ -299,7 +317,7 @@ const afterReadPhoto = async (file: any) => {
   .containerTop2 {
     height: 120px;
     width: 100%;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px dashed#566B88;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -307,7 +325,7 @@ const afterReadPhoto = async (file: any) => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .containerTop2Right {
       display: flex;
@@ -315,13 +333,14 @@ const afterReadPhoto = async (file: any) => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 400;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
       .inputClass {
         font-family: "SF Pro Display", sans-serif;
         font-weight: 400;
         font-size: 32px;
-        color: #1a1a1a;
+        color: #fff;
         text-align: right;
+        background: none;
       }
       .iconClass {
         margin-left: 24px;
@@ -332,18 +351,19 @@ const afterReadPhoto = async (file: any) => {
     // height: 120px;
     padding-top: 20px;
     width: 100%;
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px dashed#566B88;
     .containerTop3Ttile {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .textarea {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;
       font-size: 26px;
-      color: #1a1a1a;
+      color: #fff;
+      background: none;
     }
   }
   .uploadBox {

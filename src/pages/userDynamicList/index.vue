@@ -1,10 +1,16 @@
 <template>
-  <van-nav-bar title="" left-text="" fixed :border="false">
+  <van-nav-bar
+    title=""
+    style="background-color: #2c1a1a; color: #ffffff"
+    left-text=""
+    fixed
+    :border="false"
+  >
     <template #left>
       <van-icon
         name="arrow-left"
         size="18"
-        color="#000000"
+        color="#ffffff"
         @click="
           () => {
             router.go(-1);
@@ -20,6 +26,7 @@
         () => {
           state.list = [];
           state.offset = 0;
+          state.finished = true;
           getList();
         }
       "
@@ -36,11 +43,16 @@
       <van-list
         v-model:loading="loading"
         :finished="state.finished"
-        finished-text="Noting More"
+        finished-text="Nothing More"
         loading-text="Loading..."
         @load="getList"
       >
-        <div class="itemBox" v-for="(item, index) in state?.list" :key="index">
+        <div
+          v-if="state.list.length > 0"
+          class="itemBox"
+          v-for="(item, index) in state?.list"
+          :key="index"
+        >
           <div class="itemBoxTop">
             <div class="itemBoxTopLeft">
               <van-image
@@ -51,6 +63,12 @@
                 :src="item.user.avatar"
                 alt=""
                 class="hostImg"
+                @click="
+                  router.push({
+                    name: 'AnchorDetail',
+                    query: { id: item.user.id },
+                  })
+                "
               ></van-image>
               <div class="name">{{ item.user.nickname }}</div>
               <img :src="getCountryImg(item?.user)" class="countryImg" alt="" />
@@ -64,7 +82,7 @@
                 Follow
               </div> -->
               <img
-                src="./assets/more-horizontal@2x.png"
+                src="./assets/menu-dot-vertical-thin@2x.webp"
                 alt=""
                 class="moreImg"
                 @click="
@@ -88,12 +106,20 @@
               collapse-text="close"
             />
           </div>
-          <div class="transBox" @click="handleTranslate(item)">
-            <img class="transImg" src="./assets/icon_translate@2x.png" />
-            <div class="transFont">See translation</div>
+
+          <div class="transBox" v-if="item?.post?.content !== ''">
+            <img
+              @click="handleTranslate(item)"
+              class="transImg"
+              src="./assets/Slice30@2x.webp"
+            />
+            <div @click="handleTranslate(item)" class="transFont">
+              See translation
+            </div>
           </div>
           <div class="imgFlexBox">
             <van-image
+              v-if="item.images?.[0]?.video !== 1"
               fit="cover"
               radius="8"
               class="photoImg"
@@ -108,79 +134,134 @@
               "
             >
             </van-image>
+            <div v-else style="position: relative">
+              <video
+                class="videoClass"
+                :src="item.images?.[0]?.resourcePath"
+                controls
+                ref="videoRefDynamic"
+                preload="auto"
+              ></video>
+              <div
+                style="
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                  z-index: 22;
+                "
+                @click="handlePlayVideo(item.images?.[0]?.resourcePath)"
+              ></div>
+            </div>
           </div>
           <div class="bottomBox">
-            <img
-              class="likeImg"
-              @click.stop="handleLike(item)"
-              src="./assets/like.png"
-              v-if="item.liked === 0"
-            />
-            <img
-              v-else
-              class="likeImg"
-              @click.stop="handleLike(item)"
-              src="./assets/likeTrue.png"
-            />
-            <div class="likeFont" @click.stop="handleLike(item)">
-              {{ item.post.likeCount }}
+            <div class="bottomBoxLeft">
+              <img
+                class="likeImg"
+                @click.stop="handleLike(item)"
+                src="./assets/like.webp"
+                v-if="item.liked === 0"
+              />
+              <img
+                v-else
+                class="likeImg"
+                @click.stop="handleLike(item)"
+                src="./assets/likeTrue.webp"
+              />
+              <div class="likeFont" @click.stop="handleLike(item)">
+                {{ item.post.likeCount }}
+              </div>
+              <img
+                class="likeImg"
+                @click.stop="
+                  () => {
+                    router.push({
+                      name: 'ChatRoom',
+                      query: { user: JSON.stringify(item.user) },
+                    });
+                  }
+                "
+                src="./assets/message@2x.webp"
+              />
+              <div
+                class="likeFont"
+                @click.stop="
+                  () => {
+                    router.push({
+                      name: 'ChatRoom',
+                      query: { user: JSON.stringify(item.user) },
+                    });
+                  }
+                "
+              >
+                Chat
+              </div>
             </div>
-            <img
-              class="likeImg"
-              @click.stop="
-                () => {
-                  router.push({
-                    name: 'ChatRoom',
-                    query: { user: JSON.stringify(item.user) },
-                  });
-                }
-              "
-              src="./assets/chat.png"
-            />
-            <div
-              class="likeFont"
-              @click.stop="
-                () => {
-                  router.push({
-                    name: 'ChatRoom',
-                    query: { user: JSON.stringify(item.user) },
-                  });
-                }
-              "
-            >
-              Chat
-            </div>
-            <img
-              class="likeImg"
-              @click.stop="
-                () => {
-                  handleGo(item).then((res) => {
-                    if (!res) {
-                      state.showRechargePopup = true;
-                    }
-                  });
-                }
-              "
-              src="./assets/video.png"
-            />
-            <div
-              class="likeFont"
-              @click.stop="
-                () => {
-                  handleGo(item).then((res) => {
-                    if (!res) {
-                      state.showRechargePopup = true;
-                    }
-                  });
-                }
-              "
-              style="margin-right: 0"
-            >
-              Call
+
+            <div class="bottomBoxRight">
+              <img
+                class="caozuo"
+                src="./assets/callOp.png"
+                v-if="
+                  user?.user?.id !== item.user.id &&
+                  item.user.onDuty &&
+                  item.user.inCall === 0
+                "
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      if (!res) {
+                        const userDetails = getLocalUserDetail();
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showAppUserDownLoadPopup = true;
+                        }
+                      } else {
+                        state.showAppUserDownLoadPopup = true;
+                      }
+                    });
+                  }
+                "
+              />
+              <!-- <div
+                v-if="
+                  user?.user?.id !== item.user.id &&
+                  item.user.active === 1 &&
+                  item.user.inCall === 0
+                "
+                class="caozuo"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
+                      if (!res) {
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          // state.showRechargePopup = true;
+                          // state.showCallDownLoadPopup = true;
+                          state.showAppUserDownLoadPopup = true;
+                        }
+                      } else {
+                        // state.showCallDownLoadPopup = true;
+                        state.showAppUserDownLoadPopup = true;
+                      }
+                    });
+                  }
+                "
+              >
+                <SvgaShow
+                  :divId="`demo${item?.user?.id}${index}`"
+                  :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+                ></SvgaShow>
+              </div> -->
             </div>
           </div>
           <div class="line"></div>
         </div>
+        <Empty v-else></Empty>
       </van-list>
     </van-pull-refresh>
   </div>
@@ -193,6 +274,11 @@
     @cancel="state.showPopup = false"
   />
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 
 <script lang="ts" setup>
@@ -209,8 +295,23 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import Empty from "@/components/Empty.vue";
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
+import SvgaShow from "@/components/svgaShow/index.vue";
+import { useUserStore } from "@/stores/user";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
+
+const { user }: any = useUserStore();
 
 const state = reactive<any>({
+  showCallDownLoadPopup: false,
   showPopover: false,
   offset: 0,
   finished: true,
@@ -226,11 +327,31 @@ const state = reactive<any>({
   ],
   blockAndReportId: "",
   showRechargePopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 onMounted(() => {
   getList();
 });
+
+const videoRefDynamic = ref<any>();
+
+const handlePlayVideo = (url: String) => {
+  let currElement = videoRefDynamic.value[0];
+  currElement.src = url;
+  if (currElement.requestFullscreen) {
+    currElement.requestFullscreen();
+  } else if (currElement.mozRequestFullScreen) {
+    currElement.mozRequestFullScreen();
+  } else if (currElement.msRequestFullscreen) {
+    currElement.msRequestFullscreen();
+  } else if (currElement.oRequestFullscreen) {
+    currElement.oRequestFullscreen();
+  } else if (currElement.webkitRequestFullscreen) {
+    currElement.webkitRequestFullScreen();
+  }
+  videoRefDynamic.value.play();
+};
 
 const router = useRouter();
 
@@ -296,7 +417,8 @@ const onSelect = (val: any) => {
       forbidClick: true,
     });
     blockFetch({
-      toUserId: state.blockAndReportId,
+      toUserId: state.blockAndReportId || 123,
+      scene: "个人空间拉黑",
     });
     if (blockSuccess.value) {
       showToast("Success");
@@ -360,39 +482,12 @@ const handleFollow = async (item: any) => {
   }
 };
 
-const regions = [
-  "bgd",
-  "bra",
-  "col",
-  "egy",
-  "esp",
-  "fra",
-  "idn",
-  "ind",
-  "mar",
-  "nga",
-  "pak",
-  "phl",
-  "usa",
-  "ven",
-  "vnm",
-];
-
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/contryIcon/icon_counties_rectangle_${item?.region.toLowerCase()}.png`,
     import.meta.url
   );
-  const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
-    import.meta.url
-  );
-
-  if (regions.includes(item?.region?.toLowerCase())) {
-    return path;
-  } else {
-    return defaultImg;
-  }
+  return path || "";
 };
 </script>
 <style scoped lang="scss">
@@ -401,7 +496,8 @@ const getCountryImg = (item: any) => {
 }
 
 .itemBig {
-  padding-top: 70px;
+  // margin-top: -150px;
+  padding-top: 100px;
   z-index: 1;
   padding-bottom: 150px;
   .itemBox {
@@ -418,14 +514,14 @@ const getCountryImg = (item: any) => {
         display: flex;
         align-items: center;
         .hostImg {
-          width: 80px;
-          height: 80px;
+          width: 90px;
+          height: 90px;
         }
         .name {
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Jost", sans-serif;
           font-weight: 500;
-          font-size: 36px;
-          color: #000000;
+          font-size: 28px;
+          color: #eb6300;
           margin-left: 16px;
         }
         .countryImg {
@@ -458,11 +554,11 @@ const getCountryImg = (item: any) => {
     }
     .content {
       padding-left: 96px;
-      font-family: "SF Pro Display", sans-serif;
+      font-family: "Jost", sans-serif;
       font-weight: 400;
-      font-size: 28px;
-      color: #1a1a1a;
-      line-height: 33px;
+      font-size: 22px;
+      color: #ffffff;
+      line-height: 26px;
       width: 100%;
       // max-height: 64px;
       // display: -webkit-box;
@@ -493,16 +589,19 @@ const getCountryImg = (item: any) => {
       display: flex;
       align-items: center;
       padding-left: 96px;
+      max-width: 350px;
+      margin-bottom: 20px;
+
       .transImg {
         width: 40px;
         height: 40px;
         margin-right: 8px;
       }
       .transFont {
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 400;
+        font-family: "PingFang SC", sans-serif;
+        font-weight: 500;
         font-size: 24px;
-        color: #ff4d42;
+        color: #ffcaa3;
       }
     }
     .imgFlexBox {
@@ -515,31 +614,57 @@ const getCountryImg = (item: any) => {
         height: 172px;
         border-radius: 16px 16px 16px 16px;
       }
+      .videoClass {
+        width: 272px;
+        height: 272px;
+        border-radius: 16px 16px 16px 16px;
+        object-fit: fill;
+      }
     }
     .bottomBox {
       margin-top: 16px;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      // justify-content: flex-end;
+      justify-content: space-between;
+
       margin-bottom: 20px;
-      .likeImg {
-        width: 48px;
-        height: 48px;
-        margin-right: 8px;
+      .bottomBoxLeft {
+        display: flex;
+        align-items: center;
+        padding-left: 74px;
+        .likeImg {
+          width: 42px;
+          height: 42px;
+          margin-right: 8px;
+        }
+
+        .likeFont {
+          margin-right: 32px;
+          font-family: "SF Pro Display", sans-serif;
+          font-weight: 400;
+          font-size: 32px;
+          color: #fff;
+        }
       }
-      .likeFont {
-        margin-right: 32px;
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 400;
-        font-size: 32px;
-        color: #8c8c8c;
+      .bottomBoxRight {
+        .likeImg {
+          width: 80px;
+          height: 80px;
+        }
+        .caozuo {
+          width: 88px;
+          height: 88px;
+          border-radius: 50%;
+          background-color: #f9577e;
+        }
       }
-    }
-    .line {
-      width: 100%;
-      height: 2px;
-      background: rgba(0, 0, 0, 0.04);
-      border-radius: 0px 0px 0px 0px;
+      .line {
+        width: 100%;
+        height: 2px;
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 0px 0px 0px 0px;
+      }
     }
   }
 }

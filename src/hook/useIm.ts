@@ -33,9 +33,11 @@ export const useImHook = () => {
     console.log("error::", e);
   }
 
+  const isDev = import.meta.env.env === "development";
+
   const nim: any = SDK.NIM.getInstance({
     appKey: import.meta.env.VITE_APP_IM_APPKEY,
-    debug: import.meta.env.VITE_NODE_ENV === "prod" ? false : true,
+    debug: isDev,
     db: true,
     dbLog: true,
     account: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
@@ -127,10 +129,9 @@ export const useImHook = () => {
 
     newData.unshift(session);
     console.log("会话更新了", session);
-    evenBus.emit("updateSession", newData);
-    evenBus.emit("updateSessionChatRoom", newData);
+    evenBus.emit("updateSession", session);
+    evenBus.emit("updateSessionChatRoom", session);
     evenBus.emit("updateTopNotification", session);
-    closeToast();
   }
 
   // function onUpdateUser(user: any) {
@@ -139,7 +140,8 @@ export const useImHook = () => {
 
   function onSyncDone() {
     console.log("同步完成");
-    // debugger;
+    closeToast();
+
     const webToken = localStorage.getItem("web_token");
     // if (!webToken) {
     //   connectWebSocket();
@@ -169,9 +171,10 @@ export const useImHook = () => {
         done: (error: any, obj: any) => {
           if (error) {
             reject(error);
-            // closeToast();
           } else {
             msgHistoryArr = obj.msgs || [];
+            console.log(`output->`, obj.msgs);
+            // debugger;
             closeToast();
             resolve(msgHistoryArr);
           }

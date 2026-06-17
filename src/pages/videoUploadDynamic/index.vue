@@ -1,44 +1,53 @@
 <template>
-  <van-nav-bar title="" left-text="" fixed :border="false">
-    <template #left>
-      <van-icon
-        name="arrow-left"
-        size="18"
-        color="#000000"
-        @click="
-          () => {
-            router.go(-1);
-          }
-        "
-      />
-    </template>
-  </van-nav-bar>
-  <div class="titleOne">
-    <span class="text-[#EA1C00]">* </span>Please fill in
-  </div>
-  <div class="textBig">
-    <div class="textBox">
-      <textarea
-        class="textarea"
-        v-model="state.text"
-        maxlength="200"
-      ></textarea>
-      <div class="textRight">{{ state.text.length }}/200</div>
+  <div>
+    <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
+      title=""
+      left-text=""
+      fixed
+      :border="false"
+    >
+      <template #left>
+        <van-icon
+          name="arrow-left"
+          size="18"
+          color="#fff"
+          @click="
+            () => {
+              router.go(-1);
+            }
+          "
+        />
+      </template>
+    </van-nav-bar>
+    <div class="titleOne">
+      <span class="text-[#EA1C00]">* </span>Please fill in
     </div>
-  </div>
-  <div class="titleOne" style="padding-top: 0px">Upload video</div>
-  <div class="uploadBox">
-    <van-uploader
-      @delete="handleDelete"
-      accept="video/*"
-      class="upload"
-      v-model="state.fileList"
-      :after-read="afterRead"
-      :max-count="1"
-    />
-  </div>
-  <div class="possBig">
-    <div @click="handleSubmit" class="possBigBtn">Post</div>
+    <div class="textBig">
+      <div class="textBox">
+        <textarea
+          class="textarea"
+          v-model="state.text"
+          maxlength="200"
+          style="background: none"
+        ></textarea>
+        <div class="textRight">{{ state.text.length }}/200</div>
+      </div>
+    </div>
+    <div class="titleOne" style="padding-top: 0px">Upload video</div>
+    <div class="uploadBox">
+      <van-uploader
+        @delete="handleDelete"
+        accept="video/*"
+        class="upload"
+        v-model="state.fileList"
+        :after-read="afterRead"
+        :max-count="1"
+      />
+    </div>
+    <div class="possBig">
+      <div @click="handleSubmit" class="possBigBtn">Post</div>
+    </div>
   </div>
 </template>
 
@@ -148,12 +157,18 @@ const handleSubmit = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
 .titleOne {
   padding-top: 100px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: 600;
   font-size: 32px;
-  color: #1a1a1a;
+  color: #fff;
   padding-left: 32px;
   margin-bottom: 20px;
 }
@@ -169,7 +184,7 @@ const handleSubmit = async () => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;
       font-size: 26px;
-      color: #1a1a1a;
+      color: #fff;
       min-height: 320px;
       min-width: 100%;
     }
@@ -195,7 +210,8 @@ const handleSubmit = async () => {
   padding-right: 32px;
   .possBigBtn {
     height: 100px;
-    background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+    background: #eb6300;
+    // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
     border-radius: 16px 16px 16px 16px;
     font-family: "SF Pro Display", sans-serif;
     font-weight: 500;

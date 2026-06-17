@@ -1,6 +1,7 @@
 <template>
   <div class="bigBox">
     <van-nav-bar
+      style="background-color: #2c1a1a; color: #fff"
       title="Fill your information"
       left-text=""
       fixed
@@ -62,13 +63,18 @@ import {
   deviceactivate,
   userfillInfo,
   webconfig,
+  userlocation,
 } from "@/api/allApi";
 import { v4 as uuidv4 } from "uuid";
 import Cookies from "js-cookie";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import dayjs from "dayjs";
 import { useRouter } from "vue-router";
-import { generateRandomString, getCurrentQueryParams } from "@/common/utils";
+import {
+  generateRandomString,
+  getCurrentQueryParams,
+  getFilterData,
+} from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import { useImHook } from "@/hook/useIm";
 import { useUserDetailStore } from "@/stores/userDetail";
@@ -150,10 +156,15 @@ const {
 
 const router = useRouter();
 
+const { fetchData: localFetchData } = userlocation();
+
+const latitude = ref<any>("");
+const longitude = ref<any>("");
+
 // 登录
 const handleLogin = async () => {
   showLoadingToast({
-    message: "Loding...",
+    message: "Loading...",
     forbidClick: true,
     duration: 0,
   });
@@ -168,6 +179,8 @@ const handleLogin = async () => {
       console.log(data.country_name); // 输出国家名称，如 'United States'
       localStorage.setItem("region", data.country_code_iso3);
       localStorage.setItem("country", data.country);
+      latitude.value = data.latitude;
+      longitude.value = data.longitude;
     })
     .catch(function (error) {
       console.log("Error fetching API: ", error);
@@ -176,7 +189,7 @@ const handleLogin = async () => {
   //根据缓存获取广告参数
 
   const link_id: any = JSON.parse(
-    localStorage.getItem("__rb_3262701136_link_id")
+    localStorage.getItem(`__rb_${import.meta.env.VITE_ROLBEST_LINKID}_link_id`)
   );
   state.linkId = link_id;
   // state.linkId = "L2410143112486100044585990";
@@ -223,15 +236,16 @@ const handleLogin = async () => {
     // ...state.urlData,
   });
   localStorage.setItem("link_id", state.linkId);
-  await activateFetch({
-    brand: "XIAOMI",
-    model: "MI 10",
-    userAgent: "cs",
-    androidId: "123456",
-    referrer: JSON.stringify(state.urlData),
-
-    // ...res,
-  });
+  await activateFetch(
+    getFilterData({
+      brand: "XIAOMI",
+      model: "MI 10",
+      userAgent: "cs",
+      androidId: "123456",
+      referrer: JSON.stringify(state.urlData),
+      imei: link_id,
+    })
+  );
   if (activateSuccess.value) {
     await fetchData({ deviceId: deviceId });
     if (success.value) {
@@ -267,12 +281,26 @@ const handleLogin = async () => {
         birthDate: dayjs().format("YYYY-MM-DD"),
       });
       if (userSuccess.value) {
+        if (latitude.value !== "" && typeof latitude.value !== "undefined") {
+          await localFetchData(
+            getFilterData({
+              latitude: latitude.value,
+              longitude: longitude.value,
+            })
+          );
+        }
         showToast("Success");
         // closeToast();
         router.push({ name: "HostList" });
         setUser(data.value);
         setUserDetail(data.value);
+        showLoadingToast({
+          duration: 0,
+          message: "Loading...",
+          forbidClick: true,
+        });
         useImHook();
+
         // 写入当前版本号
         localStorage.setItem("version", webConfigData.value.version);
       } else {
@@ -280,6 +308,11 @@ const handleLogin = async () => {
           router.push({ name: "HostList" });
           setUser(data.value);
           setUserDetail(data.value);
+          showLoadingToast({
+            duration: 0,
+            message: "Loading...",
+            forbidClick: true,
+          });
           useImHook();
           localStorage.setItem("version", webConfigData.value.version);
         }
@@ -297,6 +330,15 @@ const handleLogin = async () => {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-nav-bar__title) {
+  color: #fff !important;
+  font-family: "ABeeZee", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 40px !important;
+}
+.bigBox {
+  // background-color: #2c1a1a;
+}
 .contBox {
   //   height: 300px;
   display: flex;
@@ -337,15 +379,16 @@ const handleLogin = async () => {
       font-family: "SF Pro Display", sans-serif;
       font-weight: 600;
       font-size: 32px;
-      color: #1a1a1a;
+      color: #fff;
     }
     .inputClass {
       text-align: right;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 400;
       font-size: 40px;
-      color: #1a1a1a;
+      color: #fff;
       width: 100%;
+      background: none;
     }
     .inputClass::placeholder {
       font-family: "SF Pro Display", sans-serif;
@@ -372,7 +415,7 @@ const handleLogin = async () => {
   margin-left: 156px;
   margin-right: 156px;
   height: 100px;
-  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  background: #eb6300;
   border-radius: 16px 16px 16px 16px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: 500;

@@ -1,6 +1,6 @@
 <template>
   <div class="bigBox">
-    <van-tabbar v-model="props.tabsCurrent">
+    <van-tabbar z-index="8" v-model="props.tabsCurrent" :border="false">
       <van-tabbar-item
         v-for="(item, index) in tabsList"
         :key="index"
@@ -15,7 +15,13 @@
       >
         <template #icon>
           <img
-            class="imgClass"
+            :class="
+              index === 1
+                ? 'imgClassXin'
+                : item?.name === 'Nearby'
+                ? 'fujinClass'
+                : 'imgClass'
+            "
             :src="item.active ? item.activeImg : item.img"
           />
         </template>
@@ -25,28 +31,23 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  reactive,
-  onMounted,
-  watch,
-  getCurrentInstance,
-  onActivated,
-  computed,
-} from "vue";
+import { ref, reactive, onMounted, onActivated, computed, nextTick } from "vue";
 import { useRouter } from "vue-router";
-import img1 from "../../assets/home.png";
-import img2 from "../../assets/homeActive.png";
-import imgMatchActive from "../../assets/matchActive.png";
-import imgMatch from "../../assets/match.png";
-import img3 from "../../assets/gc.png";
-import img4 from "../../assets/gcActive.png";
-import img5 from "../../assets/icon@2x (4).png";
-import img6 from "../../assets/icon@2x (3).png";
-import img7 from "../../assets/icon@2x (2).png";
-import img8 from "../../assets/icon@2x (1).png";
+import img1 from "../../assets/img1.webp";
+import img2 from "../../assets/img2.webp";
+import imgMatchActive from "../../assets/imgMatchActive.webp";
+import imgMatch from "../../assets/imgMatch.webp";
+import img3 from "../../assets/img3.webp";
+import img4 from "../../assets/img4.webp";
+import img5 from "../../assets/img5.webp";
+import img6 from "../../assets/img6.webp";
+import img7 from "../../assets/img7.webp";
+import img8 from "../../assets/img8.webp";
+import img9 from "../../assets/img9.webp";
+import img10 from "../../assets/img10.webp";
 import evenBus from "@/common/evenBus";
 import { useImHook } from "@/hook/useIm";
+import { userconfig } from "@/api/allApi";
 
 export interface Props {
   tabsCurrent: number;
@@ -71,188 +72,143 @@ const emits = defineEmits([
 
 const { nim } = useImHook();
 
-const getLocalSessions = () => {
+const getLocalSessions = async () => {
   return new Promise((resolve, reject) => {
     let arr: any = [];
     nim?.getLocalSessions({
       limit: 100,
-      done: getLocalSessionsDone,
-    });
-
-    function getLocalSessionsDone(error: any, obj: any) {
-      if (!error) {
-        arr = obj.sessions.map((item: any) => {
-          if (item?.localCustom) {
-            try {
-              item.localCustom = JSON.parse(item.localCustom);
-            } catch (err) {
-              console.warn(err);
+      done: (error: any, obj: any) => {
+        if (!error) {
+          arr = obj.sessions.map((item: any) => {
+            if (item?.localCustom) {
+              try {
+                item.localCustom = JSON.parse(item.localCustom);
+              } catch (err) {
+                console.warn(err);
+              }
             }
-          }
-          return item;
-        });
-        resolve(arr);
-      }
-    }
+            return item;
+          });
+          resolve(arr);
+        }
+      },
+    });
   });
 };
 
-evenBus.on("updateonSessions", (data: any) => {
-  getLocalSessions().then((res: any) => {
-    state.badge = sumUnreadAndLocalCustomUnread(res);
-    // if (state.badge > 99) {
-    //   state.badge = "99+";
-    // }
-  });
-
-  // localStorage.setItem("badge", state.badge.toString());
-  // emits("update:modalValue", 23);
+evenBus.on("updateonSessions", async (data: any) => {
+  const sessions = await getLocalSessions();
+  state.badge = sumUnreadAndLocalCustomUnread(sessions);
 });
 
-evenBus.on("updateSession", (data: any) => {
-  getLocalSessions().then((res: any) => {
-    state.badge = sumUnreadAndLocalCustomUnread(res);
-    // if (state.badge > 99) {
-    //   state.badge = "99+";
-    // }
-  });
-
-  // localStorage.setItem("badge", state.badge.toString());
+evenBus.on("updateSession", async (data: any) => {
+  const sessions = await getLocalSessions();
+  state.badge = sumUnreadAndLocalCustomUnread(sessions);
 });
-
-// watch(
-//   () => state.badge,
-//   (newVal) => {
-//     console.log(`state.badge`, newVal);
-//   }
-// );
 
 const sumUnreadAndLocalCustomUnread = (arr: any) => {
   return arr.reduce((accumulator: any, current: any) => {
     const unread = current.unread || 0;
-
     const localCustomUnread =
       current.localCustom && current.localCustom.unread
         ? current.localCustom.unread
         : 0;
-
     return accumulator + unread + localCustomUnread;
   }, 0);
 };
 
 const router = useRouter();
 
-// let nim: any;
+const { fetchData: configFetch, data: configData } = userconfig();
 
-// evenBus.on("setFunc", (data: any) => {
-//   nim = data;
-// });
-
-onMounted(() => {
-  const currentTab = getCurrentTab();
-  // state.badge = localStorage.getItem("badge") || 0;
-  getLocalSessions().then((res: any) => {
-    state.badge = sumUnreadAndLocalCustomUnread(res);
-  });
-
-  emits("update:tabsCurrent", currentTab);
-
-  if (currentTab === 0) {
-    tabsList[0].active = true;
-    tabsList[1].active = false;
-    tabsList[2].active = false;
-    tabsList[3].active = false;
-    tabsList[4].active = false;
-  } else if (currentTab === 2) {
-    tabsList[0].active = false;
-    tabsList[1].active = false;
-    tabsList[2].active = true;
-    tabsList[3].active = false;
-    tabsList[4].active = false;
-  } else if (currentTab === 1) {
-    tabsList[0].active = false;
-    tabsList[1].active = true;
-    tabsList[2].active = false;
-    tabsList[3].active = false;
-    tabsList[4].active = false;
-  } else if (currentTab === 3) {
-    tabsList[0].active = false;
-    tabsList[1].active = false;
-    tabsList[2].active = false;
-    tabsList[3].active = true;
-    tabsList[4].active = false;
-  } else if (currentTab === 4) {
-    tabsList[0].active = false;
-    tabsList[1].active = false;
-    tabsList[2].active = false;
-    tabsList[3].active = false;
-    tabsList[4].active = true;
+const updateTabsList = (currentTab: number) => {
+  const needRefreshTabbar = localStorage.getItem("needRefreshTabbar");
+  if (needRefreshTabbar === "true") {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchHome";
+      }
+      if (i === 2) {
+        item.name = "Dynamic";
+        item.img = img3;
+        item.activeImg = img4;
+      }
+      return item;
+    });
+  } else {
+    tabsList = tabsList.map((item: any, i: number) => {
+      if (i === 1) {
+        item.name = "MatchNew";
+        item.img = imgMatch;
+        item.activeImg = imgMatchActive;
+      }
+      if (i === 2) {
+        item.name = "Nearby";
+        item.img = img9;
+        item.activeImg = img10;
+      }
+      return item;
+    });
   }
+
+  tabsList.forEach((item: any, index: number) => {
+    item.active = index === currentTab;
+  });
+};
+
+onMounted(async () => {
+  await configFetch();
+  await nextTick();
+  const currentTab: any = await getCurrentTab();
+  await updateTabsList(currentTab);
+  state.badge = sumUnreadAndLocalCustomUnread(await getLocalSessions());
+  emits("update:tabsCurrent", currentTab);
 });
 
-onActivated(() => {
-  const currentTab = getCurrentTab();
-  // state.badge = localStorage.getItem("badge") || 0;
-
-  getLocalSessions().then((res: any) => {
-    state.badge = sumUnreadAndLocalCustomUnread(res);
-  });
-
+onActivated(async () => {
+  await nextTick();
+  const currentTab: any = await getCurrentTab();
+  await updateTabsList(currentTab);
+  state.badge = sumUnreadAndLocalCustomUnread(await getLocalSessions());
   emits("update:tabsCurrent", currentTab);
-
-  if (currentTab === 0) {
-    tabsList[0].active = true;
-    tabsList[1].active = false;
-    tabsList[2].active = false;
-    tabsList[3].active = false;
-    tabsList[4].active = false;
-  } else if (currentTab === 2) {
-    tabsList[0].active = false;
-    tabsList[1].active = false;
-    tabsList[2].active = true;
-    tabsList[3].active = false;
-    tabsList[4].active = false;
-  } else if (currentTab === 1) {
-    tabsList[0].active = false;
-    tabsList[1].active = true;
-    tabsList[2].active = false;
-    tabsList[3].active = false;
-    tabsList[4].active = false;
-  } else if (currentTab === 3) {
-    tabsList[0].active = false;
-    tabsList[1].active = false;
-    tabsList[2].active = false;
-    tabsList[3].active = true;
-    tabsList[4].active = false;
-  } else if (currentTab === 4) {
-    tabsList[0].active = false;
-    tabsList[1].active = false;
-    tabsList[2].active = false;
-    tabsList[3].active = false;
-    tabsList[4].active = true;
-  }
 });
 
 const getCurrentTab = () => {
-  switch (router?.currentRoute?.value?.name) {
-    case "HostList":
-      return 0;
-    case "Messages":
-      return 3;
-    case "Dynamic":
-      return 2;
-    case "MatchHome":
-      return 1;
-    case "Mine":
-      return 4;
+  const needRefreshTabbar = localStorage.getItem("needRefreshTabbar");
+  if (needRefreshTabbar === "true") {
+    switch (router?.currentRoute?.value?.name) {
+      case "HostList":
+        return 0;
+      case "Messages":
+        return 3;
+      case "Dynamic":
+        return 2;
+      case "MatchHome":
+        return 1;
+      case "Mine":
+        return 4;
+    }
+  } else {
+    switch (router?.currentRoute?.value?.name) {
+      case "HostList":
+        return 0;
+      case "Messages":
+        return 3;
+      case "Nearby":
+        return 2;
+      case "MatchNew":
+        return 1;
+      case "Mine":
+        return 4;
+    }
   }
 };
 
-const tabsList: any = reactive([
+let tabsList: any = reactive([
   {
     img: img1,
     activeImg: img2,
-    active: true,
+    active: false,
     name: "HostList",
   },
   {
@@ -284,23 +240,38 @@ const tabsList: any = reactive([
 
 const handleChange = (it: any, index: number) => {
   tabsList.map((item: any, i: number) => {
-    if (index === i) {
-      item.active = true;
-    } else {
-      item.active = false;
-    }
+    item.active = index === i;
     return item;
   });
   router.push({ name: it.name });
   //   emits("onChange", index);
 };
+
+defineExpose({
+  state,
+});
 </script>
+
 <style lang="scss" scoped>
 .van-tabbar {
   height: 100px !important;
+  background: #241213 !important;
+  // border: 4px solid #241213 !important;
+  border-top: 2px solid #585050 !important;
+}
+.van-tabbar-item--active {
+  background: #241213 !important;
 }
 .imgClass {
-  width: 72px;
-  height: 72px;
+  width: 50px;
+  height: 50px;
+}
+.imgClassXin {
+  width: 60px;
+  height: 50px;
+}
+.fujinClass {
+  width: 46px;
+  height: 58px;
 }
 </style>

@@ -3,6 +3,9 @@
     <div v-if="props.modelValue" class="popup">
       <!-- v-if="state.showVideo" -->
       <div class="videoBox" v-if="state.showVideo">
+        <div class="bottomFont" v-if="walletData?.wallet?.gold === 0">
+          Top up coins to turn on the voice
+        </div>
         <div class="topLeft">
           <div class="flex items-center">
             <van-image
@@ -10,8 +13,8 @@
               radius="50"
               :src="
                 user?.user?.id !== props?.wsData?.fromUser?.id
-                  ? props?.wsData?.fromUser?.avatar
-                  : props?.wsData?.toUser?.avatar
+                  ? props?.wsData?.fromUser?.portrait
+                  : props?.wsData?.toUser?.portrait
               "
               class="imgClass"
               lazy-load
@@ -39,12 +42,12 @@
                   class="countryImg"
                 />
               </div>
-              <div class="nameBoxBottom">
+              <!-- <div class="nameBoxBottom">
                 <img src="./assets/coin_300@2x.png" class="goldIcon" alt="" />
                 <div class="goldNum">
                   {{ props?.wsData?.call?.goldPrice }}/min
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -52,12 +55,15 @@
           <div class="mineBox">
             <div id="local-video" class="mineVideo"></div>
 
-            <img
+            <!-- <img
               class="camera"
-              @click="state.showRechargePopup = true"
+              @click="state.showVipPopup = true"
               src="./assets/ic_changecamera@2x.png"
               alt=""
-            />
+            /> -->
+            <div class="kaiCameraBig" @click="state.showVipPopup = true">
+              <img src="./assets/Slice356@2x.webp" class="kaiCamera" />
+            </div>
           </div>
         </div>
         <!-- ref="videoRef"
@@ -86,12 +92,16 @@
         >
           您的浏览器不支持视频标签。
         </video>
-        <img
-          src="./assets/ic_calling_quit@2x.png"
+        <div
           class="closeImgMq"
-          alt=""
-          @click="handleCallHangUp"
-        />
+          @click="
+            () => {
+              state.showHangupPopup = true;
+            }
+          "
+        >
+          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+        </div>
         <div class="timerDisplay">
           <!-- <span>{{ hours }}:</span> -->
           <span>{{ minutes }}:</span>
@@ -111,11 +121,11 @@
         <!-- 聊天框 -->
 
         <!-- 接听后底部 -->
-        <img
+        <!-- <img
           class="giftBox"
           src="./assets/ic_calling_gift@2x.png"
           alt=""
-          @click="state.showRechargePopup = true"
+          @click="state.showVipPopup = true"
         />
         <div class="reciveBottomBox">
           <img
@@ -123,51 +133,113 @@
             v-if="state.showAudio"
             src="./assets/ic_calling_mic@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
           <img
             class="maiKai"
             v-else
             src="./assets/ic_mic-off@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
           <img
             class="videoKai"
             v-if="state.showVideo"
             src="./assets/ic_camera_open@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
           <img
             class="videoKai"
             v-if="!state.showVideo"
             src="./assets/ic_camera_close@2x.png"
             alt=""
-            @click="state.showRechargePopup = true"
+            @click="state.showVipPopup = true"
           />
 
-          <div class="sendBox">
-            <input
+          <div class="sendBox" @click="state.showVipPopup = true">
+            <div class="inputBox">Say something...</div>
+            <!-- <input
               :disabled="true"
               class="inputBox"
               type="text"
-              placeholder="Say somethig..."
-              @click="state.showRechargePopup = true"
+              placeholder="Say something..."
+              @click="state.showVipPopup = true"
             />
             <img
               src="./assets/ic_send_2@2x.png"
               class="sendImg"
               alt=""
-              @click="state.showRechargePopup = true"
+              @click="state.showVipPopup = true"
             />
           </div>
           <img
             class="goldIcon"
-            @click="() => (state.showRechargePopup = true)"
-            src="./assets/ic_calling_coin@2x.png"
+            @click="() => (state.showVipPopup = true)"
+            src="./assets/gold@2x.webp"
             alt=""
           />
+        </div> -->
+        <div class="reciveBottomBoxTwo">
+          <div class="reciveBottomBoxTwoBottom">
+            <div class="reciveBottomBoxTwoBottomItem">
+              <img
+                src="./assets/Group14008@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+                @click="state.showVipPopup = true"
+              />
+            </div>
+            <div
+              class="suoGiftList"
+              v-if="userGiftListData?.recommendList?.length"
+            >
+              <div
+                class="reciveBottomBoxTwoBottomItem2"
+                v-for="(item, index) in userGiftListData?.recommendList"
+                @click="state.showVipPopup = true"
+              >
+                <img
+                  :src="item?.icon"
+                  class="reciveBottomBoxTwoBottomItemImg2"
+                />
+                <div class="numsCoins">{{ item?.value }}</div>
+              </div>
+            </div>
+            <div
+              class="reciveBottomBoxTwoBottomItem"
+              @click="state.showVipPopup = true"
+            >
+              <img
+                style="width: 85px; height: 85px"
+                src="./assets/image925@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+              />
+            </div>
+
+            <div
+              class="reciveBottomBoxTwoBottomItem"
+              @click="state.showVipPopup = true"
+            >
+              <img
+                src="./assets/Slice353@2x.webp"
+                class="reciveBottomBoxTwoBottomItemImg"
+              />
+            </div>
+          </div>
+          <!-- <div class="reciveBottomBoxTwoBottomInputBox" v-if="!state.showInput">
+            <input
+              class="inputBox"
+              v-model="state.inputValue"
+              type="text"
+              placeholder="Say something..."
+              @keyup.center="handleSendMsg"
+            />
+            <img
+              src="./assets/Group1627@2x.webp"
+              class="reciveBottomBoxTwoBottomInputBoxImg"
+              @click="handleSendMsg"
+            />
+          </div> -->
         </div>
         <!-- 接听后底部 -->
       </div>
@@ -177,9 +249,22 @@
           class="hostImg"
           fit="cover"
         />
+        <!-- <div class="closeImg" @click="handleCallHangUp">
+          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+        </div> -->
+        <div
+          class="closeImgMq"
+          @click="
+            () => {
+              state.showHangupPopup = true;
+            }
+          "
+        >
+          <img src="./assets/Vector@2x(1).webp" class="closeImgNei" alt="" />
+        </div>
         <div class="bottomBoxConnect">
           <div class="bottomBoxInvite">
-            <img
+            <!-- <img
               src="./assets/ic_phone-hangup@2x.png"
               alt=""
               class="bottomBoxInviteGua"
@@ -200,6 +285,20 @@
                   </div>
                 </div>
               </div>
+            </div> -->
+            <div class="inviteBox" @click="handleCallPickUp">
+              <SvgaShow
+                :divId="`demo${props?.wsData?.fromUser?.id}`"
+                :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+              ></SvgaShow>
+              <div class="posBox" v-if="props?.wsData?.call?.freeCount > 0">
+                <div class="posBoxOne">
+                  Free
+                  <div class="posBoxOneImgBox">
+                    {{ props?.wsData?.call?.freeCount }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -207,6 +306,17 @@
     </div>
   </transition>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+  <!-- <FirstVipPromptPopup
+    :video-url="configData.firstVipPromptVideo"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup> -->
+  <HangupPopup v-model="state.showHangupPopup" @handle-sure="handleCallHangUp">
+  </HangupPopup>
+  <audio style="display: none" controls loop muted ref="audioRef">
+    <source src="../../assets/call.mp3" />
+  </audio>
 </template>
 
 <script setup lang="ts">
@@ -220,13 +330,31 @@ import {
   computed,
 } from "vue";
 import { showConfirmDialog, showLoadingToast, showToast } from "vant";
-import { freeCallpickUp, freeCallhangUp, giftsend } from "@/api/allApi";
+import {
+  freeCallpickUp,
+  freeCallhangUp,
+  giftsend,
+  userwallet,
+  usergiftmalelist,
+  userconfig,
+} from "@/api/allApi";
 import { useUserStore } from "@/stores/user";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import GiftPopup from "@/components/giftPopup/index.vue";
 import { useZego } from "@/hook/useZego";
 import evenBus from "@/common/evenBus";
-import { generateRandomString } from "@/common/utils";
+import { generateRandomString, getLocalUserDetail } from "@/common/utils";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+import HangupPopup from "@/components/hangupPopup/index.vue";
+
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
+import SvgaShow from "@/components/svgaShow/index.vue";
+
+const { fetchData: wollectFetch, data: walletData } = userwallet();
 
 interface Prop {
   modelValue: boolean;
@@ -238,6 +366,9 @@ const props = withDefaults(defineProps<Prop>(), {
   modelValue: false,
   wsData: {},
 });
+
+const { fetchData: userGiftListFetch, data: userGiftListData } =
+  usergiftmalelist();
 
 const state = reactive({
   src: `${import.meta.env.VITE_APP_BASE_APIW}/蝶梦恋人.mp4`,
@@ -252,6 +383,9 @@ const state = reactive({
   showRechargePopup: false,
   insetData: {},
   isPick: false,
+  showVipPopup: false,
+  showFirstVipPromptPopup: false,
+  showHangupPopup: false,
 });
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -350,7 +484,11 @@ const {
   code,
 } = freeCallpickUp();
 
+const { fetchData: configFetch, data: configData } = userconfig();
+
 const handleCallPickUp = async () => {
+  // await configFetch();
+
   showLoadingToast({
     message: "Please wait...",
     duration: 0,
@@ -360,6 +498,10 @@ const handleCallPickUp = async () => {
     callId: props.wsData.call?.id,
   });
   if (pickUpSuccess.value) {
+    nextTick(() => {
+      audioRef.value.muted = true;
+      audioRef.value.pause();
+    });
     state.showVideo = true;
     showToast("Success");
     emit("handleCallPickUp");
@@ -367,7 +509,15 @@ const handleCallPickUp = async () => {
     // localStorage.setItem("isFreeCalling", "true");
   } else {
     if (code.value === 402) {
-      state.showRechargePopup = true;
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+      // if (configData?.value?.showFirstVipPrompt) {
+      //   state.showFirstVipPromptPopup = true;
+      // }
     }
     emit("handleCallPickUp");
     showToast(pickUpMsg.value);
@@ -382,38 +532,38 @@ const {
 } = freeCallhangUp();
 
 const handleCallHangUp = async () => {
-  showConfirmDialog({
-    title: "",
-    message: "Are you sure hang up?",
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-  })
-    .then(async () => {
-      showLoadingToast({
-        message: "Please wait...",
-        duration: 0,
-        forbidClick: true,
-      });
-      await hangUpFetch({
-        callId: props.wsData.call?.id,
-      });
-      if (hangUpSuccess.value) {
-        showToast("Success");
-        emit("update:modelValue", false);
-        emit("handleCallHangUp");
-        // localStorage.setItem("isFreeCalling", "false");
-        emit("handleCallFrend", props.wsData, currentTime.value);
-        state.isPick = false;
-      } else {
-        emit("update:modelValue", false);
-        emit("handleCallHangUp");
-        showToast(hangUpMsg.value);
-        state.isPick = false;
-      }
-    })
-    .catch(() => {
-      // on cancel
-    });
+  // showConfirmDialog({
+  //   title: "",
+  //   message: "Are you sure hang up?",
+  //   confirmButtonText: "Yes",
+  //   cancelButtonText: "No",
+  // })
+  //   .then(async () => {
+  showLoadingToast({
+    message: "Please wait...",
+    duration: 0,
+    forbidClick: true,
+  });
+  await hangUpFetch({
+    callId: props.wsData.call?.id,
+  });
+  if (hangUpSuccess.value) {
+    showToast("Success");
+    emit("update:modelValue", false);
+    emit("handleCallHangUp");
+    // localStorage.setItem("isFreeCalling", "false");
+    emit("handleCallFrend", props.wsData, currentTime.value);
+    state.isPick = false;
+  } else {
+    emit("update:modelValue", false);
+    emit("handleCallHangUp");
+    showToast(hangUpMsg.value);
+    state.isPick = false;
+  }
+  // })
+  // .catch(() => {
+  //   // on cancel
+  // });
 };
 
 const onVideoEnded = () => {
@@ -436,7 +586,7 @@ const emit = defineEmits([
 // 计时器
 const startTime = ref(0);
 const currentTime = ref(0);
-const timerId = ref(null);
+const timerId = ref<any>(null);
 
 const startTimer = () => {
   startTime.value = Date.now() - currentTime.value * 1000;
@@ -445,16 +595,31 @@ const startTimer = () => {
   }, 1000);
 };
 
+const audioRef = ref<any>(null);
+
 watch(
   () => props.modelValue,
-  (newValue) => {
+  async (newValue) => {
     state.showVideo = false;
     state.msgList = [];
     toggleBodyScroll(newValue);
+    await scheduler.yield();
     if (newValue) {
+      nextTick(() => {
+        audioRef.value.muted = false;
+        audioRef.value.play();
+      });
+
+      await wollectFetch();
+      await userGiftListFetch();
       localStorage.setItem("isFreeCalling", "true");
     } else {
+      nextTick(() => {
+        audioRef.value.muted = true;
+        audioRef.value.pause();
+      });
       localStorage.setItem("isFreeCalling", "false");
+      toggleBodyScroll(false);
     }
   },
   { immediate: true }
@@ -517,39 +682,12 @@ const resetTimer = () => {
   currentTime.value = 0;
 };
 
-const regions = [
-  "bgd",
-  "bra",
-  "col",
-  "egy",
-  "esp",
-  "fra",
-  "idn",
-  "ind",
-  "mar",
-  "nga",
-  "pak",
-  "phl",
-  "usa",
-  "ven",
-  "vnm",
-];
-
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/contryIcon/icon_counties_rectangle_${item?.region.toLowerCase()}.png`,
     import.meta.url
   );
-  const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
-    import.meta.url
-  );
-
-  if (regions.includes(item?.region?.toLowerCase())) {
-    return path;
-  } else {
-    return defaultImg;
-  }
+  return path || "";
 };
 </script>
 <style lang="scss" scoped>
@@ -583,18 +721,40 @@ const getCountryImg = (item: any) => {
   width: 100%;
   height: 100vh;
   position: relative;
+  .bottomFont {
+    position: absolute;
+    bottom: 200px;
+    left: 20px;
+    font-family: "SF Pro Display", sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    z-index: 10;
+    color: #fff;
+  }
   .videoClass {
     width: 100%;
     height: 100vh;
     object-fit: cover;
   }
+
   .closeImgMq {
     width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #504f56;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 130px;
     right: 20px;
     height: 96px;
     z-index: 20;
+    .closeImgNei {
+      width: 52px;
+      height: 52px;
+    }
   }
   .topLeft {
     position: absolute;
@@ -605,13 +765,13 @@ const getCountryImg = (item: any) => {
     display: flex;
     align-items: center;
     padding-right: 24px;
-    background: linear-gradient(
-      270deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.1) 100%
-    );
-    border-radius: 200px 200px 200px 200px;
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    // background: linear-gradient(
+    //   270deg,
+    //   rgba(0, 0, 0, 0.5) 0%,
+    //   rgba(0, 0, 0, 0.1) 100%
+    // );
+    // border-radius: 200px 200px 200px 200px;
+    // border: 2px solid rgba(255, 255, 255, 0.35);
     display: flex;
     align-items: center;
     .imgClass {
@@ -685,6 +845,7 @@ const getCountryImg = (item: any) => {
       position: relative;
       .mineVideo {
         border-radius: 40px 40px 40px 40px;
+        transform: scaleX(-1);
       }
       .camera {
         position: absolute;
@@ -693,6 +854,25 @@ const getCountryImg = (item: any) => {
         height: 64px;
         top: 200px;
         left: 68px;
+      }
+      .kaiCameraBig {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background: #3a5157;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        top: 0;
+        left: 0;
+        z-index: 12;
+
+        .kaiCamera {
+          width: 27px;
+          height: 27px;
+        }
       }
     }
   }
@@ -780,8 +960,143 @@ const getCountryImg = (item: any) => {
       }
     }
     .goldIcon {
-      width: 88px;
-      height: 88px;
+      width: 68px;
+      height: 68px;
+    }
+  }
+  .reciveBottomBoxTwo {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+    .reciveBottomBoxTwoTop {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      .reciveBottomBoxTwoTopLeft {
+        display: flex;
+        align-items: center;
+        font-family: "ABeeZee", sans-serif;
+        font-weight: 400;
+        font-size: 24px;
+        color: #ffe100;
+        padding: 16px 16px 16px 36px;
+        // width: 528px;
+        // height: 60px;
+        background: rgba(235, 99, 0, 0.8);
+        border-radius: 60px 60px 60px 60px;
+        line-height: 60px;
+        overflow: hidden;
+        .iconImg3 {
+          width: 66px;
+          height: 66px;
+          margin-left: 5px;
+          margin-right: 5px;
+        }
+      }
+      .reciveBottomBoxTwoTopRight {
+        width: 132px;
+        height: 60px;
+        background: #eb6300;
+        border-radius: 20px 20px 20px 20px;
+        font-family: "Inter", sans-serif;
+        font-weight: normal;
+        font-size: 32px;
+        color: #fefefe;
+        line-height: 60px;
+        text-align: center;
+        margin-left: 26px;
+      }
+    }
+    .reciveBottomBoxTwoBottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      .reciveBottomBoxTwoBottomItem {
+        width: 80px;
+        height: 80px;
+        background: #4c545a;
+        border-radius: 0px 0px 0px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 50%;
+        .reciveBottomBoxTwoBottomItemImg {
+          width: 34px;
+          height: 30px;
+        }
+      }
+      .suoGiftList {
+        display: flex;
+        align-items: center;
+        .reciveBottomBoxTwoBottomItem2 {
+          width: 80px;
+          height: 80px;
+          background: #4c545a;
+          border-radius: 0px 0px 0px 0px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          border-radius: 50%;
+          margin-right: 24px;
+          .reciveBottomBoxTwoBottomItemImg2 {
+            width: 34px;
+            height: 30px;
+          }
+          .numsCoins {
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            color: #ffffff;
+          }
+        }
+        .reciveBottomBoxTwoBottomItem2:last-child {
+          margin-right: 0px;
+        }
+      }
+    }
+    .reciveBottomBoxTwoBottomInputBox {
+      margin-top: 38px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 62px;
+      padding-right: 42px;
+      height: 112px;
+      background: #ffffff;
+      box-shadow: inset 0px 0px 180px 0px rgba(255, 255, 255, 0.2);
+      border-radius: 80px 80px 80px 80px;
+      border: 2px solid;
+      // border-image: linear-gradient(
+      //     315deg,
+      //     rgba(255, 95, 109, 0.42),
+      //     rgba(255, 195, 113, 0.33)
+      //   )
+      //   2 2;
+      .inputBox {
+        padding-left: 24px;
+        line-height: 88px;
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #000000;
+        border-radius: 200px 200px 200px 200px;
+        width: 96%;
+      }
+      .inputBox::placeholder {
+        font-family: "SF Pro Display", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #ababab;
+      }
+      .reciveBottomBoxTwoBottomInputBoxImg {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 }
@@ -794,14 +1109,26 @@ const getCountryImg = (item: any) => {
     width: 100%;
     height: 100vh;
   }
-  .closeImg {
+  .closeImgMq {
     width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #504f56;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    top: 20px;
+    top: 130px;
     right: 20px;
     height: 96px;
     z-index: 20;
+    .closeImgNei {
+      width: 52px;
+      height: 52px;
+    }
   }
+
   .bottomBoxConnect {
     position: absolute;
     bottom: 120px;
@@ -830,23 +1157,28 @@ const getCountryImg = (item: any) => {
       padding-right: 60px;
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
       align-items: center;
-      .bottomBoxInviteGua {
-        width: 120px;
-        height: 120px;
-      }
-      .bottomBoxInviteRecive {
+      justify-content: center;
+      .inviteBox {
+        width: 180px;
+        height: 180px;
+        background: #f9577e;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
         .posBox {
           position: absolute;
           top: -85px;
-          right: 20px;
+          // right: 20px;
           background-image: url("./assets/Group 7636@2x.png");
           background-repeat: no-repeat;
           width: 226px;
           height: 100px;
           background-size: 100% 100%;
+          z-index: 2;
           // display: flex;
           // align-items: center;
           // justify-content: center;
@@ -885,35 +1217,40 @@ const getCountryImg = (item: any) => {
             }
           }
         }
-        .bottomBoxInviteReciveImg {
-          width: 440px;
-          height: 120px;
+      }
+      .bottomBoxInviteGua {
+        width: 120px;
+        height: 120px;
+      }
+
+      .bottomBoxInviteReciveImg {
+        width: 440px;
+        height: 120px;
+      }
+      .bottomBoxInviteReciveBox {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        right: -5px;
+        top: -40px;
+        .isFreeFont {
+          width: 166px;
+          height: 58px;
+          background: linear-gradient(270deg, #f58921 0%, #fee590 100%);
+          border-radius: 20px 20px 20px 20px;
+          font-family: "SF Pro Text", sans-serif;
+          font-weight: 600;
+          font-size: 32px;
+          color: #1a1a1a;
+          line-height: 58px;
+          text-align: center;
+          margin-right: 16px;
         }
-        .bottomBoxInviteReciveBox {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          right: -5px;
-          top: -40px;
-          .isFreeFont {
-            width: 166px;
-            height: 58px;
-            background: linear-gradient(270deg, #f58921 0%, #fee590 100%);
-            border-radius: 20px 20px 20px 20px;
-            font-family: "SF Pro Text", sans-serif;
-            font-weight: 600;
-            font-size: 32px;
-            color: #1a1a1a;
-            line-height: 58px;
-            text-align: center;
-            margin-right: 16px;
-          }
-          .isFreeFontNums {
-            font-family: "SF Pro Text", sans-serif;
-            font-weight: bold;
-            font-size: 32px;
-            color: #ffffff;
-          }
+        .isFreeFontNums {
+          font-family: "SF Pro Text", sans-serif;
+          font-weight: bold;
+          font-size: 32px;
+          color: #ffffff;
         }
       }
     }

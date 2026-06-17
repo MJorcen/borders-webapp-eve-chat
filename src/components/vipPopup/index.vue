@@ -1,269 +1,721 @@
 <template>
   <van-popup
     v-model:show="props.modelValue"
+    position="center"
+    @click-overlay="
+      emit('update:modelValue', false);
+      if (configData?.showFirstVipPrompt && props.showVideo) {
+        state.showFirstVipPromptPopup = true;
+      }
+      emit('handleClose');
+    "
+    z-index="9997"
+    round
+  >
+    <div class="popupBoxBig">
+      <div class="swiperBox">
+        <van-swipe class="myswipe" :autoplay="3000" indicator-color="white">
+          <van-swipe-item>
+            <div class="swiperItem">
+              <img src="./assets/vip3.webp" class="icon" />
+              <div class="title">Chat for free</div>
+              <div class="font">Unlimited free text message</div>
+            </div>
+          </van-swipe-item>
+          <van-swipe-item>
+            <div class="swiperItem">
+              <img src="./assets/vip8.webp" class="icon" />
+              <div class="title">Unlimited video chat</div>
+              <div class="font">
+                Connect via video calls without restrictions
+              </div>
+            </div>
+          </van-swipe-item>
+          <van-swipe-item>
+            <div class="swiperItem">
+              <img src="./assets/vip5.webp" class="icon" />
+              <div class="title">Check who viewed my profile</div>
+              <div class="font">Never miss the chance to connect with her.</div>
+            </div>
+          </van-swipe-item>
+          <van-swipe-item>
+            <div class="swiperItem">
+              <img src="./assets/vip9.webp" class="icon" />
+              <div class="title">Live stream room</div>
+              <div class="font1">
+                Post messages in the live stream room chat with the host
+              </div>
+            </div>
+          </van-swipe-item>
+          <van-swipe-item>
+            <div class="swiperItem">
+              <img src="./assets/vip10.webp" class="icon" />
+              <div class="title">Get free coins</div>
+              <div class="font">
+                Get free coins {{ vipConfigData?.monthlyGoldBonus }} coins a
+                month
+              </div>
+            </div>
+          </van-swipe-item>
+        </van-swipe>
+      </div>
+      <div class="contentBox">
+        <div class="itemBox">
+          <div
+            :class="item?.isActived ? 'itemactive' : 'item'"
+            v-for="(item, index) in state.list"
+            :key="index"
+            @click="handleActive(item, index)"
+          >
+            <div class="topBoxBig" v-if="item.tag">
+              <div class="topBox">{{ item.tag }}</div>
+            </div>
+            <div class="monthBox">
+              <div class="monthnums">{{ item.month }}</div>
+              <div class="monthfont">Months</div>
+              <div
+                class="font1"
+                v-if="item?.channelList?.[0]?.price?.vipMonthlyMoney > 0"
+              >
+                {{ item?.channelList?.[0]?.price?.currency
+                }}{{ item?.channelList?.[0]?.price?.vipMonthlyMoney }}/mo.
+              </div>
+              <div class="font2">{{ item?.discountInfo }}</div>
+            </div>
+            <div class="font3">
+              {{ item?.channelList?.[0]?.price?.symbol
+              }}{{ item?.channelList?.[0]?.price?.money }}
+            </div>
+          </div>
+        </div>
+        <div class="cundowmBox">
+          <van-count-down :time="time">
+            <template #default="timeData">
+              <div class="cutdownFont">
+                offer ends in {{ timeData.hours }}:{{ timeData.minutes }}:{{
+                  timeData.seconds
+                }}
+              </div>
+            </template>
+          </van-count-down>
+        </div>
+      </div>
+      <div class="btnBox">
+        <div
+          class="btn"
+          @click="
+            () => {
+              state.showLink = false;
+              state.showPopup = true;
+              state.channelData = state.list[state.choseIndex].channelList;
+              state.channelData = state.channelData.map((item) => {
+                item.selected = false;
+                return item;
+              });
+              state.showMore = true;
+            }
+          "
+        >
+          Continue
+          <img src="./assets/image1085@2x.webp" class="btnIcon" />
+        </div>
+      </div>
+    </div>
+  </van-popup>
+  <FirstVipPromptPopup
+    :video-url="configData.firstVipPromptVideo"
+    v-model="state.showFirstVipPromptPopup"
+  >
+  </FirstVipPromptPopup>
+  <van-popup
+    z-index="9998"
+    v-model:show="state.showPopup"
     position="bottom"
-    @click-overlay="emit('update:modelValue', false)"
     round
   >
     <div class="popupBox">
-      <div class="topBox">
-        <div class="topBoxLeft">
-          <img src="./assets/vip@2x.png" class="vipImg" />
-          <div class="title">VIP for 30days</div>
-        </div>
-        <div class="topBoxRight">
-          {{ channelData?.list?.[0]?.channelList?.[0]?.price.symbol }}
-          {{ channelData?.list?.[0]?.channelList?.[0]?.price.money }}
-        </div>
-      </div>
-      <div class="ruleBox">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>
-          Get
-          <span style="color: #ff5768">{{
-            props.vipConfg.monthlyGoldBonus
-          }}</span>
-          coins every month
-        </div>
-      </div>
-      <div class="ruleBox">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>
-          VIP exclusive sign in, Worth
-          <span style="color: #ff5768">{{
-            props.vipConfg.monthlyCheckInGoldValue
-          }}</span>
-          coins
-        </div>
-      </div>
-      <div class="ruleBox">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>Unlimited free text message</div>
-      </div>
-      <div class="ruleBox">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>Recharge <span style="color: #ff5768">15%</span> OFF</div>
-      </div>
-      <div class="ruleBox">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>Check who visited my profile</div>
-      </div>
-      <div class="ruleBox">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>Profiles are displayed at the top</div>
-      </div>
-      <div class="ruleBox" style="margin-bottom: 40px">
-        <img src="./assets/ic_select@2x.png" class="getImg" />
-        <div>VIP badge</div>
-      </div>
+      <div class="popupBoxTop">VIP {{ state.month }} month</div>
       <div class="itemBig">
         <div
           class="itemBox"
+          @click="handleSelect(item)"
           v-for="(item, index) in state.channelData"
           :key="index"
-          @click="handleSelect(item, index)"
         >
           <div class="itemBoxLeft">
             <img
-              v-if="item.active"
-              src="./assets/ic_select@2x (1).png"
-              class="activeSelectImg"
+              src="./assets/ic_select@2x.png"
+              v-if="item.selected"
+              class="choseBoxImg"
             />
             <img
+              src="./assets/ic_select@2x (1).png"
               v-else
-              src="./assets/ic_select@2x (2).png"
-              class="activeSelectImg"
+              class="choseBoxImg"
             />
+            <img :src="item.channel.icon" class="activeSelectImg" alt="" />
             <div class="activeSelectText">{{ item.channel.displayName }}</div>
+            <div class="activeSelectText" style="color: #c50205">
+              {{ item.channel.discountText }}
+            </div>
           </div>
           <div class="itemBoxRight">
             {{ item.price.symbol }}{{ item.price.money }}
           </div>
         </div>
+        <div class="moreBox" @click="handleShowMore" v-if="state.showMore">
+          <div>More</div>
+          <van-icon name="arrow-down" size="30px" />
+        </div>
       </div>
+
       <div class="btnBig" v-if="state.showLink">
-        <a :href="state.payUrl" target="_blank" rel="noopener noreferrer">
-          <div class="btnBox">Continue</div>
+        <!-- <a
+          v-if="state.linkType === 'h5'"
+          :href="state.payUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="btnBox2">Submit</div>
         </a>
+        <a
+          v-else
+          :href="state.payUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="btnBox2">Submit</div>
+        </a> -->
+        <div @click="handleDeepLink" class="btnBox2">Submit</div>
       </div>
     </div>
   </van-popup>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from "vue";
-import { vippriceList, vipbuy } from "@/api/allApi";
+import { ref, reactive, onMounted, watch, computed } from "vue";
+import {
+  vipMultipriceList,
+  userconfig,
+  vipMultisubmit,
+  paymentchannelvipMultilistMore,
+} from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import router from "@/router";
+import FirstVipPromptPopup from "../firstVipPromptPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
 
 interface Prop {
   modelValue: boolean;
   vipConfg: any;
+  showVideo?: boolean;
 }
 
 const props = withDefaults(defineProps<Prop>(), {
   modelValue: false,
   vipConfg: {},
+  showVideo: true,
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const { vipConfigData } = useVipConfigStore();
+
+const emit = defineEmits(["update:modelValue", "handleClose"]);
 
 const state = reactive<any>({
-  channelData: [],
+  showQuickPopup: false,
+  list: [
+    {
+      isActived: false,
+      nums: 3,
+      topFont: "Bset value",
+    },
+    {
+      isActived: true,
+      nums: 1,
+      topFont: "Most popular",
+    },
+    {
+      isActived: false,
+      nums: 6,
+    },
+  ],
   payUrl: "",
-  showLink: false,
+  channelData: [],
+  payData: {},
+  month: "",
+  showFirstVipPromptPopup: false,
+  showMore: true,
+  moreChannelParmas: 0,
+  choseIndex: 1,
+  linkType: "",
 });
+
+const { fetchData, data } = vipMultipriceList();
+
+const { fetchData: configFetch, data: configData } = userconfig();
 
 watch(
   () => props.modelValue,
   async () => {
     if (props.modelValue) {
-      await channelFetchData();
-      state.channelData = channelData.value?.list?.[0]?.channelList;
-      state.showLink = false;
+      await fetchData();
+      await configFetch();
+      state.list = data.value.list;
+      state.list = state.list.map((item: any, index: number) => {
+        if (index === 1) {
+          item.isActived = true;
+        }
+        return item;
+      });
+      state.payData = state.list[1];
+      state.channelData = state.list[1].channelList;
+      state.month = state.list[1].month;
+      state.moreChannelParmas = state.list[1].money;
     }
   },
   { immediate: true }
 );
 
-const { fetchData: channelFetchData, data: channelData } = vippriceList();
+const getRemainingMilliseconds = () => {
+  // 获取当前时间
+  const now: any = new Date();
 
-const handleSelect = async (item: any, index: number) => {
-  state.channelData = state.channelData.map((it: any, inx: number) => {
-    if (inx === index) {
-      it.active = true;
-    } else {
-      it.active = false;
-    }
-    return it;
-  });
-  showLoadingToast({
-    message: "Please wait...",
-    duration: 0,
-    forbidClick: true,
-  });
+  // 创建下一天零点的时间
+  const nextDay: any = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1, // 日期加1，表示下一天
+    0,
+    0,
+    0,
+    0 // 设置时间为零点
+  );
 
-  await buyFetchedData({
-    priceId: channelData.value?.list?.[0]?.id,
-    channelId: item?.channel.id,
-    deeplink: false,
-  });
-  if (buySuccess.value) {
-    state.payUrl = buyData.value.data.payInfo;
-    state.showLink = true;
-    closeToast();
-    // emit("update:modelValue", false);
-  } else {
-    showToast(buyMsg.value);
-  }
+  // 计算剩余时间（毫秒）
+  const remainingMilliseconds = nextDay - now;
+
+  return remainingMilliseconds;
 };
+
+const time = computed(() => {
+  return getRemainingMilliseconds();
+});
 
 const {
   fetchData: buyFetchedData,
   success: buySuccess,
   msg: buyMsg,
   data: buyData,
-} = vipbuy();
+} = vipMultisubmit();
 
-// const handleBuy = async () => {
-//   const arr = state.channelData.filter((item: any) => item.active);
-//   if (arr.length === 0) {
-//     return;
-//   }
-//   showLoadingToast({
-//     message: "Please wait...",
-//     duration: 0,
-//     forbidClick: true,
-//   });
+const handleActive = async (item: any, index: number) => {
+  state.list = state.list.map((it: any, inx: number) => {
+    if (inx === index) {
+      it.isActived = true;
+    } else {
+      it.isActived = false;
+    }
+    return it;
+  });
+  state.channelData = item.channelList;
+  state.payData = item;
+  state.month = item.month;
+  state.choseIndex = index;
+  state.moreChannelParmas = item.money;
+};
 
-//   await buyFetchedData({
-//     priceId: channelData.value?.list?.[0]?.id,
-//     channelId: arr[0]?.channel.id,
-//     deeplink: false,
-//   });
-//   if (buySuccess.value) {
-//     let system = navigator.userAgent;
-//     let isAndroid =
-//       system.indexOf("Android") > -1 || system.indexOf("Adr") > -1; // android终端
-//     let isiOS = !!system.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+const handleSelect = async (item: any) => {
+  state.channelData = state.channelData.map((i: any) => {
+    if (item.channel.id === i.channel.id) {
+      i.selected = true;
+    } else {
+      i.selected = false;
+    }
+    return i;
+  });
+  buyShop.value = item;
+  state.showLink = true;
+};
 
-//     // 使用
-//     if (isAndroid) {
-//       //android终端
-//       console.log("我是安卓");
-//       window.open(buyData.value.data.payInfo);
-//     } else if (isiOS) {
-//       //ios终端
-//       console.log("我是ios");
-//       window.location.href = buyData.value.data.payInfo;
-//     }
+const buyShop = ref("");
 
-//     emit("update:modelValue", false);
-//   } else {
-//     showToast(buyMsg.value);
-//   }
-//   //   let link = document.createElement("a"); // 创建a元素
-//   //   link.href = 'https://www.google.com/policies/privacy/'; // 设置href属性
-//   //   link.target = "_blank"; // 设置target属性
-//   //   document.body.appendChild(link); // 添加到页面
-//   //   link.click();
-// };
+const { fetchData: moreChannelFetch, data: moreChannelData } =
+  paymentchannelvipMultilistMore();
 
-// onMounted(async () => {
-//   await channelFetchData();
-//   state.channelData = channelData.value?.list?.[0]?.channelList;
-// });
+const handleDeepLink = async (e: any) => {
+  showLoadingToast({
+    message: "Please wait...",
+    duration: 0,
+    forbidClick: true,
+    zIndex: 999999,
+  });
+  await buyFetchedData({
+    priceId: state.payData.id,
+    channelId: buyShop.value.channel.id,
+    deeplink: true,
+  });
+  if (buySuccess.value) {
+    state.payUrl = buyData.value.data.payInfo;
+    state.linkType = buyData.value?.type;
+    const startTime = Date.now();
+
+    document.addEventListener("visibilitychange", () => {
+      closeToast();
+    });
+
+    window.location.href = state.payUrl;
+
+    if (state.payUrl.indexOf("https") === -1) {
+      setTimeout(() => {
+        const endTime = Date.now();
+        if (endTime - startTime < 2000) {
+          showToast("Payment method not supported.");
+          setTimeout(() => {
+            closeToast();
+          }, 1000);
+        }
+      }, 500); // 延迟检查的时间
+    }
+  } else {
+    showToast(buyMsg.value);
+  }
+};
+
+const handleShowMore = async () => {
+  state.showMore = false;
+  await moreChannelFetch({
+    scene: "multi_vip",
+    money: state.moreChannelParmas,
+    vipMonths: state.month,
+  });
+  state.channelData = [...state.channelData, ...moreChannelData.value?.list];
+};
 </script>
 <style lang="scss" scoped>
+::v-deep(.van-swipe__indicators) {
+  bottom: 60px;
+}
+.popupBoxBig {
+  width: 660px;
+  height: 1158px;
+  // background: linear-gradient(90deg, #c20057 0%, #b100bb 100%), #ffffff;
+  border-radius: 40px 40px 40px 40px;
+  border: 10px solid #ffdfc6;
+  .swiperBox {
+    width: 100%;
+    height: 420px;
+    background: linear-gradient(90deg, #c20057 0%, #b100bb 100%);
+    .myswipe {
+      width: 100%;
+      height: 420px;
+      background: linear-gradient(90deg, #c20057 0%, #b100bb 100%);
+      .swiperItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .icon {
+        width: 488px;
+        height: 185px;
+      }
+      .title {
+        font-family: "Inter", sans-serif;
+        font-weight: bold;
+        font-size: 32px;
+        color: #ffffff;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .font {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: rgba(240, 240, 240, 0.8);
+        text-align: center;
+        padding-left: 62px;
+        padding-right: 62px;
+      }
+      .font1 {
+        padding-left: 62px;
+        padding-right: 62px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: rgba(240, 240, 240, 0.8);
+        text-align: center;
+      }
+    }
+  }
+  .contentBox {
+    margin-bottom: 86px;
+    position: relative;
+    margin-top: -20px;
+    z-index: 10;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 40px 40px 0px 0px;
+    border-top: 10px solid #ffdfc6;
+    border-top-left-radius: 10px solid #ffdfc6;
+    border-top-right-radius: 10px solid #ffdfc6;
+    padding-top: 108px;
+    .itemBox {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      .item {
+        width: 200px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+
+        // padding: 20px;
+        background: #f3f3f3;
+        border-radius: 20px 20px 20px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        .topBoxBig {
+          position: absolute;
+          top: -20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 3;
+          .topBox {
+            padding: 6px;
+            background: linear-gradient(90deg, #c20057 0%, #b100bb 100%);
+            border-radius: 40px 40px 40px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            color: #ffffff;
+          }
+        }
+        .monthBox {
+          margin-top: -10px;
+          width: 178px;
+          height: 234px;
+          //   background: #ffffff;
+          border-radius: 20px 20px 20px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          .monthnums {
+            font-family: "Inter", sans-serif;
+            font-weight: 900;
+            font-size: 72px;
+            color: #000000;
+          }
+          .monthfont {
+            margin-top: -25px;
+            font-family: "Inter", sans-serif;
+            font-weight: bold;
+            font-size: 32px;
+            color: #000000;
+            margin-bottom: 6px;
+          }
+          .font1 {
+            margin-bottom: 6px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 32px;
+            color: #929292;
+          }
+          .font2 {
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 28px;
+            color: #ec6776;
+          }
+        }
+        .font3 {
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 32px;
+          color: #929292;
+        }
+      }
+      .itemactive {
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        width: 200px;
+        height: 300px;
+        background: linear-gradient(315deg, #ff4d67 0%, #ff8a9b 100%);
+        border-radius: 20px 20px 20px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        .topBoxBig {
+          position: absolute;
+          top: -20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 3;
+          .topBox {
+            padding: 6px;
+            background: linear-gradient(90deg, #c20057 0%, #b100bb 100%);
+            border-radius: 40px 40px 40px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            color: #ffffff;
+          }
+        }
+        .monthBox {
+          margin-top: -10px;
+          width: 178px;
+          height: 234px;
+          background: #ffffff;
+          border-radius: 20px 20px 20px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          .monthnums {
+            font-family: "Inter", sans-serif;
+            font-weight: 900;
+            font-size: 72px;
+            color: #000000;
+          }
+          .monthfont {
+            margin-top: -25px;
+            font-family: "Inter", sans-serif;
+            font-weight: bold;
+            font-size: 32px;
+            color: #000000;
+            margin-bottom: 6px;
+          }
+          .font1 {
+            margin-bottom: 6px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 32px;
+            color: #929292;
+          }
+          .font2 {
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 28px;
+            color: #ec6776;
+          }
+        }
+        .font3 {
+          margin-top: 8px;
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 32px;
+          color: #ffffff;
+        }
+      }
+    }
+    .cundowmBox {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 86px;
+      .cutdownFont {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 40px;
+        color: #ee7987;
+      }
+    }
+  }
+  .bottomFontBig {
+    position: fixed;
+    padding-left: 118px;
+    padding-right: 116px;
+    text-align: center;
+    width: 100%;
+    bottom: 10px;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    color: #929292;
+    line-height: 28px;
+  }
+  .btnBox {
+    position: fixed;
+
+    width: 100%;
+    bottom: 30px;
+    // z-index: 23;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .btn {
+      position: relative;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      width: 380px;
+      height: 112px;
+      background: #e98853;
+      border-radius: 64px;
+      font-family: "Inter", sans-serif;
+      font-weight: normal;
+      font-size: 40px;
+      color: #fefefe;
+      line-height: 100px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .btnIcon {
+        width: 117px;
+        height: 117px;
+        position: absolute;
+        top: -40px;
+        right: -40px;
+      }
+    }
+  }
+}
 .popupBox {
   height: 928px;
   border-radius: 16px 16px 0px 0px;
   background-color: #f2f2f2;
   padding-top: 20px;
-  .topBox {
-    padding-left: 32px;
-    padding-right: 32px;
-
+  .popupBoxTop {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+    width: 100%;
+    background: #f2f2f2;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
-    .topBoxLeft {
-      display: flex;
-      align-items: center;
-      .vipImg {
-        width: 80px;
-        height: 80px;
-        margin-right: 20px;
-      }
-      .title {
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: bold;
-        font-size: 44px;
-        color: #1a1a1a;
-      }
-    }
-    .topBoxRight {
-      font-family: "SF Pro Display", sans-serif;
-      font-weight: bold;
-      font-size: 40px;
-      color: #ff4d42;
-    }
-  }
-  .ruleBox {
     padding-left: 32px;
-
-    display: flex;
-    align-items: center;
-    font-family: "SF Pro Display", sans-serif;
-    font-weight: 400;
-    font-size: 28px;
-    color: #1a1a1a;
     margin-bottom: 20px;
-    .getImg {
-      width: 32px;
-      height: 32px;
-      margin-right: 8px;
+    .rightImg {
+      width: 48px;
+      height: 48px;
+    }
+    .myWalletFont {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      color: #1a1a1a;
     }
   }
   .itemBig {
@@ -273,7 +725,6 @@ const {
     padding-bottom: 150px;
 
     .itemBox {
-      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -282,25 +733,34 @@ const {
       border-radius: 24px 24px 24px 24px;
       padding-left: 32px;
       padding-right: 32px;
+      margin-bottom: 20px;
       .itemBoxLeft {
         display: flex;
         align-items: center;
-        .activeSelectImg {
+        .choseBoxImg {
           width: 32px;
           height: 32px;
           margin-right: 8px;
         }
+        .activeSelectImg {
+          min-width: 48px;
+          height: 48px;
+          margin-right: 8px;
+        }
         .activeSelectText {
+          margin-right: 8px;
           font-family: "SF Pro Display", sans-serif;
           font-weight: 400;
-          font-size: 40px;
+          font-size: 28px;
           color: #1a1a1a;
         }
       }
       .itemBoxRight {
-        width: 160px;
-        height: 64px;
-        background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+        // width: 160px;
+        // height: 64px;
+        padding: 7px;
+        background: #eb6300;
+        // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
         border-radius: 40px 40px 40px 40px;
         font-family: "SF Pro Display", sans-serif;
         font-weight: bold;
@@ -310,6 +770,16 @@ const {
         text-align: center;
       }
     }
+    .moreBox {
+      font-family: "SF Pro Display", sans-serif;
+      font-weight: 500;
+      font-size: 40px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
   }
 
   .btnBig {
@@ -318,9 +788,10 @@ const {
     bottom: 10px;
     padding-left: 32px;
     padding-right: 32px;
-    .btnBox {
+    .btnBox2 {
       height: 100px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
+      //background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 16px 16px 16px 16px;
       font-family: "SF Pro Display", sans-serif;
       font-weight: 500;

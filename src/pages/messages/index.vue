@@ -1,5 +1,10 @@
 <template>
   <div class="bigBoxs">
+    <!-- <img
+      class="siginImg"
+      @click.stop="handleSigin"
+      src="./assets/Group1000004767@2x.webp"
+    /> -->
     <div class="topBox">
       <div class="tabsBox">
         <div class="tabsBoxLeft">
@@ -10,13 +15,21 @@
             @click="handleClick(index)"
           >
             {{ item.title }}
+            <div class="line" v-if="item.active"></div>
           </div>
         </div>
-        <img
-          @click="handleClear"
-          src="./assets/Frame@2x.png"
-          class="deleteImg"
-        />
+        <div class="flex items-center">
+          <img
+            @click="router.push('/notification')"
+            src="./assets/xiaoxi1@2x.webp"
+            class="noticeImg"
+          />
+          <img
+            @click="handleClear"
+            src="./assets/clear123.webp"
+            class="deleteImg"
+          />
+        </div>
       </div>
       <!-- <div class="scollTop" v-if="active === 0 && state.messageList.length">
         <div
@@ -35,8 +48,42 @@
           ></van-image>
         </div>
       </div> -->
+      <!-- live流入口 -->
+      <div
+        class="liveBoxBig"
+        v-if="active === 0 && liveData?.list?.length"
+        @click="router.push('/livePage')"
+      >
+        <div class="liveBox">
+          <div class="liveBoxLeft">
+            <div class="liveBoxLeftImg">
+              <SvgaShow
+                :divId="`liveBoxSvga`"
+                :url="'https://fs.duome.live/app/live/live.svga'"
+              ></SvgaShow>
+              <div class="liveNums">{{ liveData?.total }}</div>
+            </div>
+            <div class="liveBoxLeftFont">Live streaming</div>
+          </div>
+          <div class="liveBoxRight">
+            <van-image
+              v-for="(item, index) in liveData?.list"
+              round
+              fit="cover"
+              lazy-load
+              radius="50"
+              :src="item?.avatar"
+              class="liveBoxRightImg"
+            >
+            </van-image>
+          </div>
+        </div>
+      </div>
+
+      <!-- live流入口 -->
+
       <!-- 系统消息 -->
-      <div class="noticeTopBoxBig" v-if="active === 0">
+      <!-- <div class="noticeTopBoxBig" v-if="active === 0">
         <div class="noticeTopBox" @click="router.push('/notification')">
           <img src="./assets/noticeNew.png" class="noticeTopImg" />
           <div class="noticeTopBoxRight">
@@ -51,7 +98,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- 系统消息 -->
       <!-- 访客 -->
       <div
@@ -81,7 +128,7 @@
         <div
           class="noticeTopBoxBigMsg"
           v-for="(item, index) in state.messageList"
-          :key="item.id"
+          :key="item?.id"
           @click.stop="handleChatRoom(item)"
         >
           <div class="noticeTopBox">
@@ -90,17 +137,17 @@
               fit="cover"
               lazy-load
               radius="50"
-              :src="item.avatar"
+              :src="item?.avatar"
               class="noticeTopImg"
             >
-              <template v-slot:loading>
+              <!-- <template v-slot:loading>
                 <van-loading type="spinner" size="20" />
-              </template>
+              </template> -->
             </van-image>
             <div class="noticeTopBoxRight">
               <van-skeleton title :row="4" :loading="loadingSkeleton">
                 <div class="noticeTopBoxRightTop">
-                  <div class="noticeTopBoxRightTopLeft">{{ item.nick }}</div>
+                  <div class="noticeTopBoxRightTopLeft">{{ item?.nick }}</div>
                   <div
                     class="noticeTopBoxRightTopRight"
                     v-if="
@@ -122,7 +169,7 @@
                   <div
                     class="noticeTopBoxRightBottomFlexFont"
                     v-if="
-                      (!item?.localCustom && !item.localCustom?.cusstomMsg) ||
+                      (!item?.localCustom && !item?.localCustom?.cusstomMsg) ||
                       item?.localCustom?.cusstomMsg === ''
                     "
                   >
@@ -131,12 +178,16 @@
                         ? "[Picture]"
                         : item?.lastMsg?.type === "audio"
                         ? "[Audio]"
-                        : item.lastMsg?.type === "custom" &&
+                        : item?.lastMsg?.type === "custom" &&
                           JSON.parse(item?.lastMsg?.content)?.type === 2
                         ? "[Video Call]"
-                        : item.lastMsg?.type === "custom" &&
+                        : item?.lastMsg?.type === "custom" &&
                           JSON.parse(item?.lastMsg?.content)?.type === 1
                         ? "[Gift]"
+                        : item?.lastMsg?.type === "geo"
+                        ? "[Map]"
+                        : item?.lastMsg?.text?.includes("displayName")
+                        ? "[Map]"
                         : item?.lastMsg?.text
                     }}
                   </div>
@@ -144,23 +195,27 @@
                     {{
                       item?.localCustom?.cusstomMsg?.includes?.("ext")
                         ? "[Picture]"
+                        : item?.localCustom?.cusstomMsg?.includes?.(
+                            "displayName"
+                          )
+                        ? "[Map]"
                         : item?.localCustom?.cusstomMsg
                     }}
                   </div>
                   <div
                     class="nums"
                     v-if="
-                      (item.unread <= 99 && item.unread > 0) ||
+                      (item?.unread <= 99 && item?.unread > 0) ||
                       item?.localCustom?.unread > 0
                     "
                   >
                     {{
                       !item?.localCustom && !item?.localCustom?.unread
-                        ? item.unread
+                        ? item?.unread
                         : item?.localCustom?.unread
                     }}
                   </div>
-                  <div class="numsPlus" v-if="item.unread >= 99">99+</div>
+                  <div class="numsPlus" v-if="item?.unread >= 99">99+</div>
                 </div>
               </van-skeleton>
             </div>
@@ -194,7 +249,7 @@
       <van-list
         v-model:loading="loading"
         :finished="state.finished"
-        finished-text="Noting More"
+        finished-text="Nothing More"
         loading-text="Loading..."
         @load="getList"
         v-if="active === 1"
@@ -227,28 +282,53 @@
                   </div>
                 </div>
               </div>
-              <!-- <img
-                :src="
-                  item.user.inCall === 0 && item.user.active === 1
-                    ? videoImg
-                    : msgImg
-                "
-                @click="handleGo(item)"
-                class="callBoxItemRight"
-              /> -->
               <img
-                :src="videoImg"
+                :src="
+                  item.user.inCall === 0 && item.user.onDuty ? videoImg : msgImg
+                "
                 @click.stop="
                   () => {
                     handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
+
                       if (!res) {
-                        state.showRechargePopup = true;
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          state.showRechargePopup = true;
+                        }
                       }
                     });
                   }
                 "
                 class="callBoxItemRight"
               />
+              <!-- <div
+                class="caozuo"
+                @click.stop="
+                  () => {
+                    handleGo(item).then((res) => {
+                      const userDetails = getLocalUserDetail();
+
+                      if (!res) {
+                        if (userDetails?.user?.vipLevel === 0) {
+                          state.showVipPopup = true;
+                        } else {
+                          // state.showRechargePopup = true;
+                          state.showAppUserDownLoadPopup = true;
+                        }
+                      } else {
+                        state.showAppUserDownLoadPopup = true;
+                      }
+                    });
+                  }
+                "
+              >
+                <SvgaShow
+                  :divId="`demo${item?.user?.id}${index}`"
+                  :url="'https://fs.duome.live/app/animation/call_animation_nobg.svga'"
+                ></SvgaShow>
+              </div> -->
             </div>
           </div>
         </div>
@@ -272,8 +352,14 @@
       </div>
     </template>
   </van-floating-bubble> -->
-  <Tabbar></Tabbar>
+  <Tabbar ref="TabbarRef"></Tabbar>
+  <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
   <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+  <CallDownLoadPopup v-model="state.showCallDownLoadPopup"></CallDownLoadPopup>
+  <SignPopup v-model="state.showSignPopup"> </SignPopup>
+  <AppUserDownLoadPopup
+    v-model="state.showAppUserDownLoadPopup"
+  ></AppUserDownLoadPopup>
 </template>
 
 <script setup lang="ts" name="Messages">
@@ -290,16 +376,30 @@ import Tabbar from "@/components/Tabbar/index.vue";
 import Empty from "@/components/Empty.vue";
 import dayjs from "dayjs";
 import { useImHook } from "@/hook/useIm";
-import { callrecordlist, notiflist } from "@/api/allApi";
+import { callrecordlist, notiflist, livelist, userconfig } from "@/api/allApi";
 import { closeToast, showLoadingToast, showToast } from "vant";
 import msgImg from "./assets/ic_video@2x (1).png";
-import videoImg from "./assets/ic_video@2x.png";
+import videoImg from "./assets/callOp.png";
 import evenBus from "@/common/evenBus";
 import { useRouter } from "vue-router";
 import { handleGo } from "@/common/fetchCommon";
 import { formatSecondsToTime, removeSubstrings } from "@/common/utils";
 import { useUserStore } from "@/stores/user";
 import RechargePopup from "@/components/rechargePopup/index.vue";
+import { useUserDetailStore } from "@/stores/userDetail";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import SignPopup from "@/components/signPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+import { getLocalUserDetail } from "@/common/utils";
+
+const { userDetail }: any = useUserDetailStore();
+
+const { vipConfigData } = useVipConfigStore();
+import SvgaShow from "@/components/svgaShow/index.vue";
+
+const { fetchData: configFetch, data: configData } = userconfig();
 
 const state = reactive<any>({
   messageList: [],
@@ -307,7 +407,13 @@ const state = reactive<any>({
   offset: 0,
   finished: true,
   showRechargePopup: false,
+  showVipPopup: false,
+  showCallDownLoadPopup: false,
+  showSignPopup: false,
+  showAppUserDownLoadPopup: false,
 });
+
+const { fetchData: liveFetch, data: liveData } = livelist();
 
 const offsetPover = ref({
   x: -138,
@@ -338,19 +444,65 @@ const getLocalSessions = () => {
 
 const loadingSkeleton = ref(true);
 
-evenBus.on("updateonSessions", (data: any) => {
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-    closeToast();
-  });
-});
+// evenBus.on("updateonSessions", (data: any) => {
+//   // getLocalSessions().then((sessions: any) => {
+//   //   getMsgList(sessions);
+//   //   closeToast();
+//   // });
+// });
 
 evenBus.on("updateSession", (data: any) => {
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-    closeToast();
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  //   closeToast();
+  // });
+  getNewMsg(data);
 });
+
+const getNewMsg = async (session: any) => {
+  loadingSkeleton.value = false;
+  state.messageList = [...state.messageList, session];
+  const account =
+    session.to ===
+    `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
+      ? session.lastMsg.from
+      : session.to;
+  await nim.getUser({
+    account,
+    done: (error: any, user: any) => {
+      // if (error) {
+      state.messageList = state.messageList.map((item: any) => {
+        if (item?.id === session?.id) {
+          item = {
+            ...session,
+            avatar: user?.avatar,
+            nick: user?.nick,
+          };
+          if (user?.custom) {
+            item.custom = JSON?.parse(user?.custom || "{}");
+          }
+          if (session?.localCustom) {
+            try {
+              item.localCustom = JSON.parse(session.localCustom || "{}");
+            } catch (err) {
+              console.warn(err);
+            }
+          }
+          return item;
+        }
+        return item;
+      });
+      state.messageList = state.messageList.reduce((acc: any, current: any) => {
+        const x = acc.find((item: any) => item?.id === current?.id);
+
+        if (!x) {
+          acc.push(current);
+        }
+        return acc;
+      }, []);
+    },
+  });
+};
 
 const tabsList: any = reactive([
   { title: "Messages", active: true },
@@ -365,64 +517,120 @@ onMounted(async () => {
   //   tab: 3,
   // });
   // await getMsgList(hooksState.messageList);
+
   document.body.style.overflow = "auto";
+  await scheduler.yield();
+  getLocalSessions().then((sessions: any) => {
+    showLoadingToast({
+      duration: 0,
+      message: "Loading...",
+      forbidClick: true,
+    });
+    getMsgList(sessions);
+  });
 });
 
 onActivated(async () => {
+  await scheduler.yield();
   await getList();
   await noticeFetch({
     tab: 3,
   });
+  await liveFetch({
+    limit: 4,
+  });
+  await configFetch();
   // showLoadingToast({
   //   duration: 0,
   //   message: "Loading...",
   //   forbidClick: true,
   // });
-  getLocalSessions().then((sessions: any) => {
-    getMsgList(sessions);
-  });
+  // getLocalSessions().then((sessions: any) => {
+  //   getMsgList(sessions);
+  // });
   document.body.style.overflow = "auto";
+
   closeToast();
 });
+
+const handleSigin = () => {
+  if (!configData.value?.hasPayment) {
+    state.showVipPopup = true;
+  } else {
+    state.showSignPopup = true;
+  }
+};
+
+watch(
+  () => state.messageList,
+  (newVal) => {
+    if (newVal) {
+      state.messageList = state.messageList.sort((a: any, b: any) => {
+        const timeA = getCompareTime(a);
+        const timeB = getCompareTime(b);
+        return timeB - timeA;
+      });
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 
 const { user: userInfo }: any = useUserStore();
 
 function getCompareTime(item: any) {
   try {
-    const localCustom = JSON.parse(item?.localCustom);
+    // const localCustom = JSON.parse(item?.localCustom || "{}");
+    const localCustom = item?.localCustom;
     if (localCustom && localCustom.time) {
       return localCustom.time;
     }
   } catch (error) {
     // 如果解析失败，忽略错误
   }
-  return item.updateTime;
+  return item.updateTime || 0;
 }
 
 const getMsgList = async (data: any) => {
   state.messageList = data;
+  console.time("getMsgList耗时"); // 开始计时
+
+  // 创建一个数组用于存放所有的 Promise
+  const promises = [];
+
   for (let i = 0; i < state.messageList.length; i++) {
     if (state.messageList[i]?.lastMsg) {
-      nim.getUser({
-        account:
-          state.messageList[i].to ===
-          `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
-            ? state.messageList[i].lastMsg.from
-            : state.messageList[i].to,
-        done: (error: any, user: any) => getUserDone(error, user),
+      const userPromise = new Promise((resolve, reject) => {
+        nim.getUser({
+          account:
+            state.messageList[i].to ===
+            `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userInfo?.user.id}`
+              ? state.messageList[i].lastMsg.from
+              : state.messageList[i].to,
+          done: (error: any, user: any) => {
+            getUserDone(error, user);
+            if (error) {
+              reject(error); // 如果失败，reject
+            } else {
+              resolve(user); // 如果成功，resolve
+            }
+          },
+        });
       });
+
+      promises.push(userPromise); // 将每个Promise放入数组
     }
   }
-  state.messageList = state.messageList.sort((a, b) => {
-    const timeA = getCompareTime(a);
-    const timeB = getCompareTime(b);
-    return timeB - timeA;
-  });
-  // state.messageList = state.messageList.reverse();
-  setTimeout(() => {
-    loadingSkeleton.value = false;
-  }, 300);
-  closeToast();
+
+  try {
+    await Promise.all(promises); // 等待所有请求完成
+    console.timeEnd("getMsgList耗时"); // 结束计时并输出
+    loadingSkeleton.value = false; // 关闭loading效果
+  } catch (error) {
+    console.error("获取用户资料时出错:", error);
+  }
 };
 
 const getUserDone = (error: any, user: any) => {
@@ -469,6 +677,8 @@ const getList = async () => {
   }
 };
 
+const TabbarRef = ref<any>();
+
 const handleClear = () => {
   showLoadingToast({
     duration: 0,
@@ -479,16 +689,19 @@ const handleClear = () => {
     // id: idArr,
     done: deleteLocalSessionDone,
   });
+
   function deleteLocalSessionDone(error: any, obj: any) {
     console.log(error);
     console.log(obj);
     console.log("删除本地会话" + (!error ? "成功" : "失败"));
     if (!error) {
       closeToast();
-      localStorage.setItem("badge", "0");
+      TabbarRef.value.state.badge = 0;
       state.messageList = [];
+      localStorage.removeItem("wsMsgArr");
     }
   }
+
   closeToast();
 };
 
@@ -551,8 +764,19 @@ const handleClick = (index: number) => {
 [v-cloak] {
   display: none !important;
 }
+
 .bigBoxs {
   // padding-bottom: 100px;
+  background-color: #241213;
+  position: relative;
+  .siginImg {
+    position: absolute;
+    bottom: 200px;
+    right: 0px;
+    width: 168px;
+    height: 169px;
+    z-index: 10;
+  }
   .tabsBox {
     display: flex;
     align-items: center;
@@ -564,44 +788,64 @@ const handleClick = (index: number) => {
     position: sticky;
     top: 0;
     z-index: 18;
-    background-color: #ffffff;
+    background-color: #241213;
+
     .tabsBoxLeft {
       display: flex;
       align-items: center;
+
       .tabs {
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: bold;
-        font-size: 40px;
-        color: #aaaaaa;
+        font-size: 36px;
+        color: #c7c4cc;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
       }
+
       .activeTabs {
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: bold;
-        font-size: 40px;
-        color: #ff4d42;
+        font-size: 44px;
+        color: #eb6300;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
+        .line {
+          width: 100%;
+          min-height: 4px;
+          background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+          border-radius: 4px 4px 4px 4px;
+          margin-top: 8px;
+        }
       }
+
       .activeTabs:nth-child(2) {
         margin-left: 40px;
         margin-right: 40px;
       }
+
       .tabs:nth-child(2) {
         margin-left: 40px;
         margin-right: 40px;
       }
     }
+
     .deleteImg {
       width: 48px;
       height: 48px;
     }
+    .noticeImg {
+      width: 48px;
+      height: 48px;
+      margin-right: 30px;
+    }
   }
+
   .scollTop {
     display: flex;
     align-items: center;
@@ -611,6 +855,7 @@ const handleClick = (index: number) => {
     padding-right: 28px;
     gap: 14px;
     flex-shrink: 0;
+
     .userItem {
       min-width: 101px;
       max-width: 101px;
@@ -622,12 +867,14 @@ const handleClick = (index: number) => {
       align-items: center;
       justify-content: center;
       flex-direction: column;
+
       .userItemImg {
         border-radius: 50%;
         width: 92px;
         height: 92px;
       }
     }
+
     .userItemNone {
       min-width: 101px;
       max-width: 101px;
@@ -638,18 +885,84 @@ const handleClick = (index: number) => {
       align-items: center;
       justify-content: center;
       flex-direction: column;
+
       .userItemImg {
         border-radius: 50%;
         width: 92px;
         height: 92px;
       }
     }
+
     .noticeTopImg {
       min-width: 108px;
       max-width: 108px;
       height: 108px;
       border-radius: 50%;
       margin-right: 32px;
+    }
+  }
+  .liveBoxBig {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding-left: 32px;
+    padding-right: 32px;
+    width: 100%;
+    .liveBox {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 168px;
+      border-bottom: 2px dashed #566b88;
+      width: 100%;
+      .liveBoxLeft {
+        display: flex;
+        align-items: center;
+        .liveBoxLeftImg {
+          background-image: url(./assets/1@2x.webp);
+          background-size: 100% 100%;
+          // background-size: cover;
+          width: 112px;
+          height: 112px;
+          background-repeat: no-repeat;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          .liveNums {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ff0000;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 20px;
+            color: #ffffff;
+            line-height: 32px;
+            text-align: center;
+            position: absolute;
+            right: 0;
+            top: -10px;
+          }
+        }
+        .liveBoxLeftFont {
+          margin-left: 20px;
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 32px;
+          color: #eb6300;
+        }
+      }
+      .liveBoxRight {
+        display: flex;
+        align-items: center;
+        .liveBoxRightImg {
+          min-width: 84px;
+          max-width: 84px;
+          height: 84px;
+          margin-left: -23px;
+        }
+      }
     }
   }
   .noticeTopBoxBig {
@@ -659,12 +972,13 @@ const handleClick = (index: number) => {
     padding-left: 32px;
     padding-right: 32px;
     width: 100%;
+
     .noticeTopBox {
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
 
       .noticeTopImg {
@@ -674,42 +988,49 @@ const handleClick = (index: number) => {
         border-radius: 50%;
         margin-right: 32px;
       }
+
       .noticeTopBoxRight {
         width: 100%;
+
         .noticeTopBoxRightTop {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 18px;
           width: 100%;
+
           .noticeTopBoxRightTopLeft {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
             font-size: 36px;
-            color: #1a1a1a;
+            color: #fff;
           }
+
           .noticeTopBoxRightTopRight {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 28px;
-            color: #8c8c8c;
+            color: #91a3bd;
           }
         }
+
         .noticeTopBoxRightBottom {
           width: 556px;
           height: 34px;
           font-family: "SF Pro Display", sans-serif;
           font-weight: 400;
           font-size: 28px;
-          color: #404040;
+          color: #91a3bd;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
         }
+
         .noticeTopBoxRightBottomFlex {
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           .noticeTopBoxRightBottomFlexFont {
             width: 504px;
             height: 34px;
@@ -721,6 +1042,7 @@ const handleClick = (index: number) => {
             white-space: nowrap;
             text-overflow: ellipsis;
           }
+
           .nums {
             // padding: 2px 15px 2px 15px;
             width: 40px;
@@ -735,6 +1057,7 @@ const handleClick = (index: number) => {
             font-size: 24px;
             color: #ffffff;
           }
+
           .numsPlus {
             width: 64px;
             height: 32px;
@@ -752,43 +1075,52 @@ const handleClick = (index: number) => {
         }
       }
     }
+
     .eyeBig {
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
+
       .eyesLeft {
         display: flex;
         align-items: center;
+
         .eyesImg {
           min-width: 104px;
           height: 104px;
         }
+
         .eyesFont {
           margin-left: 24px;
+
           .eyesFontOne {
             font-family: "SF Pro Display", sans-serif;
             font-weight: bold;
             font-size: 34px;
-            color: #1a1a1a;
+            color: #fff;
             margin-bottom: 18px;
           }
+
           .eyesFontTwo {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 30px;
-            color: #8c8c8c;
+            color: #91a3bd;
           }
         }
       }
+
       .eyesRight {
         position: relative;
+
         .eyesRightImg {
           width: 158px;
           height: 88px;
         }
+
         .dian {
           position: absolute;
           top: 0;
@@ -815,12 +1147,13 @@ const handleClick = (index: number) => {
       padding-left: 32px;
       padding-right: 32px;
       width: 100%;
+
       .noticeTopBox {
         display: flex;
         align-items: center;
         justify-content: space-between;
         height: 168px;
-        border-bottom: 2px solid #f5f5f5;
+        border-bottom: 2px dashed #566b88;
         width: 100%;
 
         .noticeTopImg {
@@ -830,25 +1163,29 @@ const handleClick = (index: number) => {
           border-radius: 50%;
           margin-right: 32px;
         }
+
         .noticeTopBoxRight {
           width: 100%;
+
           .noticeTopBoxRightTop {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 18px;
             width: 100%;
+
             .noticeTopBoxRightTopLeft {
-              font-family: "SF Pro Display", sans-serif;
-              font-weight: bold;
-              font-size: 36px;
-              color: #1a1a1a;
+              font-family: "Inter", sans-serif;
+              font-weight: normal;
+              font-size: 28px;
+              color: #fff;
               width: 200px;
               // height: 60px;
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
             }
+
             .noticeTopBoxRightTopRight {
               font-family: "SF Pro Display", sans-serif;
               font-weight: 400;
@@ -856,6 +1193,7 @@ const handleClick = (index: number) => {
               color: #8c8c8c;
             }
           }
+
           .noticeTopBoxRightBottom {
             width: 556px;
             height: 34px;
@@ -867,21 +1205,24 @@ const handleClick = (index: number) => {
             white-space: nowrap;
             text-overflow: ellipsis;
           }
+
           .noticeTopBoxRightBottomFlex {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .noticeTopBoxRightBottomFlexFont {
               width: 504px;
               height: 34px;
-              font-family: "SF Pro Display", sans-serif;
+              font-family: "Inter", sans-serif;
               font-weight: 400;
               font-size: 28px;
-              color: #404040;
+              color: #91a3bd;
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
             }
+
             .nums {
               // padding: 2px 15px 2px 15px;
               width: 40px;
@@ -896,6 +1237,7 @@ const handleClick = (index: number) => {
               font-size: 24px;
               color: #ffffff;
             }
+
             .numsPlus {
               width: 64px;
               height: 32px;
@@ -913,22 +1255,27 @@ const handleClick = (index: number) => {
           }
         }
       }
+
       .eyeBig {
         display: flex;
         align-items: center;
         justify-content: space-between;
         height: 168px;
-        border-bottom: 2px solid #f5f5f5;
+        border-bottom: 2px dashed #566b88;
         width: 100%;
+
         .eyesLeft {
           display: flex;
           align-items: center;
+
           .eyesImg {
             min-width: 104px;
             height: 104px;
           }
+
           .eyesFont {
             margin-left: 24px;
+
             .eyesFontOne {
               font-family: "SF Pro Display", sans-serif;
               font-weight: bold;
@@ -936,6 +1283,7 @@ const handleClick = (index: number) => {
               color: #1a1a1a;
               margin-bottom: 18px;
             }
+
             .eyesFontTwo {
               font-family: "SF Pro Display", sans-serif;
               font-weight: 400;
@@ -944,12 +1292,15 @@ const handleClick = (index: number) => {
             }
           }
         }
+
         .eyesRight {
           position: relative;
+
           .eyesRightImg {
             width: 158px;
             height: 88px;
           }
+
           .dian {
             position: absolute;
             top: 0;
@@ -963,23 +1314,27 @@ const handleClick = (index: number) => {
       }
     }
   }
+
   .callBigBox {
     height: 168px;
-    background: #ffffff;
+    background-color: #241213;
     display: flex;
     align-items: center;
     padding-left: 32px;
     padding-right: 32px;
+
     .callBoxItem {
       display: flex;
       justify-content: space-between;
       align-items: center;
       height: 168px;
-      border-bottom: 2px solid #f5f5f5;
+      border-bottom: 2px dashed #566b88;
       width: 100%;
+
       .callBoxItemLeft {
         display: flex;
         align-items: center;
+
         .callBoxItemLeftImg {
           border-radius: 50%;
           min-width: 108px;
@@ -987,19 +1342,21 @@ const handleClick = (index: number) => {
           height: 108px;
           margin-right: 32px;
         }
+
         .callContent {
           .callContentTop {
             width: 260px;
             height: 42px;
             font-weight: bold;
             font-size: 36px;
-            color: #1a1a1a;
+            color: #fff;
             font-family: "SF Pro Display", sans-serif;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
             margin-bottom: 8px;
           }
+
           .callContentTime {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
@@ -1007,14 +1364,24 @@ const handleClick = (index: number) => {
             color: #00d88a;
             margin-bottom: 8px;
           }
+
           .callContentBottom {
             font-family: "SF Pro Display", sans-serif;
             font-weight: 400;
             font-size: 28px;
-            color: #8c8c8c;
+            color: #91a3bd;
           }
         }
       }
+
+      .caozuo {
+        width: 88px;
+        height: 88px;
+
+        border-radius: 50%;
+        background-color: #f9577e;
+      }
+
       .callBoxItemRight {
         width: 80px;
         height: 80px;
@@ -1022,6 +1389,7 @@ const handleClick = (index: number) => {
     }
   }
 }
+
 .freeFont {
   width: 120px;
   height: 43px;

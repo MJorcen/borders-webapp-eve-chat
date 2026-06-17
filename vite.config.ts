@@ -8,16 +8,102 @@ import pxtorem from "postcss-pxtorem";
 import fs from "fs";
 import { VitePWA } from "vite-plugin-pwa";
 import viteCompression from "vite-plugin-compression";
+import archiver from "archiver";
 
 //这个配置 为了在html中使用 环境变量
 const getViteEnv = (mode, target) => {
   return loadEnv(mode, process.cwd())[target];
 };
 
+const getOutputDir = (buildCommand) => {
+  switch (buildCommand) {
+    case "build:vidjoy":
+      return "dist-vidjoy";
+    case "build:yaya":
+      return "dist-yaya";
+    case "build:chatJoi":
+      return "dist-chatJoi";
+    case "build:justVidTest":
+      return "dist-justVidTest";
+    case "build:vidHub":
+      return "dist-vidHub";
+    case "build:vidBuzz":
+      return "dist-vidBuzz";
+    case "build:vidLink":
+      return "dist-vidLink";
+    case "build:vidChat":
+      return "dist-vidChat";
+    case "build:SoulChat":
+      return "dist-SoulChat";
+    case "build:SpicyChat":
+      return "dist-SpicyChat";
+    case "build:strangers":
+      return "dist-strangers";
+    case "build:SexyChat":
+      return "dist-SexyChat";
+    case "build:Hornyhub":
+      return "dist-Hornyhub";
+    case "build:Sexylivechat":
+      return "dist-Sexylivechat";
+    case "build:NudeChat":
+      return "dist-NudeChat";
+    case "build:AdultChat":
+      return "dist-AdultChat";
+    default:
+      return "dist"; // 默认构建输出目录
+  }
+};
+
+// 太多包需要压缩，这里使用插件压缩输出目录
+const compressOutputPlugin = () => {
+  const buildCommand = process.env.npm_lifecycle_event;
+
+  return {
+    name: "compress-output-plugin",
+    closeBundle() {
+      const outputDir = getOutputDir(buildCommand);
+
+      const zipFilePath = `${outputDir}.zip`;
+
+      console.log(`开始压缩 ${outputDir} 到 ${zipFilePath}...`);
+
+      // 检查目录是否存在
+      if (!fs.existsSync(outputDir)) {
+        console.error(`目录 ${outputDir} 不存在，无法压缩！`);
+        return;
+      }
+
+      // 创建压缩文件
+      const output = fs.createWriteStream(zipFilePath);
+      const archive = archiver("zip", { zlib: { level: 9 } });
+
+      output.on("close", () => {
+        console.log(
+          `${zipFilePath} 压缩完成，大小为 ${archive.pointer()} 字节`
+        );
+      });
+
+      archive.on("error", (err) => {
+        throw err;
+      });
+
+      archive.pipe(output);
+
+      // 添加目录内容（不包含根目录本身）
+      archive.glob("**/*", { cwd: outputDir, dot: true });
+
+      archive.finalize();
+    },
+  };
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
+  const buildCommand = process.env.npm_lifecycle_event;
+
   return {
     plugins: [
+      compressOutputPlugin(),
       vue(),
       VueSetupExtend(),
       viteCompression({
@@ -31,55 +117,57 @@ export default defineConfig(({ command, mode }) => {
           },
         },
       }),
-      VitePWA({
-        registerType: "autoUpdate", // 可选：autoUpdate | manual
-        includeAssets: [
-          "favicon.ico",
-          "apple-touch-icon.png",
-          "masked-icon.svg",
-        ],
-        manifest: {
-          name: "My PWA App",
-          short_name: "MyApp",
-          description: "A description of my PWA app.",
-          theme_color: "#ffffff",
-          icons: [
-            {
-              src: "./public/vite.svg",
-              sizes: "192x192",
-              type: "image/png",
-            },
-            // {
-            //   src: "android-chrome-512x512.png",
-            //   sizes: "512x512",
-            //   type: "image/png",
-            // },
-          ],
-        },
-        workbox: {
-          globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg}"],
-          // runtimeCaching: [
-          //   {
-          //     urlPattern: /^https:\/\/fonts\.gstatic\.com/,
-          //     handler: "StaleWhileRevalidate",
-          //     options: {
-          //       cacheName: "google-fonts-webfonts",
-          //       cacheableResponse: {
-          //         statuses: [0, 200],
-          //       },
-          //       expiration: {
-          //         maxEntries: 10,
-          //         maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
-          //       },
-          //     },
-          //   },
-          //   // Add more runtime caching rules as needed
-          // ],
-        },
-        // devOptions: {
-        //   enabled: true,
-        // },
-      }),
+      // VitePWA({
+      //   registerType: "autoUpdate", // 可选：autoUpdate | manual
+      //   includeAssets: [
+      //     "favicon.ico",
+      //     "apple-touch-icon.png",
+      //     "masked-icon.svg",
+      //   ],
+      //   manifest: {
+      //     name: "My PWA App",
+      //     short_name: "MyApp",
+      //     description: "A description of my PWA app.",
+      //     theme_color: "#ffffff",
+      //     icons: [
+      //       {
+      //         src: "./public/vite.svg",
+      //         sizes: "192x192",
+      //         type: "image/png",
+      //       },
+      //       // {
+      //       //   src: "android-chrome-512x512.png",
+      //       //   sizes: "512x512",
+      //       //   type: "image/png",
+      //       // },
+      //     ],
+      //   },
+      //   workbox: {
+      //     globPatterns: ["**/*.{ts,js,css,html,png,jpg,svg,webp,gif}"],
+      //     maximumFileSizeToCacheInBytes: 5 * 1024 ** 2, // 5 MB or set to something else
+
+      //     // runtimeCaching: [
+      //     //   {
+      //     //     urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+      //     //     handler: "StaleWhileRevalidate",
+      //     //     options: {
+      //     //       cacheName: "google-fonts-webfonts",
+      //     //       cacheableResponse: {
+      //     //         statuses: [0, 200],
+      //     //       },
+      //     //       expiration: {
+      //     //         maxEntries: 10,
+      //     //         maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+      //     //       },
+      //     //     },
+      //     //   },
+      //     //   // Add more runtime caching rules as needed
+      //     // ],
+      //   },
+      //   // devOptions: {
+      //   //   enabled: true,
+      //   // },
+      // }),
     ],
     resolve: {
       alias: {
@@ -106,7 +194,7 @@ export default defineConfig(({ command, mode }) => {
 
     server: {
       port: 3000,
-      // // 生成https方便本地调试，需要配置本地证书
+      // 生成https方便本地调试，需要配置本地证书；VITE_DEV_HTTPS=false 时使用 http
       https:
         process.env.VITE_DEV_HTTPS === "false"
           ? false
@@ -121,14 +209,22 @@ export default defineConfig(({ command, mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ""), // 重写路径，去除请求前缀
         },
         "/qqq": {
-          target: "https://img.duome.live", // 后端API的实际地址
+          target: "https://maps.googleapis.com/maps/api", // 后端API的实际地址
           changeOrigin: true, // 是否改变源，开启后会对主机头进行修改， 默认false
+          secure: true, // 禁用 SSL 证书验证
           rewrite: (path) => path.replace(/^\/qqq/, ""), // 重写路径，去除请求前缀
+        },
+        "/www": {
+          target: "http://hnybgz.asuscomm.com:6688/gateway/mapping/cloud/v1", // 后端API的实际地址
+          changeOrigin: true, // 是否改变源，开启后会对主机头进行修改， 默认false
+          rewrite: (path) => path.replace(/^\/www/, ""), // 重写路径，去除请求前缀
+          // rewrite: (path) => path.replace(new RegExp(`^${baseApiOther}`), ""), // Rewrite the path dynamically
         },
       },
       hmr: true,
     },
     build: {
+      outDir: getOutputDir(buildCommand),
       // sourcemap: isDevEnv(mode),
       rollupOptions: {
         output: {

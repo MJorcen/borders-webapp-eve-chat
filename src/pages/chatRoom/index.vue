@@ -1,24 +1,60 @@
 <template>
   <div class="bigBox">
-    <van-nav-bar
-      :title="data?.user?.nickname"
-      left-text=""
-      fixed
-      :border="false"
-    >
+    <van-nav-bar title="" left-text="" fixed>
       <template #left>
-        <van-icon
-          name="arrow-left"
-          size="18"
-          color="#000000"
+        <div
+          class="topLeftBox"
           @click="
             () => {
-              nim.resetSessionUnread(`p2p-${preFix}${data?.user?.id}`);
-              router.go(-1);
-              handleSetCash();
+              router.push({
+                name: 'AnchorDetail',
+                query: { id: data?.user?.id },
+              });
             }
           "
-        />
+        >
+          <img
+            src="./assets/Slice90@2x.webp"
+            class="backImg"
+            @click.stop="
+              () => {
+                nim.resetSessionUnread(`p2p-${preFix}${data?.user?.id}`);
+                router.go(-1);
+                handleSetCash();
+              }
+            "
+          />
+          <van-image
+            round
+            fit="cover"
+            radius="50"
+            lazy-load
+            :src="data?.user?.avatar"
+            alt=""
+            class="hostImg"
+          ></van-image>
+          <div class="hostName">
+            {{ data?.user?.nickname }}
+          </div>
+          <div
+            class="onlineBox"
+            v-if="data?.user?.inCall === 0 && data?.user?.onDuty"
+          >
+            <div class="onlineYuan"></div>
+            <div class="onlineYuanFont">Online</div>
+          </div>
+          <div v-if="!data?.user?.onDuty" class="offlineBox">
+            <div class="onlineYuan"></div>
+            <div class="onlineYuanFont">Offline</div>
+          </div>
+          <div
+            v-if="data?.user?.inCall === 1 && data?.user?.active === 1"
+            class="busyBox"
+          >
+            <div class="onlineYuan"></div>
+            <div class="onlineYuanFont">Busy</div>
+          </div>
+        </div>
       </template>
       <template #right>
         <div class="flex items-center">
@@ -29,9 +65,9 @@
           >
             Follow
           </div>
-          <div v-else class="rightBtnUn" @click.stop="handleCancelFollow">
+          <!-- <div v-else class="rightBtnUn" @click.stop="handleCancelFollow">
             UnFollow
-          </div>
+          </div> -->
           <!-- <img src="./assets/列表图标@2x.png" class="w-[24px] h-[24px]" /> -->
         </div>
       </template>
@@ -39,7 +75,17 @@
     <div class="chatBox">
       <van-skeleton :loading="loading" title :row="3">
         <div class="hostBox">
-          <div class="hostBoxTop">
+          <div
+            class="hostBoxTop"
+            @click="
+              () => {
+                router.push({
+                  name: 'AnchorDetail',
+                  query: { id: data?.user?.id },
+                });
+              }
+            "
+          >
             <van-image
               round
               fit="cover"
@@ -103,6 +149,14 @@
         <div v-for="(it, inx) in item.messages" :key="inx">
           <div :class="it.to !== roomUserId ? 'userLeftBox' : 'userRightBox'">
             <van-image
+              @click="
+                () => {
+                  router.push({
+                    name: 'AnchorDetail',
+                    query: { id: data?.user?.id },
+                  });
+                }
+              "
               fit="cover"
               radius="50"
               :src="
@@ -133,7 +187,8 @@
                 it.type === 'text' &&
                 !it.text.includes('md5') &&
                 !it.text.includes('anchorUserId') &&
-                !it.text.includes('ext')
+                !it.text.includes('ext') &&
+                !it.text.includes('displayName')
               "
             >
               {{ it.text }}
@@ -143,7 +198,7 @@
                 @click="handleTranslate(it)"
               >
                 <img
-                  src="./assets/icon_translate@2x.png"
+                  src="./assets/Slice130@2x.webp"
                   class="w-[20px] h-[20px] mr-[8px]"
                 />
                 <div>See translation</div>
@@ -152,6 +207,37 @@
 
             <!-- </div> -->
             <!-- 文字 -->
+            <!-- 位置 -->
+            <div
+              v-if="it?.text?.includes('displayName') || it?.geo"
+              :class="
+                it.to !== roomUserId
+                  ? 'userLeftBoxContentDis'
+                  : 'userRightBoxContentDis'
+              "
+            >
+              <div v-if="it.to !== roomUserId">
+                {{ JSON.parse(it?.text)?.name }}
+              </div>
+              <!-- <div class="locationBox" v-if="it.to !== roomUserId">
+                {{ JSON.parse(it?.text)?.vicinity }}
+              </div> -->
+              <img
+                :src="JSON.parse(it?.text)?.mapUrl"
+                style="width: 300px; height: 200px"
+              />
+              <div class="mapFont" v-if="JSON.parse(it?.text)?.name === ''">
+                Open VIP and view for free...
+              </div>
+              <div class="allowBig" v-if="JSON.parse(it?.text)?.name === ''">
+                <div class="allowBtn" @click.stop="handleAllow">View</div>
+              </div>
+              <!-- <GoogleMap
+                :position="getDistance(it)"
+                v-if="it?.type === 'geo' || it?.text?.includes('locationLat')"
+              ></GoogleMap> -->
+            </div>
+            <!-- 位置 -->
 
             <!-- 礼物 -->
             <div
@@ -193,11 +279,13 @@
               radius="8"
               style="min-width: 80px"
               v-if="
-                it.type === 'image' ||
-                it.text.includes('png') ||
-                it.text.includes('jpg') ||
-                it.text.includes('jpeg') ||
-                it.text.includes('jfif')
+                (it.type === 'image' ||
+                  it.text.includes('png') ||
+                  it.text.includes('jpg') ||
+                  it.text.includes('jpeg') ||
+                  it.text.includes('webp') ||
+                  it.text.includes('jfif')) &&
+                !it.text.includes('displayName')
               "
               :src="it.file?.url || JSON.parse(it?.text)?.url"
               @click.stop="
@@ -392,6 +480,7 @@
           </div>
         </div>
       </div>
+
       <div class="w-[100%] h-[100px]"></div>
     </div>
     <div class="bottomBox">
@@ -444,7 +533,7 @@
         <div class="bottomImgPos">
           <img
             class="toolsImg"
-            @change="handleFileChange"
+            @click.stop="handleFileChange"
             src="./assets/ic_photo_44@2x.png"
           />
           <input
@@ -454,18 +543,42 @@
             @change="triggerFileInput"
             id="upload-files"
             accept="image/gif, image/jpeg, image/jpg, image/png, image/svg"
+            multiple
           />
         </div>
-        <!-- <img
+        <div
           class="toolsImg"
-          src="./assets/ic_video_fill@2x.png"
-          @click.stop="handleGo(data)"
-        /> -->
-        <div class="toolsImg" @click.stop="handleGo(data)">
+          @click.stop="
+            () => {
+              handleGo(data).then((res) => {
+                const userDetails = getLocalUserDetail();
+
+                if (!res) {
+                  if (userDetails?.user?.vipLevel === 0) {
+                    state.showVipPopup = true;
+                  } else {
+                    // state.showRechargePopup = true;
+                    // state.showCallDownLoadPopup = true;
+                    state.showAppUserDownLoadPopup = true;
+                  }
+                } else {
+                  // state.showCallDownLoadPopup = true;
+                  state.showAppUserDownLoadPopup = true;
+                }
+              });
+            }
+          "
+        >
           <SvgaShow
             :url="'https://fs.duome.live/app/animation/call_animation_color.svga'"
           ></SvgaShow>
         </div>
+        <!-- <img
+          class="disImg"
+          src="./assets/dis3.webp"
+          @click.stop="handleSendDistance"
+        /> -->
+
         <img
           class="toolsImg"
           src="./assets/ic_gift@2x.png"
@@ -473,38 +586,53 @@
         />
       </div>
     </div>
-  </div>
-  <audio
-    style="display: none"
-    width="100%"
-    height="100%"
-    controls
-    class="audioClass"
-    ref="audioRef"
-  >
-    <source type="audio/aac" />
-    <source type="audio/mp3" />
-    <source type="audio/mp4" />
+    <audio
+      style="display: none"
+      width="100%"
+      height="100%"
+      controls
+      class="audioClass"
+      ref="audioRef"
+    >
+      <source type="audio/aac" />
+      <source type="audio/mp3" />
+      <source type="audio/mp4" />
 
-    <!-- <source type="audio/mpeg,mp3,mp4"/> -->
-  </audio>
-  <Dialog ref="DialogRef">
-    <template v-slot:modalContent>
-      <div class="redBox" v-if="!isInside">
-        <img class="redSource" src="./assets/redSource.png" />
-      </div>
-      <div class="whiteBox" v-else>
-        <img class="whiteSource" src="./assets/whiteSource.png" />
-      </div>
-    </template>
-  </Dialog>
-  <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
-  <giftPopup
-    ref="giftPopupRef"
-    v-model="showGiftPopup"
-    @handleGive="handleGive"
-  ></giftPopup>
-  <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+      <!-- <source type="audio/mpeg,mp3,mp4"/> -->
+    </audio>
+    <Dialog ref="DialogRef">
+      <template v-slot:modalContent>
+        <div class="redBig">
+          <div class="redBox" v-if="!isInside">
+            <img class="redSource" src="./assets/Group14140@2x.webp" />
+            <div class="redText">Swipe up cancel to sending</div>
+          </div>
+        </div>
+        <!-- <div class="whiteBox" v-else>
+          <img class="whiteSource" src="./assets/whiteSource.png" />
+        </div> -->
+      </template>
+    </Dialog>
+    <SvgaDialog ref="SvgaDialogRef"></SvgaDialog>
+    <giftPopup
+      ref="giftPopupRef"
+      v-model="showGiftPopup"
+      @handleGive="handleGive"
+    ></giftPopup>
+    <RechargePopup v-model="state.showRechargePopup"></RechargePopup>
+    <VipPopup :vipConfg="vipConfigData" v-model="state.showVipPopup"></VipPopup>
+    <!-- <FirstVipPromptPopup
+      :video-url="configData.firstVipPromptVideo"
+      v-model="state.showFirstVipPromptPopup"
+    >
+    </FirstVipPromptPopup> -->
+    <CallDownLoadPopup
+      v-model="state.showCallDownLoadPopup"
+    ></CallDownLoadPopup>
+    <AppUserDownLoadPopup
+      v-model="state.showAppUserDownLoadPopup"
+    ></AppUserDownLoadPopup>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -533,6 +661,7 @@ import {
   groupMessagesByDay,
   groupMessagesByDayNoReverse,
   formatSecondsToTime,
+  getLocalUserDetail,
 } from "@/common/utils";
 import dayjs from "dayjs";
 import Recorder from "recorder-core"; //注意如果未引用Recorder变量，可能编译时会被优化删除（如vue3 tree-shaking），请改成 import 'recorder-core'，或随便调用一下 Recorder.a=1 保证强引用
@@ -541,13 +670,29 @@ import "recorder-core/src/engine/mp3-engine";
 import Dialog from "./compoents/Dialog.vue";
 import SvgaDialog from "@/components/svgaDialog/index.vue";
 import giftPopup from "@/components/giftPopup/index.vue";
-import { giftsend, datatranslate, userunfollow } from "@/api/allApi";
+import {
+  giftsend,
+  datatranslate,
+  userunfollow,
+  userconfig,
+  userlocation,
+} from "@/api/allApi";
 import { handleGo } from "@/common/fetchCommon";
 import { useUserDetailStore } from "@/stores/userDetail";
 import RechargePopup from "@/components/rechargePopup/index.vue";
 import SvgaShow from "@/components/svgaShow/index.vue";
+import VipPopup from "@/components/vipPopup/index.vue";
+import { useVipConfigStore } from "@/stores/vipConfig";
+import GoogleMap from "@/components/googleMap/index.vue";
+// import FirstVipPromptPopup from "@/components/firstVipPromptPopup/index.vue";
+import CallDownLoadPopup from "@/components/callDownLoadPopup/index.vue";
+import AppUserDownLoadPopup from "@/components/appUserDownLoadPopup/index.vue";
+
+const { vipConfigData } = useVipConfigStore();
 
 const preFix = import.meta.env.VITE_APP_ACCOUNT_PREFIX;
+
+const { fetchData: configFetch, data: configData } = userconfig();
 
 const { userDetail }: any = useUserDetailStore();
 
@@ -580,21 +725,28 @@ const state = reactive<any>({
   messageList: [],
   isInput: true,
   showRechargePopup: false,
+  showVipPopup: false,
+  showFirstVipPromptPopup: false,
+  showCallDownLoadPopup: false,
+  showAppUserDownLoadPopup: false,
 });
 
 const SvgaDialogRef = ref<any>();
 
-onMounted(() => {
+onMounted(async () => {
   getUserData();
+  await configFetch();
+  await scheduler.yield();
+  await nextTick();
+
   nextTick(() => {
     // var height = document.body.clientHeight;
-    window.scroll({ top: 100000000, behavior: "instant" });
+    window.scrollTo({ top: 100000000, behavior: "instant" });
   });
   // 初始化组件时确保浏览器支持 MediaDevices.getUserMedia
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     console.error("getUserMedia not supported in this browser.");
   }
-  // useBetterScroll(".bigBox");
 });
 
 onUnmounted(() => {
@@ -648,19 +800,17 @@ onUnmounted(() => {
       }
     },
   });
-  window.scroll({ top: 0 });
+  // window.scrollTo({ top: 0, behavior: "instant" });
 });
 
 watch(
   () => state.messageList,
   () => {
     nextTick(() => {
-      // if (route.name === "chatRoom") {
-      window.scroll({ top: 100000000, behavior: "instant" });
-      // }
+      window.scrollTo({ top: 100000000, behavior: "instant" });
     });
   },
-  { deep: true }
+  { immediate: true, deep: true }
 );
 
 const { fetchData, data, loading } = userget();
@@ -679,33 +829,39 @@ const getUserData = async () => {
     duration: 0,
   });
   getRoomMsg(data.value.user.cuteId).then((res) => {
-    getChatMsgList(res || []);
+    getChatMsgList(res || [], "首次获取进来");
   });
 };
 
 // 防止浏览器刷新
-evenBus.on("onConnect", () => {
+evenBus.on("setFunc", () => {
   // showLoadingToast({
   //   message: "Please wait...",
   //   forbidClick: true,
   //   duration: 0,
   // });
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
-    getChatMsgList(res || []);
+    getChatMsgList(res || [], "shuaxin");
   });
 });
 
 // 监听到消息更新后更新页面数据
 evenBus.on("updateSessionChatRoom", () => {
   getRoomMsg(data.value?.user?.cuteId).then((res) => {
-    getChatMsgList(res || []);
+    getChatMsgList(res || [], "监听到消息更新");
   });
 });
 
-const getChatMsgList = (msgList: any) => {
-  state.messageList = msgList;
+const getChatMsgList = (msgList: any, from: string) => {
+  console.log(`从哪个监听获取到的消息`, from);
+  // state.messageList = msgList;
 
-  state.messageList = groupMessagesByDay(state.messageList);
+  // state.messageList = groupMessagesByDay(state.messageList);
+  state.messageList = groupMessagesByDay(msgList);
+  nextTick(() => {
+    // window.scroll({ top: 100000000, behavior: "instant" });
+    closeToast();
+  });
   console.log(state.messageList, "最终获取的数据");
   closeToast();
 };
@@ -723,7 +879,8 @@ const handleFollow = async () => {
     forbidClick: true,
   });
   await followFetch({
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
+    scene: "房间关注",
   });
   if (followSuccess.value) {
     showToast("Success");
@@ -741,8 +898,17 @@ const handleFileChange = () => {
 const triggerFileInput = (event: any) => {
   const files = event.target.files;
   if (files.length > 0) {
-    const file = files[0];
-    afterRead(file);
+    // const file = files[0];
+    // afterRead(file);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (configData.value?.hasPayment) {
+        state.showAppUserDownLoadPopup = true;
+        return;
+      } else {
+        afterRead(file);
+      }
+    }
   }
 };
 
@@ -758,7 +924,8 @@ const afterRead = async (file: any) => {
     scene: "p2p",
     to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
     type: "image",
-    fileInput: "upload-files",
+    // fileInput: "upload-files",
+    blob: file,
     fastPass: `{"w":200,"h":110,"md5":${md532Str}}`,
     env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
     beginupload: function (upload: any) {
@@ -778,7 +945,7 @@ const afterRead = async (file: any) => {
     },
     beforesend: function (msg: any) {
       console.log("正在发送p2p image消息, id=" + msg.idClient);
-      getNowMsgList(msg);
+      // getNowMsgList(msg);
       // 判断是不是存在自定义消息的用户，存在则需要去清洗自定义数据
       nim.getLocalSession({
         sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
@@ -813,6 +980,10 @@ const afterRead = async (file: any) => {
 
 // 发送文字
 const handleSend = async () => {
+  if (configData.value?.hasPayment) {
+    state.showAppUserDownLoadPopup = true;
+    return;
+  }
   if (state.inputText.trim() === "") {
     return;
   }
@@ -834,7 +1005,7 @@ const handleSend = async () => {
 };
 
 // 发送消息回调
-function sendMsgDone(error: any, msg: any) {
+async function sendMsgDone(error: any, msg: any) {
   console.log(error);
   console.log(msg);
   console.log(
@@ -847,19 +1018,41 @@ function sendMsgDone(error: any, msg: any) {
       ", id=" +
       msg.idClient
   );
+  // await configFetch();
+
   if (error) {
     showToast(error);
   } else {
     if (msg.callbackExt) {
-      state.showRechargePopup = true;
+      // state.showVipPopup = true;
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showRechargePopup = true;
+      }
+      if (configData?.value?.showFirstVipPrompt) {
+        state.showFirstVipPromptPopup = true;
+      }
     }
+    // if (state.messageList.length) {
+    //   getNowMsgList(msg);
+    // } else {
+    //   state.messageList.push(msg);
+    //   state.messageList = groupMessagesByDay([...state.messageList]);
+    // }
 
-    if (state.messageList.length) {
-      getNowMsgList(msg);
-    } else {
-      state.messageList.push(msg);
-      state.messageList = groupMessagesByDay([...state.messageList]);
-    }
+    // 加定时器是为了拿callbackExt的抄送字段
+    const timer = setInterval(() => {
+      getRoomMsg(data.value.user.cuteId).then((res) => {
+        getChatMsgList(res || [], "send");
+      });
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(timer);
+    }, 1000);
+
     nim.getLocalSession({
       sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
         data?.value?.user?.id
@@ -891,7 +1084,10 @@ function sendMsgDone(error: any, msg: any) {
 
 // 收到消息后推送到数组里
 evenBus.on("onMsg", (msg: any) => {
-  getNowMsgList(msg);
+  getRoomMsg(data.value.user.cuteId).then((res) => {
+    getChatMsgList(res || [], "收到消息");
+  });
+  // getNowMsgList(msg);
 });
 
 const getNowMsgList = (msg: any) => {
@@ -927,13 +1123,6 @@ const getNowMsgList = (msg: any) => {
   if (flag) {
     state.messageList = [...state.messageList].reverse();
   }
-
-  nextTick(() => {
-    if (route.name === "chatRoom") {
-      window.scroll({ top: 100000000, behavior: "instant" });
-      closeToast();
-    }
-  });
 };
 
 const isRecording = ref(false);
@@ -967,6 +1156,20 @@ const touchElement = ref<any>(null);
 const isInside = ref<any>(false);
 
 const onTouchStart = (event: any) => {
+  if (!configData.value?.hasPayment) {
+    const userDetails = getLocalUserDetail();
+
+    if (userDetails?.user?.vipLevel === 0) {
+      state.showVipPopup = true;
+    } else {
+      // state.showRechargePopup = true;
+      // state.showCallDownLoadPopup = true;
+      state.showAppUserDownLoadPopup = true;
+    }
+  } else {
+    state.showAppUserDownLoadPopup = true;
+    return;
+  }
   event.preventDefault();
 
   rec.start();
@@ -1096,7 +1299,8 @@ const handleCancelFollow = async () => {
     forbidClick: true,
   });
   await UnFollowFetch({
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
+    scene: "房间取消关注",
   });
   if (UnFollowSuccess.value) {
     showToast("Success");
@@ -1106,39 +1310,131 @@ const handleCancelFollow = async () => {
   }
 };
 
-const regions = [
-  "bgd",
-  "bra",
-  "col",
-  "egy",
-  "esp",
-  "fra",
-  "idn",
-  "ind",
-  "mar",
-  "nga",
-  "pak",
-  "phl",
-  "usa",
-  "ven",
-  "vnm",
-];
+// 发送定位消息，只发送到本地，不发到服务器
+const handleSendDistance = async () => {
+  if (!configData.value?.hasPayment) {
+    if (userDetail?.user?.vipLevel === 0) {
+      state.showVipPopup = true;
+    } else {
+      // state.showRechargePopup = true;
+      // state.showCallDownLoadPopup = true;
+      state.showAppUserDownLoadPopup = true;
+    }
+    return;
+  } else {
+    state.showAppUserDownLoadPopup = true;
+    return;
+  }
+  showLoadingToast({
+    duration: 0,
+    message: "Please wait...",
+    forbidClick: true,
+  });
+  // navigator.geolocation.getCurrentPosition(function (position) {
+  // var latitude = position.coords.latitude;
+  // var longitude = position.coords.longitude;
+  let latitude = "";
+  let longitude = "";
+  await fetch(
+    `https://www.googleapis.com/geolocation/v1/geolocate?key=${
+      import.meta.env.VITE_APP_GOOGLE_MAP_KEY
+    }`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        considerIp: true,
+      }),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Location Data:", data);
+      latitude = data.location.lat;
+      longitude = data.location.lng;
+    })
+    .catch((error) => console.error("Error:", error));
+
+  nim.sendGeo({
+    scene: "p2p",
+    to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${data.value.user.id}`,
+    isLocal: true,
+    env: `${import.meta.env.VITE_APP_CHAOSONG_ENV}`,
+    geo: {
+      lng: longitude,
+      lat: latitude,
+      title: "distance",
+    },
+    done: () => {
+      nim?.getLocalMsgs({
+        scene: "p2p",
+        limit: 500,
+        // to: `${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${userId}`,
+        sessionId: `p2p-${import.meta.env.VITE_APP_ACCOUNT_PREFIX}${
+          data.value.user.id
+        }`,
+        done: (error: any, obj: any) => {
+          if (error) {
+          } else {
+            getChatMsgList(obj.msgs || [], "发定位");
+            closeToast();
+          }
+        },
+      });
+    },
+  });
+  // });
+};
+
+const { fetchData: localFetchData } = userlocation();
+// 授权定位信息
+const handleAllow = async () => {
+  const userDetails = getLocalUserDetail();
+  if (userDetails?.user?.vipLevel === 0) {
+    state.showVipPopup = true;
+  } else {
+    showToast("Message has expired");
+  }
+
+  // showLoadingToast({
+  //   duration: 0,
+  //   message: "Please wait...",
+  //   forbidClick: true,
+  // });
+  // navigator.geolocation.getCurrentPosition(async function (position) {
+  //   var latitude: any = position.coords.latitude;
+  //   var longitude = position.coords.longitude;
+  //   if (latitude !== "" && latitude !== "undefined") {
+  //     await localFetchData({
+  //       latitude: latitude,
+  //       longitude: longitude,
+  //     });
+  //   }
+
+  //   showToast("Success");
+  // });
+};
+
+const getDistance = (it: any) => {
+  if (it?.geo) {
+    const position = {
+      lat: it.geo.lat,
+      lng: it.geo.lng,
+    };
+    return position;
+  } else {
+    return JSON.parse(it.text).position;
+  }
+};
 
 const getCountryImg = (item: any) => {
   const path: any = new URL(
-    `../../../public/ic_contry_${item?.region?.toLowerCase()}.webp`,
+    `/public/contryIcon/icon_counties_rectangle_${item?.region.toLowerCase()}.png`,
     import.meta.url
   );
-  const defaultImg: any = new URL(
-    `../../../public/ic_contry_ind.webp`,
-    import.meta.url
-  );
-
-  if (regions.includes(item?.region?.toLowerCase())) {
-    return path;
-  } else {
-    return defaultImg;
-  }
+  return path || "";
 };
 
 const {
@@ -1146,16 +1442,21 @@ const {
   data: sendGiftData,
   success: giftSuccess,
   msg: giftMsg,
+  code: giftCode,
 } = giftsend();
 
 const giftPopupRef = ref<any>();
 
 const handleGive = async (item: any) => {
+  if (!item?.id) {
+    return;
+  }
   await giftFetch({
     backpack: 0,
-    toUserId: data.value.user.id,
+    toUserId: data.value.user.id || 123,
     giftId: item.id,
     number: 1,
+    scene: "私聊送礼",
   });
   // debugger
   if (giftSuccess.value) {
@@ -1169,6 +1470,14 @@ const handleGive = async (item: any) => {
     giftPopupRef.value.wollectFetch();
   } else {
     showToast(giftMsg.value);
+    if (giftCode.value === 402) {
+      const userDetails = getLocalUserDetail();
+      if (userDetails?.user?.vipLevel === 0) {
+        state.showVipPopup = true;
+      } else {
+        state.showAppUserDownLoadPopup = true;
+      }
+    }
   }
 };
 
@@ -1181,10 +1490,101 @@ const handleSetCash = () => {
 .bigBox {
   padding-bottom: 100px;
 }
+.topLeftBox {
+  display: flex;
+  align-items: center;
+  .backImg {
+    width: 64px;
+    height: 64px;
+  }
+  .hostImg {
+    width: 64px;
+    height: 64px;
+    margin-left: 18px;
+    margin-right: 12px;
+  }
+  .hostName {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #554c5f;
+  }
+  .onlineBox {
+    width: 104px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #24e672;
+    margin-left: 12px;
+    .onlineYuan {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin-right: 4px;
+    }
+    .onlineYuanFont {
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffffff;
+    }
+  }
+  .offlineBox {
+    width: 104px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #898987;
+    margin-left: 12px;
+    .onlineYuan {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin-right: 4px;
+    }
+    .onlineYuanFont {
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffffff;
+    }
+  }
+  .busyBox {
+    width: 104px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #f3cc41;
+    margin-left: 12px;
+    .onlineYuan {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #fff;
+      margin-right: 4px;
+    }
+    .onlineYuanFont {
+      font-family: "PingFang SC", sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: #ffffff;
+    }
+  }
+}
 .rightBtn {
   width: 116px;
   height: 48px;
-  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  background: #eb6300;
+
+  // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
   border-radius: 24px 24px 24px 24px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: bold;
@@ -1197,7 +1597,8 @@ const handleSetCash = () => {
 .rightBtnUn {
   width: 150px;
   height: 48px;
-  background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+  background: #eb6300;
+  // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
   border-radius: 24px 24px 24px 24px;
   font-family: "SF Pro Display", sans-serif;
   font-weight: bold;
@@ -1210,14 +1611,14 @@ const handleSetCash = () => {
 .chatBox {
   background: rgba(0, 0, 0, 0.1);
 
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   padding: 32px;
   min-height: 100vh;
   overflow-y: scroll;
   .hostBox {
-    margin-top: 120px;
+    margin-top: 100px;
     padding: 32px;
-    background-color: #fff;
+    background-color: #f6f9fe;
     border-radius: 32px 32px 32px 32px;
     // margin-bottom: 32px;
     .hostBoxTop {
@@ -1328,8 +1729,8 @@ const handleSetCash = () => {
       .audioBoxUserLeft {
         max-width: 494px;
         min-width: 120px;
-        background: #ffffff;
-        border-radius: 0px 32px 32px 32px;
+        background: #f6f9fe;
+        border-radius: 30px 30px 30px 30px;
         display: flex;
         align-items: center;
         padding-right: 20px;
@@ -1361,14 +1762,14 @@ const handleSetCash = () => {
         max-width: 494px;
         // min-width: auto; /* 自动最小宽度 */
         // max-width: none; /* 不设置最大宽度 */
-        background: #ffffff;
-        border-radius: 0px 32px 32px 32px;
+        background: #f6f9fe;
+        border-radius: 30px 30px 30px 30px;
         padding: 24px;
-        font-family: "SF Pro Display", sans-serif;
+        font-family: "Inter", sans-serif;
         font-weight: 400;
         font-size: 28px;
-        color: #1a1a1a;
-        line-height: 33px;
+        color: #112437;
+        line-height: 40px;
         // margin-bottom: 32px;
 
         margin-bottom: 62px;
@@ -1380,10 +1781,69 @@ const handleSetCash = () => {
           bottom: -60px;
           width: 230px;
           left: -10px;
-          color: #ff4d42;
-          font-family: "SF Pro Display", sans-serif;
-          font-weight: 400;
+          font-family: "Inter", sans-serif;
+          font-weight: 500;
           font-size: 24px;
+          color: #ffcaa3;
+        }
+      }
+      .userLeftBoxContentDis {
+        position: relative;
+        // min-width: 100px;
+        max-width: 494px;
+        // min-width: auto; /* 自动最小宽度 */
+        // max-width: none; /* 不设置最大宽度 */
+        background: #f6f9fe;
+        border-radius: 30px 30px 30px 30px;
+        padding: 24px;
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #112437;
+        line-height: 40px;
+        .locationBox {
+          color: grey;
+          font-size: 24px;
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+        }
+        .mapFont {
+          font-family: "Inter", sans-serif;
+          font-weight: 400;
+          font-size: 28px;
+          color: #112437;
+          line-height: 40px;
+          animation: flash 2.5s infinite;
+        }
+        @keyframes flash {
+          0% {
+            opacity: 1; /* 完全显示 */
+          }
+          50% {
+            opacity: 0; /* 完全隐藏 */
+          }
+          100% {
+            opacity: 1; /* 再次显示 */
+          }
+        }
+        .allowBig {
+          margin-top: 32px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .allowBtn {
+            width: 228px;
+            height: 57px;
+            background: #eb6300;
+            border-radius: 1200px 1200px 1200px 1200px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 34px;
+            color: #ffffff;
+            text-align: center;
+            line-height: 57px;
+          }
         }
       }
       .yuan {
@@ -1475,11 +1935,11 @@ const handleSetCash = () => {
       .audioBoxUserRight {
         max-width: 494px;
         min-width: 120px;
-        background: #ff4d42;
-        border-radius: 32px 32px 0px 32px;
+        background: #eb6300;
+        border-radius: 30px 30px 30px 30px;
         display: flex;
         align-items: center;
-        padding-left: 20px;
+        padding: 10px;
         .audioNums {
           font-family: "SF Pro Display", sans-serif;
           font-weight: 400;
@@ -1512,14 +1972,28 @@ const handleSetCash = () => {
       }
       .userRightBoxContent {
         max-width: 494px;
-        background: #ff4d42;
         padding: 24px;
-        font-family: "SF Pro Display", sans-serif;
-        font-weight: 400;
-        font-size: 28px;
         color: #fff;
         line-height: 33px;
-        border-radius: 32px 32px 0px 32px;
+        background: #eb6300;
+        border-radius: 30px 30px 30px 30px;
+        font-family: "Jost", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #ffffff;
+        // margin-bottom: 32px;
+      }
+      .userRightBoxContentDis {
+        max-width: 494px;
+        padding: 24px;
+        color: #fff;
+        line-height: 33px;
+        background: #eb6300;
+        border-radius: 30px 30px 30px 30px;
+        font-family: "Jost", sans-serif;
+        font-weight: 400;
+        font-size: 28px;
+        color: #ffffff;
         // margin-bottom: 32px;
       }
       .noSendSuccessImg {
@@ -1625,7 +2099,8 @@ const handleSetCash = () => {
       // width: 418px;
       width: 100%;
       height: 80px;
-      background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
+      background: #eb6300;
+      // background: linear-gradient(90deg, #ff834e 0%, #ff4d42 100%);
       border-radius: 44px 44px 44px 44px;
       font-family: "SF Pro Text", sans-serif;
       font-weight: bold;
@@ -1680,19 +2155,40 @@ const handleSetCash = () => {
       width: 80px;
       height: 80px;
     }
+    .disImg {
+      width: 45px;
+      height: 45px;
+      z-index: 2;
+    }
   }
 }
-.redBox {
-  width: 416px;
-  height: 160px;
-  background: #ea1c00;
-  border-radius: 24px 24px 24px 24px;
+.redBig {
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+}
+.redBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  bottom: 320px;
+
   .redSource {
-    width: 256px;
-    height: 48px;
+    width: 160px;
+    height: 160px;
+    // position: absolute;
+  }
+  .redText {
+    margin-top: 30px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #ffffff;
   }
 }
 .whiteBox {

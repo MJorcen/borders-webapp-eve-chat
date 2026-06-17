@@ -8,7 +8,7 @@
       <div>
         <div @click.stop>
           <slot name="modalContent">
-            <div id="demoCanvas" class="w-[200px] h-[200px]"></div>
+            <div id="demoCanvas" class="w-[600px] h-[600px]"></div>
           </slot>
         </div>
       </div>

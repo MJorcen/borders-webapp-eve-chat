@@ -4,6 +4,7 @@ import axios from "axios";
 import { showToast } from "vant";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
+import { getCurrentQueryParams } from "@/common/utils";
 
 const router = useRouter();
 
@@ -36,10 +37,24 @@ const service = axios.create({
  */
 service.interceptors.request.use(
   (config: any) => {
+    if (config?.otherApi) {
+      config.baseURL = import.meta.env.VITE_APP_BASE_API_OTHER;
+    }
     let userInfo: any;
     const region = localStorage.getItem("region");
     const country = localStorage.getItem("country");
     const token = localStorage.getItem("web_token");
+
+    let rbParams: any = {};
+
+    try {
+      let rbLoacal = localStorage.getItem(
+        `__rb_${import.meta.env.VITE_ROLBEST_LINKID}_params`
+      ) as string;
+      rbParams = getCurrentQueryParams(rbLoacal);
+    } catch (e) {
+      console.log("error::", e);
+    }
 
     try {
       const info = localStorage.getItem("userInfo");
@@ -61,7 +76,15 @@ service.interceptors.request.use(
       import.meta.env.VITE_APP_EVE_PAYLOAD
     }&lang=${preferredLanguage}&locale=${
       navigatorInfo?.[0] || navigatorInfo?.[1]
-    }&region=${region}`;
+    }&region=${region}&rb=${
+      rbParams?.click_clickid
+        ? rbParams?.click_clickid
+        : rbParams?.rb
+        ? rbParams?.rb
+        : rbParams?.index
+        ? rbParams?.index
+        : ""
+    }`;
     config.headers["CF-IPCountry"] = country;
     config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     return config;
@@ -97,7 +120,8 @@ service.interceptors.response.use(
       //  没有权限跳转到登录页面重新登录
       if (status === 401) {
         console.log("== 401");
-        localStorage.removeItem("userInfo");
+        // localStorage.removeItem("userInfo");
+        localStorage.clear();
         router.push("/login");
         // location.reload();
       }

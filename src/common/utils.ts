@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 /**
  * 防抖
  * @param {*} fn
@@ -143,15 +145,13 @@ export const formatSecondsToTime = (seconds: number) => {
  */
 
 export const getCurrentQueryParams = (urlParamsStr: string) => {
-  const urlParams = new URLSearchParams(urlParamsStr);
-  const queryParamsObject: any = {};
-  // 创建一个对象来存储查询参数
-  const params: any = {};
-  for (const [key, value] of urlParams.entries()) {
-    params[key] = value;
-  }
+  const urlParams = new URLSearchParams(urlParamsStr?.slice?.(1));
+  const paramsObject: { [key: string]: string } = {};
+  urlParams.forEach((value: any, key: any) => {
+    paramsObject[key] = value;
+  });
 
-  return queryParamsObject;
+  return paramsObject;
   // const objectParams: any = {};
   // let url = decodeURI(window.location.search || window.location.hash);
   // let strs;
@@ -174,3 +174,192 @@ export const getCurrentQueryParams = (urlParamsStr: string) => {
   // }
   // return objectParams;
 };
+
+// 计算两经纬度之间的距离
+export const haversine = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) => {
+  const R = 6371; // 地球半径，单位：公里
+  const radLat1 = (Math.PI * lat1) / 180;
+  const radLat2 = (Math.PI * lat2) / 180;
+  const dLat = radLat2 - radLat1;
+  const dLon = (Math.PI * (lon2 - lon1)) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radLat1) *
+      Math.cos(radLat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // 返回距离，单位：公里
+};
+
+// 获取当前定位周边附近的信息
+export const getPositionObj = (data: any) => {
+  return new Promise(async (resolve, reject) => {
+    let latitude = "";
+    let longitude = "";
+    await fetch(
+      `https://www.googleapis.com/geolocation/v1/geolocate?key=${
+        import.meta.env.VITE_APP_GOOGLE_MAP_KEY
+      }`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          considerIp: true,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Location Data:", data);
+        latitude = data.location.lat;
+        longitude = data.location.lng;
+      })
+      .catch((error) => console.error("Error:", error));
+
+    // navigator.geolocation.getCurrentPosition(async function (position) {
+    // var latitude = position.coords.latitude;
+    // var longitude = position.coords.longitude;
+
+    const resObj = JSON.parse(data[0].body.data?.bodyString || "{}");
+
+    // const location = `${latitude},${longitude}`;
+
+    try {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: latitude, lng: longitude },
+        zoom: 15,
+      });
+
+      const service: any = new google.maps.places.PlacesService(map);
+
+      const request = {
+        location: new google.maps.LatLng({ lat: latitude, lng: longitude }),
+        radius: resObj.distanceMax, // 单位：米
+        type: resObj.primaryTypes, // 可以根据需要更改为其他类型，如餐厅、商店等
+      };
+
+      const distanceMax = Number(new BigNumber(resObj.distanceMax).div(1000));
+      const distanceMin = Number(new BigNumber(resObj.distanceMin).div(1000));
+      service.nearbySearch(request, (results: any, status: string) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          if (results.length) {
+            const hotelsWithDistance = results
+              .map((hotel: any) => {
+                const hotelLat = hotel.geometry.location.lat();
+                const hotelLng = hotel.geometry.location.lng();
+
+                const distance = haversine(
+                  latitude,
+                  longitude,
+                  hotelLat,
+                  hotelLng
+                ); // 计算与用户位置的距离
+                if (
+                  distance >= Number(distanceMin) &&
+                  distance <= Number(distanceMax)
+                ) {
+                  return {
+                    ...hotel,
+                    distance: distance, // 保存酒店的距离
+                  };
+                }
+                return null;
+              })
+              .filter((hotel: any) => hotel !== null); // 去除 null 项
+            // 按照距离从近到远排序
+            const resArr = hotelsWithDistance.sort(
+              (a: any, b: any) => a.distance - b.distance
+            );
+
+            resolve(resArr);
+          }
+        } else {
+          console.error("Nearby search failed with status:", status);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    // });
+  });
+};
+
+export const getLocalMsgList = (data: any) => {
+  return new Promise((resolve, reject) => {
+    let newWsMsgArr: any = [];
+    try {
+      newWsMsgArr = JSON.parse(localStorage.getItem("wsMsgArr") || "[]");
+    } catch (e) {
+      console.log(e);
+    }
+
+    // 过滤数组，取出数组ws信息传入的from去更新新的会话对象
+    let fromArrMsg: any = [];
+    fromArrMsg = newWsMsgArr.filter((item: any) => {
+      return item?.from === data[0].body?.data?.from;
+    });
+
+    let currentChatRoomObj: any;
+
+    try {
+      currentChatRoomObj = JSON.parse(
+        localStorage.getItem("currentChatRoomObj") || "{}"
+      );
+    } catch (e) {
+      console.warn(e);
+    }
+
+    // 判断是否在房间内的时候，因为要过滤当前房间内的消息，从而得出新的未读消息
+    if (
+      currentChatRoomObj &&
+      currentChatRoomObj.userId === data[0].body.data.from
+    ) {
+      fromArrMsg = fromArrMsg.filter((item: any) => {
+        return item.ts > currentChatRoomObj.time;
+      });
+    }
+    resolve(fromArrMsg);
+  });
+};
+
+export const getLocalUserDetail = () => {
+  let user: any = {};
+
+  try {
+    const info: any = localStorage.getItem("userDetail");
+    user = JSON.parse(info as any);
+    user = user.userDetail;
+    return user;
+  } catch (e) {
+    console.log("error::", e);
+  }
+};
+/**
+ * 将 RTMP 链接转换为 HTTPS 并添加 .flv 后缀
+ * @param {string} rtmpUrl - 输入的 RTMP URL
+ * @returns {string} - 转换后的 HTTPS URL
+ */
+export function convertRtmpToFlv(rtmpUrl: string) {
+  if (!rtmpUrl.startsWith("rtmp://")) {
+    throw new Error("输入的 URL 必须以 rtmp:// 开头");
+  }
+
+  // 替换 rtmp:// 为 https://
+  const httpsUrl = rtmpUrl.replace("rtmp://", "https://");
+
+  // 添加 .flv 后缀
+  const flvUrl = httpsUrl + ".flv";
+
+  return flvUrl;
+}

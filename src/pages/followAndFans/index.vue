@@ -1,128 +1,136 @@
 <template>
-  <van-nav-bar left-text="" fixed :border="false" z-index="20">
-    <template #left>
-      <van-icon
-        name="arrow-left"
-        size="18"
-        color="#000000"
-        @click="
+  <div class="bigBox">
+    <van-nav-bar
+      left-text=""
+      fixed
+      :border="false"
+      z-index="20"
+      style="background-color: #2c1a1a"
+    >
+      <template #left>
+        <van-icon
+          name="arrow-left"
+          size="18"
+          color="#ffffff"
+          @click="
+            () => {
+              router.go(-1);
+            }
+          "
+        />
+      </template>
+      <template #title>
+        <div class="tabsBox">
+          <div
+            :class="item.active ? 'activeTabs' : 'tabs'"
+            v-for="(item, index) in tabsList"
+            :key="index"
+            @click="handleClick(index)"
+          >
+            {{ item.title }}
+            <div class="line" v-if="item.active"></div>
+          </div>
+        </div>
+      </template>
+    </van-nav-bar>
+    <div class="w-[100%] h-[50px]"></div>
+    <div v-if="active === 0">
+      <van-pull-refresh
+        v-model="loadingTwo"
+        @refresh="
           () => {
-            router.go(-1);
+            state.offsetTwo = 0;
+            state.followList = [];
+            getFolowList();
           }
         "
-      />
-    </template>
-    <template #title>
-      <div class="tabsBox">
-        <div
-          :class="item.active ? 'activeTabs' : 'tabs'"
-          v-for="(item, index) in tabsList"
-          :key="index"
-          @click="handleClick(index)"
-        >
-          {{ item.title }}
-          <div class="line" v-if="item.active"></div>
-        </div>
-      </div>
-    </template>
-  </van-nav-bar>
-  <div class="w-[100%] h-[50px]"></div>
-  <div v-if="active === 0">
-    <van-pull-refresh
-      v-model="loadingTwo"
-      @refresh="
-        () => {
-          state.offsetTwo = 0;
-          state.followList = [];
-          getFolowList();
-        }
-      "
-    >
-      <template #pulling>
-        <span>Loading...</span>
-      </template>
-      <template #loosing>
-        <span>Loading...</span>
-      </template>
-      <template #loading>
-        <span>Loading...</span>
-      </template>
-      <van-list
-        v-if="state.followList.length"
-        v-model:loading="loadingTwo"
-        :finished="state.finishedTwo"
-        finished-text="Noting More"
-        loading-text="Loading..."
-        @load="getFolowList()"
       >
-        <div
-          class="callBigBox"
-          v-for="(item, index) in state.followList"
-          :key="index"
+        <template #pulling>
+          <span>Loading...</span>
+        </template>
+        <template #loosing>
+          <span>Loading...</span>
+        </template>
+        <template #loading>
+          <span>Loading...</span>
+        </template>
+        <van-list
+          v-if="state.followList.length"
+          v-model:loading="loadingTwo"
+          :finished="state.finishedTwo"
+          finished-text="Nothing More"
+          loading-text="Loading..."
+          @load="getFolowList()"
         >
-          <div class="callBoxItem">
-            <div class="callBoxItemLeft">
-              <img :src="item.avatar" class="callBoxItemLeftImg" />
-              <div class="callContent">
-                <div class="callContentTop">{{ item.nickname }}</div>
-                <div class="callContentBottom">ID:{{ item.id }}</div>
+          <div
+            class="callBigBox"
+            v-for="(item, index) in state.followList"
+            :key="index"
+          >
+            <div class="callBoxItem">
+              <div class="callBoxItemLeft">
+                <img :src="item.avatar" class="callBoxItemLeftImg" />
+                <div class="callContent">
+                  <div class="callContentTop">{{ item.nickname }}</div>
+                  <div class="callContentBottom">ID:{{ item.id }}</div>
+                </div>
               </div>
+              <!-- <img src="./assets/ic_follow@2x.png" class="w-[58px] h-[25px]" /> -->
             </div>
-            <!-- <img src="./assets/ic_follow@2x.png" class="w-[58px] h-[25px]" /> -->
           </div>
-        </div>
-      </van-list>
-      <Empty v-if="!state.followList.length" />
-    </van-pull-refresh>
-  </div>
-  <div v-else>
-    <van-pull-refresh
-      v-model="loading"
-      @refresh="
-        () => {
-          state.offset = 0;
-          state.list = [];
-          getList();
-        }
-      "
-    >
-      <template #pulling>
-        <span>Loading...</span>
-      </template>
-      <template #loosing>
-        <span>Loading...</span>
-      </template>
-      <template #loading>
-        <span>Loading...</span>
-      </template>
-      <van-list
-        v-model:loading="loading"
-        :finished="state.finished"
-        finished-text="Noting More"
-        loading-text="Loading..."
-        @load="getList()"
-        v-if="state.list.length"
+        </van-list>
+        <Empty v-if="!state.followList.length" />
+      </van-pull-refresh>
+    </div>
+    <div v-else>
+      <van-pull-refresh
+        v-model="loading"
+        @refresh="
+          () => {
+            state.offset = 0;
+            state.list = [];
+            getList();
+          }
+        "
       >
-        <div
-          class="callBigBox"
-          v-for="(item, index) in state.list"
-          :key="index"
+        <template #pulling>
+          <span>Loading...</span>
+        </template>
+        <template #loosing>
+          <span>Loading...</span>
+        </template>
+        <template #loading>
+          <span>Loading...</span>
+        </template>
+        <van-list
+          v-model:loading="loading"
+          :finished="state.finished"
+          finished-text="Nothing More"
+          loading-text="Loading..."
+          @load="getList()"
+          v-if="state.list.length"
         >
-          <div class="callBoxItem">
-            <div class="callBoxItemLeft">
-              <img :src="item.avatar" class="callBoxItemLeftImg" />
+          <div
+            class="callBigBox"
+            v-for="(item, index) in state.list"
+            :key="index"
+          >
+            <div class="callBoxItem">
+              <div class="callBoxItemLeft">
+                <img :src="item.avatar" class="callBoxItemLeftImg" />
 
-              <div class="callContent">
-                <div class="callContentTop">{{ item.nickname }}</div>
-                <div class="callContentBottom">ID:{{ item.id }}</div>
+                <div class="callContent">
+                  <div class="callContentTop">{{ item.nickname }}</div>
+                  <div class="callContentBottom">ID:{{ item.id }}</div>
+                </div>
               </div>
+              <!-- <img src="./assets/ic_follow@2x.png" class="w-[58px] h-[25px]" /> -->
             </div>
-            <!-- <img src="./assets/ic_follow@2x.png" class="w-[58px] h-[25px]" /> -->
           </div>
-        </div>
-      </van-list>
-      <Empty v-if="!state.list.length" />
-    </van-pull-refresh>
+        </van-list>
+        <Empty v-if="!state.list.length" />
+      </van-pull-refresh>
+    </div>
   </div>
 </template>
 
@@ -139,7 +147,7 @@ const router = useRouter();
 const route = useRoute();
 
 const tabsList: any = reactive([
-  { title: "Followed", active: true },
+  { title: "Follow", active: true },
   { title: "Followers", active: false },
 ]);
 
@@ -245,7 +253,7 @@ const handleClick = (index: number) => {
 }
 .callBigBox {
   height: 168px;
-  background: #ffffff;
+  // background: #ffffff;
   display: flex;
   align-items: center;
   padding-left: 32px;
@@ -255,7 +263,7 @@ const handleClick = (index: number) => {
     justify-content: space-between;
     align-items: center;
     height: 168px;
-    border-bottom: 2px solid #f5f5f5;
+    border-bottom: 2px dashed #566b88;
     width: 100%;
     .callBoxItemLeft {
       display: flex;
@@ -271,10 +279,10 @@ const handleClick = (index: number) => {
         .callContentTop {
           width: 260px;
           height: 42px;
-          font-weight: bold;
-          font-size: 36px;
-          color: #1a1a1a;
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Inter", sans-serif;
+          font-weight: normal;
+          font-size: 28px;
+          color: #fff;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
@@ -288,10 +296,10 @@ const handleClick = (index: number) => {
           margin-bottom: 8px;
         }
         .callContentBottom {
-          font-family: "SF Pro Display", sans-serif;
+          font-family: "Inter", sans-serif;
           font-weight: 400;
-          font-size: 28px;
-          color: #8c8c8c;
+          font-size: 24px;
+          color: #eb6300;
         }
       }
     }
