@@ -19,7 +19,7 @@ router.beforeEach((to, from: any) => {
   loadingDom?.parentNode?.removeChild(loadingDom);
   const userInfo = localStorage.getItem("userInfo");
   NProgress.start();
-  if (!userInfo) {
+  if (!userInfo && !import.meta.env.DEV) {
     if (!["Login"].includes(to.name as string)) {
       return {
         name: "Login",

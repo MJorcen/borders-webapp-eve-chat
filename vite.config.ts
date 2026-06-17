@@ -107,10 +107,13 @@ export default defineConfig(({ command, mode }) => {
     server: {
       port: 3000,
       // // 生成https方便本地调试，需要配置本地证书
-      https: {
-        key: fs.readFileSync("./localhost-key.pem"),
-        cert: fs.readFileSync("./localhost.pem"),
-      },
+      https:
+        process.env.VITE_DEV_HTTPS === "false"
+          ? false
+          : {
+              key: fs.readFileSync("./localhost-key.pem"),
+              cert: fs.readFileSync("./localhost.pem"),
+            },
       proxy: {
         "/api": {
           target: "http://hnybgz.asuscomm.com:6688/duome/api/v1", // 后端API的实际地址
